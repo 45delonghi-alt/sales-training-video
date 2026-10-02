@@ -1,0 +1,222 @@
+{
+  "meta": {
+    "title": "その1on1、続いていますか？",
+    "fps": 30,
+    "width": 1920,
+    "height": 1080,
+    "secondsPerChar": 0.15,
+    "lineGapSeconds": 0.3,
+    "minLineSeconds": 1.2,
+    "innerVoiceMinSeconds": 2.5,
+    "fadeSeconds": 0.5,
+    "audioExt": "mp3",
+    "ambientFile": "ambient.mp3",
+    "ambientVolume": 0.08,
+    "kenBurns": { "seconds": 5, "scale": 1.05 },
+    "useImages": false,
+    "backgroundImage": "images/background.png"
+  },
+  "characters": {
+    "tanaka": {
+      "name": "田中 誠",
+      "role": "営業2課 課長",
+      "color": "#1f3a68",
+      "position": "left",
+      "images": {
+        "front": "images/tanaka_front.png",
+        "side": "images/tanaka_side.png",
+        "down": "images/tanaka_down.png",
+        "smile": "images/tanaka_smile.png"
+      }
+    },
+    "sato": {
+      "name": "佐藤 翔太",
+      "role": "入社5年目（G2）",
+      "color": "#1e5b3a",
+      "position": "right",
+      "images": {
+        "front": "images/sato_front.png",
+        "side": "images/sato_side.png",
+        "down": "images/sato_down.png",
+        "smile": "images/sato_smile.png"
+      }
+    }
+  },
+  "sheet": {
+    "title": "営業コンピテンシー評価（上期）",
+    "person": "佐藤 翔太（営業2課・G2）",
+    "rows": [
+      { "item": "顧客理解", "self": 2, "boss": 4 },
+      { "item": "提案構築", "self": 4, "boss": 3 },
+      { "item": "行動計画", "self": 3, "boss": 3 },
+      { "item": "社内連携", "self": 3, "boss": 3 }
+    ]
+  },
+  "scenes": [
+    {
+      "id": "title",
+      "type": "title",
+      "name": "Scene 0：タイトル",
+      "targetSeconds": 5,
+      "seconds": 5,
+      "title": "その1on1、続いていますか？",
+      "subtitle": "評価結果を“次の行動”に変える対話"
+    },
+    {
+      "id": "before",
+      "type": "dialogue",
+      "name": "Scene 1：Before ― よくある1on1",
+      "targetSeconds": 90,
+      "label": "Before",
+      "desaturate": true,
+      "items": [
+        { "type": "line", "id": "B01", "speaker": "tanaka", "text": "じゃあ始めようか。評価結果が出たから、見ていこう。" },
+        { "type": "sheet", "highlight": "提案構築" },
+        { "type": "line", "id": "B02", "speaker": "tanaka", "text": "佐藤さんの自己評価がこれで…「提案構築」が4。私は3にしてる。" },
+        { "type": "line", "id": "B03", "speaker": "sato", "text": "…はい。", "pose": "down" },
+        { "type": "sheet", "highlight": "顧客理解" },
+        { "type": "line", "id": "B04", "speaker": "tanaka", "text": "「顧客理解」は、佐藤さんが2で、私は4。" },
+        { "type": "line", "id": "B05", "speaker": "sato", "text": "はい。", "pose": "down" },
+        { "type": "sheet", "showGap": true },
+        { "type": "line", "id": "B06", "speaker": "tanaka", "text": "Gapはこんな感じだね。で、これを見てどう感じた？" },
+        { "type": "sheet", "hide": true },
+        { "type": "pause", "seconds": 3 },
+        { "type": "line", "id": "B07", "speaker": "sato", "text": "…そうですね。提案のところは、もう少し頑張らないといけないなと。", "pose": "down" },
+        { "type": "inner", "speaker": "sato", "text": "4にした理由は、聞かれないんだ…", "pose": "down" },
+        { "type": "line", "id": "B08", "speaker": "tanaka", "text": "うん。じゃあ今後、何を伸ばしていく？" },
+        { "type": "pause", "seconds": 2 },
+        { "type": "line", "id": "B09", "speaker": "sato", "text": "…提案力、ですかね。", "pose": "down" },
+        { "type": "line", "id": "B10", "speaker": "tanaka", "text": "そうだね、提案力。大事だからね。頑張って。", "pose": "smile" },
+        { "type": "inner", "speaker": "tanaka", "text": "…話が広がらないな。", "pose": "side" },
+        { "type": "line", "id": "B11", "speaker": "tanaka", "text": "他に何かある？" },
+        { "type": "line", "id": "B12", "speaker": "sato", "text": "いえ、大丈夫です。", "pose": "down" },
+        { "type": "pause", "seconds": 2 },
+        { "type": "telop", "seconds": 6, "lines": ["所要時間 8分", "決まったこと：“提案力を頑張る”"] }
+      ]
+    },
+    {
+      "id": "explain",
+      "type": "explain",
+      "name": "Scene 2：解説 ― なぜ会話が止まったのか",
+      "targetSeconds": 60,
+      "heading": "なぜ会話が止まったのか",
+      "beats": [
+        { "type": "flow", "seconds": 18, "nodes": ["点数を伝える", "どう感じた？", "何を伸ばす？", "沈黙"] },
+        { "type": "message", "seconds": 12, "text": "会話の材料が“点数”しかないから止まる" },
+        {
+          "type": "shifts",
+          "seconds": 30,
+          "title": "3つの転換",
+          "items": [
+            { "before": "点数から入る", "after": "場面（事実）から入る" },
+            { "before": "どちらが正しいか", "after": "見ていた場面の違いを交換する" },
+            { "before": "全項目を扱う", "after": "1つに絞り、行動を1つ決める" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "after",
+      "type": "dialogue",
+      "name": "Scene 3：After ― 場面から入る1on1",
+      "targetSeconds": 180,
+      "label": "After",
+      "desaturate": false,
+      "steps": ["目的", "事実", "ギャップ", "焦点", "行動", "確認"],
+      "items": [
+        { "type": "step", "step": 1 },
+        { "type": "line", "id": "A01", "speaker": "tanaka", "text": "今日は点数の答え合わせじゃなくて、次の半年で伸ばす行動を1つ決めたいんだ。30分くらいでいい？" },
+        { "type": "line", "id": "A02", "speaker": "sato", "text": "はい。" },
+
+        { "type": "step", "step": 2 },
+        { "type": "line", "id": "A03", "speaker": "tanaka", "text": "点数はあとで見るとして…この半年で、一番手応えがあった商談ってどれ？" },
+        { "type": "pause", "seconds": 2 },
+        { "type": "line", "id": "A04", "speaker": "sato", "text": "うーん…三和精機さん、ですかね。", "pose": "side" },
+        { "type": "line", "id": "A05", "speaker": "tanaka", "text": "ああ、コンプレッサー更新の。最初は相見積もりで、価格の話ばっかりだったよね。" },
+        { "type": "line", "id": "A06", "speaker": "sato", "text": "そうなんです。でも2回目の訪問で、工場長に現場を見せてもらえて。夏場にラインが止まるのが一番困ってる、って分かったんです。" },
+        { "type": "line", "id": "A07", "speaker": "tanaka", "text": "それで、提案の軸を変えた？" },
+        { "type": "line", "id": "A08", "speaker": "sato", "text": "はい。価格じゃなくて、停止リスクをどう減らすかの話にしました。" },
+
+        { "type": "step", "step": 3 },
+        { "type": "line", "id": "A09", "speaker": "tanaka", "text": "それ、まさに「顧客理解」の期待水準そのものなんだよ。でも自己評価は2にしてたよね。" },
+        { "type": "line", "id": "A10", "speaker": "sato", "text": "たまたま工場長が話してくれただけなので…。", "pose": "down" },
+        { "type": "line", "id": "A11", "speaker": "tanaka", "text": "たまたまじゃないと思うよ。「現場を見せてほしい」って頼んだのは佐藤さんでしょ。私が4をつけたのは、その場面があったから。" },
+        { "type": "pause", "seconds": 2 },
+        { "type": "line", "id": "A12", "speaker": "sato", "text": "…そう言われると、そうかもしれないです。" },
+        { "type": "inner", "speaker": "sato", "text": "あれ、ちゃんと見てくれてたんだ。", "pose": "smile" },
+
+        { "type": "line", "id": "A13", "speaker": "tanaka", "text": "逆に「提案構築」は、佐藤さんが4で私が3。4にしたとき、どの商談を思い浮かべてた？" },
+        { "type": "line", "id": "A14", "speaker": "sato", "text": "北陸化工さんです。提案書を自分で作って、通ったので。" },
+        { "type": "line", "id": "A15", "speaker": "tanaka", "text": "あれは良かった。私が3にしたのは、東邦樹脂さんのほう。提案書はよくできてたけど、決裁者を確認しないまま出して、結局止まったよね。" },
+        { "type": "pause", "seconds": 2 },
+        { "type": "line", "id": "A16", "speaker": "sato", "text": "…ああ。購買の担当者に出して終わってました。", "pose": "down" },
+        { "type": "line", "id": "A17", "speaker": "tanaka", "text": "提案書を作る力はあると思ってる。足りないのは、出す前の確認じゃないかな。どう思う？" },
+        { "type": "line", "id": "A18", "speaker": "sato", "text": "確かに、そこは毎回あいまいです。" },
+
+        { "type": "step", "step": 4 },
+        { "type": "line", "id": "A19", "speaker": "tanaka", "text": "次の半年、1つに絞るなら何がいい？" },
+        { "type": "line", "id": "A20", "speaker": "sato", "text": "決裁ルートの確認、やりたいです。" },
+
+        { "type": "step", "step": 5 },
+        { "type": "line", "id": "A21", "speaker": "tanaka", "text": "いいね。具体的に、どの商談でやる？", "pose": "smile" },
+        { "type": "line", "id": "A22", "speaker": "sato", "text": "東邦樹脂さんで、来月に再提案があるので、その前に決裁の流れを聞きます。" },
+        { "type": "line", "id": "A23", "speaker": "tanaka", "text": "いつ聞く？" },
+        { "type": "line", "id": "A24", "speaker": "sato", "text": "来週の訪問で、購買の課長に聞きます。" },
+        { "type": "line", "id": "A25", "speaker": "tanaka", "text": "私に手伝えることはある？" },
+        { "type": "line", "id": "A26", "speaker": "sato", "text": "聞き方を、一回練習させてもらえますか。" },
+
+        { "type": "step", "step": 6 },
+        { "type": "line", "id": "A27", "speaker": "tanaka", "text": "じゃあ水曜の朝、10分やろう。次の1on1で、何が分かったか教えて。", "pose": "smile" },
+        { "type": "line", "id": "A28", "speaker": "sato", "text": "はい。ありがとうございます。", "pose": "smile" },
+        { "type": "inner", "speaker": "sato", "text": "来週、聞くことがはっきりした。", "pose": "smile" },
+        {
+          "type": "actionCard",
+          "seconds": 12,
+          "title": "今日決まった行動",
+          "rows": [
+            { "label": "誰が", "value": "佐藤" },
+            { "label": "何を", "value": "東邦樹脂の決裁ルートを確認する" },
+            { "label": "いつ", "value": "来週の訪問時" },
+            { "label": "支援", "value": "水曜朝、田中課長とロールプレイ10分" },
+            { "label": "確認", "value": "次回の1on1" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "compare",
+      "type": "compare",
+      "name": "Scene 4：Before / After 比較",
+      "targetSeconds": 30,
+      "seconds": 30,
+      "rows": [
+        { "label": "入り方", "before": "点数を伝える", "after": "「一番手応えがあった商談は？」" },
+        { "label": "ギャップの扱い", "before": "点数を並べるだけ", "after": "どの場面を見ていたかを交換" },
+        { "label": "話す量", "before": "上長が中心", "after": "部下が中心" },
+        { "label": "決まったこと", "before": "「提案力を頑張る」", "after": "来週、決裁ルートを確認する" }
+      ]
+    },
+    {
+      "id": "summary",
+      "type": "summary",
+      "name": "Scene 5：まとめ",
+      "targetSeconds": 20,
+      "seconds": 20,
+      "heading": "次の1on1で、この3つだけ実践する",
+      "items": [
+        "1on1の前に、具体的な場面を4つメモしておく",
+        "点数ではなく「一番手応えがあった商談は？」から始める",
+        "「どの商談で、何を変えるか」を1つ決めて終える"
+      ]
+    },
+    {
+      "id": "end",
+      "type": "end",
+      "name": "Scene 6：エンド",
+      "targetSeconds": 5,
+      "seconds": 5,
+      "label": "討議",
+      "text": "あなたの1on1は、BeforeとAfterのどちらに近いですか？"
+    }
+  ]
+}
