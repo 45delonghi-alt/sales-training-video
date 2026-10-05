@@ -303,14 +303,37 @@ export const diffuse = ({frame, at}: VisualProps): Visual => {
   };
 };
 
-// ───────── 距離設定型 ─────────
+// ───────── 距離設定型（BGS） ─────────
+// 拡散反射型は「受光量の増減」、BGS は三角測距で「受光素子のどの位置に戻ったか＝距離」で判断する
+const MethodCompare: React.FC<{at: number[]}> = ({at}) => {
+  const a = useSpringIn(at[1] + 6);
+  const b = useSpringIn(at[2] + 6);
+  const box = useSpringIn(at[1]);
+  const row = (s: number, color: string, name: string, how: string, note: string) => (
+    <div style={{opacity: s, transform: `translateX(${(1 - s) * 60}px)`, borderLeft: `10px solid ${color}`, padding: '10px 0 10px 20px'}}>
+      <div style={{fontSize: 26, fontWeight: 700, color}}>{name}</div>
+      <div style={{fontSize: 34, fontWeight: 700, color: SC.ink}}>{how}</div>
+      <div style={{fontSize: 24, color: SC.subInk}}>{note}</div>
+    </div>
+  );
+  return (
+    <div style={{opacity: box, fontFamily: FONT_FAMILY, background: SC.panel, borderRadius: 16, padding: '22px 26px', boxShadow: '0 4px 14px rgba(0,0,0,0.10)', display: 'flex', flexDirection: 'column', gap: 16}}>
+      <div style={{fontSize: 28, fontWeight: 700, color: SC.ink}}>何で判断する？</div>
+      {row(a, '#8a8f99', '反射型（拡散反射）', '受光量の増減', '黒いモノは光が弱く、見逃しやすい')}
+      {row(b, SC.ok, '距離設定型（BGS）', '戻った位置 ＝ 距離', '三角測距。光の強さに左右されにくい')}
+    </div>
+  );
+};
+
 export const bgs = ({frame, at}: VisualProps): Visual => {
-  const drop = ramp(frame, at[1] - 6, 14);
+  const drop = ramp(frame, at[1] + 6, 14);
   const hasObj = drop >= 1;
-  const showAngle = ramp(frame, at[1] + 20);
-  const verdict = ramp(frame, at[2] + 6, 8);
+  const tri = ramp(frame, at[2] + 10, 12); // 三角測距の説明が始まる
   const lens = {x: 190, y: 262};
-  const recv = {x: 190, y: 340};
+  const recv = {x: 196, y: 340};
+  // 受光素子上の光点：背景（遠い）→ 右側、手前のモノ（近い）→ 左側
+  const spotX = interpolate(drop, [0, 1], [500, 290]);
+  const spotOn = hasObj ? tri : ramp(frame, at[0] + 20);
   return {
     diagram: (
       <g>
@@ -318,48 +341,69 @@ export const bgs = ({frame, at}: VisualProps): Visual => {
           投光／受光器
         </SvgText>
         <SensorBody x={60} y={205} face="right" />
-        {/* 受光窓（投光レンズと離れた位置にある） */}
+        {/* 受光窓（投光レンズから離れた位置にあり、戻る角度の違いが位置の違いになる） */}
         <rect x={173} y={325} width={14} height={30} rx={4} fill="#3a3f4a" />
         {/* 背景 */}
-        <rect x={980} y={150} width={50} height={300} fill="#b9bdc7" />
+        <rect x={980} y={150} width={50} height={260} fill="#b9bdc7" />
         <SvgText x={1005} y={130} size={24}>
           背景
         </SvgText>
         {/* 設定距離 */}
-        <line x1={720} y1={150} x2={720} y2={450} stroke={SC.good} strokeWidth={4} strokeDasharray="12 10" />
+        <line x1={720} y1={150} x2={720} y2={410} stroke={SC.good} strokeWidth={4} strokeDasharray="12 10" />
         <SvgText x={720} y={130} size={24} color={SC.good}>
           設定距離
         </SvgText>
-        <line x1={200} y1={480} x2={712} y2={480} stroke={SC.good} strokeWidth={3} />
-        <polygon points="720,480 704,472 704,488" fill={SC.good} />
-        <SvgText x={460} y={520} size={24} color={SC.good}>
-          この範囲だけ検出
-        </SvgText>
         {/* 光：モノがなければ背景へ、あれば手前のモノへ */}
         <Beam x1={lens.x} y1={lens.y} x2={hasObj ? 448 : 975} y2={lens.y} />
-        <Beam x1={975} y1={lens.y} x2={recv.x + 10} y2={recv.y} color="#9aa0aa" width={6} opacity={hasObj ? 0.35 : 1} dashed={false} />
-        {hasObj ? <Beam x1={450} y1={lens.y} x2={recv.x + 10} y2={recv.y} color={SC.ok} width={8} /> : null}
-        <ObjectBox x={450} y={190} w={70} h={180} dropIn={drop} fill="#2b2d33" stroke="#000" caption="黒いモノ" />
-        <g opacity={showAngle}>
-          <SvgText x={300} y={240} size={24} color={SC.ok}>
-            角度 大 ＝ 近い
-          </SvgText>
-          <SvgText x={820} y={340} size={24} color={SC.subInk}>
-            角度 小 ＝ 遠い
-          </SvgText>
-        </g>
+        <Beam x1={975} y1={lens.y} x2={recv.x} y2={recv.y} color="#9aa0aa" width={6} opacity={hasObj ? 0.3 : 1} dashed={false} />
         {hasObj ? (
-          <Badge x={560} y={600} text="手前のモノだけ検出・背景は無視" color={SC.good} scale={verdict} />
-        ) : (
-          <Badge x={560} y={600} text="背景は設定距離の外 → 無視" color="#8a8f99" scale={ramp(frame, at[0] + 20, 8)} />
-        )}
+          <Beam x1={450} y1={lens.y} x2={recv.x} y2={recv.y} color={tri > 0 ? SC.ok : '#f5a35e'} width={tri > 0 ? 8 : 4} />
+        ) : null}
+        <ObjectBox x={450} y={190} w={70} h={180} dropIn={drop} fill="#2b2d33" stroke="#000" caption="黒いモノ" />
+        {hasObj && tri <= 0 ? (
+          <SvgText x={320} y={385} size={22} color={SC.warn} opacity={ramp(frame, at[1] + 24)}>
+            返る光は弱い
+          </SvgText>
+        ) : null}
+        {/* 受光素子（拡大図） */}
+        <g opacity={ramp(frame, at[0] + 14)}>
+          <line x1={186} y1={356} x2={240} y2={440} stroke={SC.subInk} strokeWidth={2} strokeDasharray="4 6" />
+          <rect x={200} y={410} width={380} height={130} rx={12} fill="#f7f8fb" stroke="#c4cad6" strokeWidth={2} />
+          <SvgText x={220} y={440} size={22} anchor="start">
+            受光素子（拡大）
+          </SvgText>
+          <rect x={230} y={462} width={150} height={34} fill="#d6f0e1" />
+          <rect x={380} y={462} width={170} height={34} fill="#e4e7ee" />
+          <rect x={230} y={462} width={320} height={34} fill="none" stroke="#9aa0aa" strokeWidth={2} />
+          <line x1={380} y1={452} x2={380} y2={506} stroke={SC.good} strokeWidth={3} strokeDasharray="6 5" />
+          <SvgText x={305} y={528} size={22} color={SC.ok}>
+            近い（検出）
+          </SvgText>
+          <SvgText x={465} y={528} size={22} color={SC.subInk}>
+            遠い（無視）
+          </SvgText>
+          <circle cx={spotX} cy={479} r={20} fill={hasObj ? SC.ok : '#8a8f99'} opacity={0.3 * spotOn} />
+          <circle cx={spotX} cy={479} r={11} fill={hasObj ? SC.ok : '#8a8f99'} opacity={spotOn} />
+        </g>
+        {hasObj && tri > 0 ? (
+          <SvgText x={850} y={490} size={24} color={SC.ok} opacity={tri}>
+            戻る角度 → 素子上の位置
+          </SvgText>
+        ) : null}
+        {frame >= at[3] ? (
+          <Badge x={560} y={600} text="手前のモノだけ検出・背景は無視" color={SC.good} scale={ramp(frame, at[3] + 6, 8)} />
+        ) : hasObj && tri > 0 ? (
+          <Badge x={560} y={600} text="近い位置に戻った → 検出" color={SC.ok} scale={ramp(frame, at[2] + 30, 8)} />
+        ) : !hasObj ? (
+          <Badge x={560} y={600} text="背景は遠い位置に戻る → 無視" color="#8a8f99" scale={ramp(frame, at[0] + 30, 8)} />
+        ) : null}
       </g>
     ),
     panel: (
       <Panel>
-        <PointCard start={at[1] + 24} kind="good" text="光の量ではなく角度で判断" />
-        <PointCard start={at[2] + 10} kind="good" text="黒いモノ・色違いも安定" />
-        <PointCard start={at[2] + 22} kind="good" text="背景の影響を受けにくい" />
+        <MethodCompare at={at} />
+        <PointCard start={at[3] + 10} kind="good" text="黒いモノ・色違いも安定" />
+        <PointCard start={at[3] + 22} kind="good" text="背景の影響を受けにくい" />
       </Panel>
     ),
   };

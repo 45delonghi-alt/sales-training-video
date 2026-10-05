@@ -157,7 +157,7 @@ const SUMMARY_ROWS = [
   {name: '回帰反射型', when: '配線を片側にまとめたい', care: '光沢物は偏光フィルタ付き', sub: false, group: 0},
   {name: '透明体専用', when: 'ペットボトル・ガラスを検出したい', care: '回帰反射型の一種', sub: true, group: 1},
   {name: '反射型', when: 'センサ1台・省スペースで', care: '色・形・背景で不安定に', sub: false, group: 1},
-  {name: '距離設定型', when: '色のばらつきや背景がある', care: '反射型の一種', sub: true, group: 1},
+  {name: '距離設定型', when: '色のばらつきや背景がある', care: '反射型の一種（BGS）', sub: true, group: 1},
 ];
 
 const SummaryScene: React.FC<{timing: SensorSceneTiming}> = ({timing}) => {
