@@ -7,6 +7,7 @@
     "secondsPerChar": 0.15,
     "lineGapSeconds": 0.3,
     "minLineSeconds": 1.2,
+    "ellipsisPauseSeconds": 0.7,
     "innerVoiceMinSeconds": 2.5,
     "fadeSeconds": 0.5,
     "audioExt": "mp3",
@@ -22,6 +23,7 @@
       "role": "営業2課 課長",
       "color": "#1f3a68",
       "position": "left",
+      "voice": "落ち着いた中低音。やや速め（結論を急ぐ性格）。「大事だからね」は軽く流す",
       "images": {
         "front": "images/tanaka_front.png",
         "side": "images/tanaka_side.png",
@@ -34,6 +36,7 @@
       "role": "入社5年目（G2）",
       "color": "#1e5b3a",
       "position": "right",
+      "voice": "少し若く控えめな声。やや遅め。Beforeは語尾を弱く、Afterの後半は少し明るく",
       "images": {
         "front": "images/sato_front.png",
         "side": "images/sato_side.png",
@@ -66,7 +69,7 @@
       "id": "before",
       "type": "dialogue",
       "name": "Scene 1：Before ― よくある1on1",
-      "targetSeconds": 90,
+      "targetSeconds": 56,
       "label": "Before",
       "desaturate": true,
       "items": [
@@ -119,7 +122,7 @@
       "id": "after",
       "type": "dialogue",
       "name": "Scene 3：After ― 場面から入る1on1",
-      "targetSeconds": 180,
+      "targetSeconds": 152,
       "label": "After",
       "desaturate": false,
       "steps": ["目的", "事実", "ギャップ", "焦点", "行動", "確認"],

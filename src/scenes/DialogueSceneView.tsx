@@ -72,12 +72,17 @@ export const DialogueSceneView: React.FC<Props> = ({script, scene, segments, has
       {scene.steps && <StepIndicator steps={scene.steps} current={seg.step} />}
 
       {/* 台詞の音声（ファイルがあるものだけ）。BGM は流さない */}
-      {segments.map((s) =>
-        s.item.type === 'line' && s.audioSeconds !== undefined ? (
-          <Sequence key={s.item.id} from={s.from} durationInFrames={s.durationInFrames} layout="none">
-            <Audio src={staticFile(`audio/${s.item.id}.${script.meta.audioExt}`)} />
+      {segments.flatMap((s) =>
+        (s.clips ?? []).map((clip) => (
+          <Sequence
+            key={clip.file}
+            from={s.from + clip.offsetFrames}
+            durationInFrames={s.durationInFrames - clip.offsetFrames}
+            layout="none"
+          >
+            <Audio src={staticFile(`audio/${clip.file}`)} />
           </Sequence>
-        ) : null,
+        )),
       )}
       {/* 環境音（空調音など）を小さく */}
       {hasAmbient && (

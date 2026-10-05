@@ -5,6 +5,7 @@ import type {
   AudioDurations,
   CharacterKey,
   DialogueItem,
+  LineItem,
   DialogueScene,
   Pose,
   Scene,
@@ -28,8 +29,9 @@ export type Segment = {
   poses: Record<CharacterKey, Pose>;
   sheet: SheetState;
   step: number | null;
-  // 音声ファイルがある台詞のみ
+  // 音声ファイルがある台詞のみ。clips は再生するファイルと、区間先頭からの開始フレーム
   audioSeconds?: number;
+  clips?: {file: string; offsetFrames: number}[];
   // 音声が無く「文字数 × 秒」で仮の長さにしたか
   estimated?: boolean;
 };
@@ -52,12 +54,43 @@ const charCount = (text: string) => [...text].length;
 export const estimateSeconds = (script: Script, text: string) =>
   charCount(text) * script.meta.secondsPerChar;
 
+// 「…」の間は音声合成に任せず、動画側で無音を入れる。
+// - 先頭の「…」：音声の前に無音を入れる
+// - 途中の「…」：音声ファイルを分け（B02_1, B02_2）、間に無音を入れる
+// - 末尾の「…」：そのまま（台詞の後の余白で表現）
+export type SpeechPlan = {
+  leadPause: boolean;
+  // 音声合成で読み上げるテキスト（ファイル単位）
+  parts: string[];
+  // 音声ファイル名（拡張子なし）。parts と同じ順番
+  stems: string[];
+};
+
+export const speechPlan = (line: LineItem): SpeechPlan => {
+  const leadPause = line.text.startsWith('…');
+  const body = line.text.replace(/^…+/, '');
+  const parts = body
+    .split(/…+(?=[^。、！？…]*[^。、！？…\s])/u)
+    .map((p) => p.trim())
+    .filter(Boolean);
+  const stems = parts.length > 1 ? parts.map((_, i) => `${line.id}_${i + 1}`) : [line.id];
+  return {leadPause, parts, stems};
+};
+
+// 動画が参照しうる音声ファイル名（拡張子なし）。分割前の 1 ファイル版も受け付ける
+export const audioStems = (script: Script) =>
+  listLines(script).flatMap(({line}) => {
+    const {stems} = speechPlan(line);
+    return stems.length > 1 ? [line.id, ...stems] : stems;
+  });
+
 const buildDialogue = (
   script: Script,
   scene: DialogueScene,
   audio: AudioDurations,
 ): Segment[] => {
-  const {fps, lineGapSeconds, minLineSeconds, innerVoiceMinSeconds} = script.meta;
+  const {fps, lineGapSeconds, minLineSeconds, innerVoiceMinSeconds, ellipsisPauseSeconds} =
+    script.meta;
   const toFrames = (s: number) => Math.max(1, Math.round(s * fps));
 
   const segments: Segment[] = [];
@@ -120,12 +153,37 @@ const buildDialogue = (
       case 'line': {
         setFocus(item.speaker);
         poses[item.speaker] = item.pose ?? 'front';
-        const audioSeconds = audio[item.id];
-        const base = audioSeconds ?? estimateSeconds(script, item.text);
+        const plan = speechPlan(item);
+        const lead = plan.leadPause ? ellipsisPauseSeconds : 0;
+        const ext = script.meta.audioExt;
+
+        // 音声：分割ファイルがすべて揃っていればそれを、無ければ 1 ファイル版を使う
+        let clips: {file: string; offsetFrames: number}[] | undefined;
+        let speech: number | undefined;
+        const splitReady = plan.stems.length > 1 && plan.stems.every((st) => audio[st] !== undefined);
+        if (splitReady) {
+          let t = lead;
+          clips = plan.stems.map((st, i) => {
+            if (i > 0) t += ellipsisPauseSeconds;
+            const clip = {file: `${st}.${ext}`, offsetFrames: Math.round(t * fps)};
+            t += audio[st];
+            return clip;
+          });
+          speech = t - lead;
+        } else if (audio[item.id] !== undefined) {
+          clips = [{file: `${item.id}.${ext}`, offsetFrames: Math.round(lead * fps)}];
+          speech = audio[item.id];
+        }
+        const estimated = speech === undefined;
+        const base =
+          speech ??
+          estimateSeconds(script, plan.parts.join('')) +
+            ellipsisPauseSeconds * (plan.parts.length - 1);
         // 短い相づち（「はい。」など）でも字幕が読めるよう最低表示時間を確保する
-        push('line', item, Math.max(minLineSeconds, base + lineGapSeconds), {
-          audioSeconds,
-          estimated: audioSeconds === undefined,
+        push('line', item, Math.max(minLineSeconds, lead + base + lineGapSeconds), {
+          audioSeconds: speech,
+          clips,
+          estimated,
         });
         break;
       }

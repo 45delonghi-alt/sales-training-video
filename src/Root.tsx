@@ -7,7 +7,7 @@ import {Composition, staticFile} from 'remotion';
 import {getAudioDurationInSeconds} from '@remotion/media-utils';
 import scriptJson from './script.json';
 import type {AudioDurations, Script} from './types';
-import {buildTimeline, listLines, type Timeline} from './timeline';
+import {audioStems, buildTimeline, type Timeline} from './timeline';
 import {Main} from './Main';
 
 const script = scriptJson as Script;
@@ -43,9 +43,9 @@ export const RemotionRoot: React.FC = () => {
       calculateMetadata={async () => {
         const audio: AudioDurations = {};
         await Promise.all(
-          listLines(script).map(async ({line}) => {
-            const seconds = await probeAudio(`audio/${line.id}.${audioExt}`);
-            if (seconds !== null) audio[line.id] = seconds;
+          audioStems(script).map(async (stem) => {
+            const seconds = await probeAudio(`audio/${stem}.${audioExt}`);
+            if (seconds !== null) audio[stem] = seconds;
           }),
         );
         const hasAmbient = (await probeAudio(`audio/${ambientFile}`)) !== null;

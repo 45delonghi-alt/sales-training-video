@@ -3,7 +3,7 @@ import {execFileSync} from 'node:child_process';
 import {existsSync, readFileSync} from 'node:fs';
 import {join} from 'node:path';
 import type {AudioDurations, Script} from '../src/types';
-import {listLines} from '../src/timeline';
+import {audioStems} from '../src/timeline';
 
 export const ROOT = join(import.meta.dirname, '..');
 
@@ -30,9 +30,9 @@ const probe = (file: string): number => {
 
 export const loadAudioDurations = (script: Script): AudioDurations => {
   const audio: AudioDurations = {};
-  for (const {line} of listLines(script)) {
-    const file = join(ROOT, 'public/audio', `${line.id}.${script.meta.audioExt}`);
-    if (existsSync(file)) audio[line.id] = probe(file);
+  for (const stem of audioStems(script)) {
+    const file = join(ROOT, 'public/audio', `${stem}.${script.meta.audioExt}`);
+    if (existsSync(file)) audio[stem] = probe(file);
   }
   return audio;
 };

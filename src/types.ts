@@ -9,6 +9,8 @@ export type Character = {
   color: string;
   position: 'left' | 'right';
   images: Record<Pose, string>;
+  // 音声合成・吹き込みの指示
+  voice: string;
 };
 
 export type LineItem = {
@@ -114,6 +116,7 @@ export type Script = {
     secondsPerChar: number;
     lineGapSeconds: number;
     minLineSeconds: number;
+    ellipsisPauseSeconds: number;
     innerVoiceMinSeconds: number;
     fadeSeconds: number;
     audioExt: string;
