@@ -15,7 +15,7 @@ const ffprobeArgs = (file: string) => [
 ];
 
 // システムの ffprobe を優先し、無ければ Remotion 同梱の ffprobe を使う
-const probe = (file: string): number => {
+export const probe = (file: string): number => {
   try {
     return Number(execFileSync('ffprobe', ffprobeArgs(file), {encoding: 'utf8'}).trim());
   } catch {

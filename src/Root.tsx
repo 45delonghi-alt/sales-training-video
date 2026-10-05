@@ -9,6 +9,9 @@ import scriptJson from './script.json';
 import type {AudioDurations, Script} from './types';
 import {audioStems, buildTimeline, type Timeline} from './timeline';
 import {Main} from './Main';
+import {SENSOR_META, SENSOR_SCENES} from './sensor/script';
+import {buildSensorTimeline, type SensorAudio} from './sensor/timeline';
+import {SensorVideo, type SensorProps} from './sensor/SensorVideo';
 
 const script = scriptJson as Script;
 
@@ -32,6 +35,7 @@ const probeAudio = async (path: string): Promise<number | null> => {
 export const RemotionRoot: React.FC = () => {
   const {fps, width, height, audioExt, ambientFile} = script.meta;
   return (
+    <>
     <Composition
       id="OneOnOne"
       component={Main}
@@ -56,5 +60,26 @@ export const RemotionRoot: React.FC = () => {
         };
       }}
     />
+    <Composition
+      id="PhotoSensor"
+      component={SensorVideo}
+      fps={SENSOR_META.fps}
+      width={SENSOR_META.width}
+      height={SENSOR_META.height}
+      durationInFrames={SENSOR_META.fps}
+      defaultProps={{timeline: null} as SensorProps}
+      calculateMetadata={async () => {
+        const audio: SensorAudio = {};
+        await Promise.all(
+          SENSOR_SCENES.flatMap((s) => s.lines).map(async ({id}) => {
+            const seconds = await probeAudio(`audio/sensor/${id}.mp3`);
+            if (seconds !== null) audio[id] = seconds;
+          }),
+        );
+        const timeline = buildSensorTimeline(audio);
+        return {durationInFrames: timeline.totalFrames, props: {timeline}};
+      }}
+    />
+    </>
   );
 };
