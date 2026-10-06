@@ -204,7 +204,7 @@ const SummaryScene: React.FC<{timing: SensorSceneTiming}> = ({timing}) => {
         }}
       >
         <div style={{fontSize: 46, fontWeight: 700, color: '#fff', background: SC.beam, borderRadius: 16, padding: '14px 48px'}}>
-          何を・どこで・どう検出したいか で選ぶ
+          検出したいモノと場所で選ぶ
         </div>
       </div>
       <Narration timing={timing} />

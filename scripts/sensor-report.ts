@@ -19,11 +19,11 @@ console.log(`合計\t${total.toFixed(1)}秒（上限 ${SENSOR_META.maxSeconds}�
 if (total > SENSOR_META.maxSeconds) console.warn('⚠ 上限を超えています。ナレーションを短くしてください');
 
 const esc = (v: string) => `"${v.replace(/"/g, '""')}"`;
-const rows = [['ファイル名', '場面', '読み上げるテキスト', '仮の秒数'].map(esc).join(',')];
+const rows = [['ファイル名', '場面', '字幕', '読み上げるテキスト', '秒数'].map(esc).join(',')];
 for (const s of t.scenes)
   for (const l of s.lines)
     rows.push(
-      [`${l.line.id}.mp3`, s.scene.heading ?? 'タイトル', l.line.text, sec(l.durationInFrames)].map(esc).join(','),
+      [`${l.line.id}.mp3`, s.scene.heading ?? 'タイトル', l.line.text, l.line.say ?? l.line.text, sec(l.durationInFrames)].map(esc).join(','),
     );
 writeFileSync(join(ROOT, 'sensor_narration.csv'), '﻿' + rows.join('\n') + '\n');
 console.log('sensor_narration.csv を出力しました');
