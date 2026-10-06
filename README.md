@@ -64,7 +64,7 @@ npm run render     # out/one-on-one.mp4 を書き出し
 
 ---
 
-# 研修動画「光電センサ 3つの検出方式」（約1分50秒・AIナレーション付き）
+# 研修動画「光電センサ 3つの検出方式」（約1分57秒・AIナレーション付き）
 
 オプテックス・エフエーの光電センサの検出方式（透過型／回帰反射型・透明体専用／反射型・距離設定型）を、大学生でも分かるように図解する動画です。
 同じプロジェクト内の別コンポジション `PhotoSensor` として作っています。
@@ -81,10 +81,11 @@ npm run sensor:render   # out/photo-sensor.mp4 を書き出し
 | `src/sensor/parts.tsx` | センサ本体・光の矢印・検出物などの部品 |
 | `src/sensor/SensorVideo.tsx` | 見出し・字幕・タイトル・まとめ表の共通レイアウト |
 | `deliverables/photo-sensor_draft.mp4` | 書き出し済みの試作版（字幕＋AIナレーション） |
-| `public/audio/sensor/` | ナレーション音声（ElevenLabs・声「Decoy」、eleven_multilingual_v2） |
+| `public/audio/sensor/` | ナレーション音声（ElevenLabs・声「Akari」、eleven_multilingual_v2、1.25倍速） |
 
 - 図解の動きはナレーションの行に合わせて出る（例：「遮ったら」の行で検出物が落ちてくる）
 - 音声：`public/audio/sensor/{行ID}.mp3`（例 `S3_2.mp3`）を置くと、その長さに合わせて尺が自動で伸び縮みする。読み上げ原稿は `sensor_narration.csv`
 - 音声がない場合は「読み上げる文字数 × 0.16秒」で仮の尺を出している
 - 台本の `say` は音声合成に渡す読み（「筐体→きょうたい」「BGS→ビージーエス」「三角測距→さんかくそっきょ」など）。台詞を変えたら、その行だけ同じ声で作り直して差し替える
-- 音声は前後の無音を削り、音量をそろえて（loudnorm）配置している
+- 音声は前後の無音を削り、1.25倍速にし、音量をそろえて（loudnorm）配置している
+- 読みの確認：生成した音声をつないで ElevenLabs の文字起こし（eleven_scribe_v1）にかけ、台本と照合した。方式名の「型」は「がた」と読ませるため、`say` ではかな書きにしている
