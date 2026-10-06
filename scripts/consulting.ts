@@ -148,12 +148,10 @@ const OUT_DIR = join(ROOT, 'public', script.meta.narrationDir);
 
 // 自動推定では切れ目が見つからない（間を空けずに読まれた）箇所の手動指定：文ID → Scene音声上の開始秒
 const START_OVERRIDES: Record<string, number> = {
-  // scene07：「…見分けるセンサです。」の後の間（9.94〜10.12秒）。「「投光器」、」の読点の間と取り違えやすい
-  PS_03: 10.04,
 };
 
 // 台本を書き換えて、手元の Scene 音声とは文面が違う文。録り直しが届くまで音声なし（字幕のみ）で扱う
-const RERECORD = new Set<string>(['PS_02', 'PS_06', 'S07_07']);
+const RERECORD = new Set<string>([]);
 
 const findInput = (stem: string) =>
   EXTS.map((e) => join(IMPORT_DIR, `${stem}.${e}`)).find((f) => existsSync(f));
