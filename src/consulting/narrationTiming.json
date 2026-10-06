@@ -7,13 +7,22 @@
   "consulting/audio/narration/S02_05.mp3": 2.586122,
   "consulting/audio/narration/S03_01.mp3": 10.762449,
   "consulting/audio/narration/S03_04.mp3": 5.773061,
-  "consulting/audio/narration/S04_03.mp3": 4.075102,
-  "consulting/audio/narration/S04_06.mp3": 2.272653,
+  "consulting/audio/narration/S04_01.mp3": 4.466939,
+  "consulting/audio/narration/S04_03.mp3": 4.153469,
+  "consulting/audio/narration/S04_06.mp3": 2.638367,
   "consulting/audio/narration/S05_01.mp3": 4.075102,
   "consulting/audio/narration/S05_04.mp3": 4.101224,
   "consulting/audio/narration/S06_01.mp3": 3.369796,
   "consulting/audio/narration/S06_03.mp3": 5.616327,
   "consulting/audio/narration/S06_07.mp3": 5.067755,
+  "consulting/audio/narration/PS_01.mp3": 15.307755,
+  "consulting/audio/narration/PS_05.mp3": 12.199184,
+  "consulting/audio/narration/PS_09.mp3": 13.766531,
+  "consulting/audio/narration/PS_13.mp3": 10.475102,
+  "consulting/audio/narration/PS_16.mp3": 9.613061,
+  "consulting/audio/narration/PS_19.mp3": 13.923265,
+  "consulting/audio/narration/PS_23.mp3": 7.57551,
+  "consulting/audio/narration/PS_25.mp3": 7.262041,
   "consulting/audio/narration/S07_01.mp3": 2.742857,
   "consulting/audio/narration/S07_03.mp3": 4.937143,
   "consulting/audio/narration/S07_07.mp3": 2.324898,
@@ -120,30 +129,40 @@
    "start": 4.632500000000001,
    "end": 5.731250000000001
   },
+  "S04_01": {
+   "clip": "consulting/audio/narration/S04_01.mp3",
+   "start": 0,
+   "end": 1.2964208333333334
+  },
+  "S04_02": {
+   "clip": "consulting/audio/narration/S04_01.mp3",
+   "start": 1.4296208333333333,
+   "end": 4.403887500000001
+  },
   "S04_03": {
    "clip": "consulting/audio/narration/S04_03.mp3",
    "start": 0,
-   "end": 1.1460416666666666
+   "end": 1.2584083333333334
   },
   "S04_04": {
    "clip": "consulting/audio/narration/S04_03.mp3",
-   "start": 1.4882249999999997,
-   "end": 2.758575
+   "start": 1.5871250000000003,
+   "end": 2.9017083333333327
   },
   "S04_05": {
    "clip": "consulting/audio/narration/S04_03.mp3",
-   "start": 2.926733333333333,
-   "end": 4.033716666666667
+   "start": 3.1570166666666672,
+   "end": 4.1102333333333325
   },
   "S04_06": {
    "clip": "consulting/audio/narration/S04_06.mp3",
    "start": 0,
-   "end": 0.4292416666666658
+   "end": 0.5102499999999995
   },
   "S04_07": {
    "clip": "consulting/audio/narration/S04_06.mp3",
-   "start": 0.5802833333333343,
-   "end": 2.226525
+   "start": 1.1658333333333342,
+   "end": 2.589416666666666
   },
   "S05_01": {
    "clip": "consulting/audio/narration/S05_01.mp3",
@@ -214,6 +233,151 @@
    "clip": "consulting/audio/narration/S06_07.mp3",
    "start": 1.6993333333333327,
    "end": 5.016750000000001
+  },
+  "PS_01": {
+   "clip": "consulting/audio/narration/PS_01.mp3",
+   "start": 0,
+   "end": 3.8156608333333337
+  },
+  "PS_02": {
+   "clip": "consulting/audio/narration/PS_01.mp3",
+   "start": 3.748994166666667,
+   "end": 8.188819166666667
+  },
+  "PS_03": {
+   "clip": "consulting/audio/narration/PS_01.mp3",
+   "start": 8.188819166666667,
+   "end": 11.6969025
+  },
+  "PS_04": {
+   "clip": "consulting/audio/narration/PS_01.mp3",
+   "start": 12.047985833333334,
+   "end": 15.2606525
+  },
+  "PS_05": {
+   "clip": "consulting/audio/narration/PS_05.mp3",
+   "start": 0,
+   "end": 3.7866666666666644
+  },
+  "PS_06": {
+   "clip": "consulting/audio/narration/PS_05.mp3",
+   "start": 3.7459166666666674,
+   "end": 6.235083333333333
+  },
+  "PS_07": {
+   "clip": "consulting/audio/narration/PS_05.mp3",
+   "start": 6.268499999999999,
+   "end": 10.137916666666666
+  },
+  "PS_08": {
+   "clip": "consulting/audio/narration/PS_05.mp3",
+   "start": 10.4665,
+   "end": 12.164
+  },
+  "PS_09": {
+   "clip": "consulting/audio/narration/PS_09.mp3",
+   "start": 0,
+   "end": 3.6053333333333333
+  },
+  "PS_10": {
+   "clip": "consulting/audio/narration/PS_09.mp3",
+   "start": 3.6000833333333366,
+   "end": 6.542583333333329
+  },
+  "PS_11": {
+   "clip": "consulting/audio/narration/PS_09.mp3",
+   "start": 6.824999999999998,
+   "end": 10.735916666666666
+  },
+  "PS_12": {
+   "clip": "consulting/audio/narration/PS_09.mp3",
+   "start": 11.063000000000004,
+   "end": 13.708083333333335
+  },
+  "PS_13": {
+   "clip": "consulting/audio/narration/PS_13.mp3",
+   "start": 0,
+   "end": 3.086500000000001
+  },
+  "PS_14": {
+   "clip": "consulting/audio/narration/PS_13.mp3",
+   "start": 3.043583333333337,
+   "end": 6.498333333333335
+  },
+  "PS_15": {
+   "clip": "consulting/audio/narration/PS_13.mp3",
+   "start": 6.767083333333339,
+   "end": 10.427499999999998
+  },
+  "PS_16": {
+   "clip": "consulting/audio/narration/PS_16.mp3",
+   "start": 0,
+   "end": 3.6367500000000064
+  },
+  "PS_17": {
+   "clip": "consulting/audio/narration/PS_16.mp3",
+   "start": 3.927500000000007,
+   "end": 6.351333333333335
+  },
+  "PS_18": {
+   "clip": "consulting/audio/narration/PS_16.mp3",
+   "start": 6.532416666666663,
+   "end": 9.54900000000001
+  },
+  "PS_19": {
+   "clip": "consulting/audio/narration/PS_19.mp3",
+   "start": 0,
+   "end": 2.5557500000000033
+  },
+  "PS_20": {
+   "clip": "consulting/audio/narration/PS_19.mp3",
+   "start": 2.6291666666666678,
+   "end": 5.1990000000000105
+  },
+  "PS_21": {
+   "clip": "consulting/audio/narration/PS_19.mp3",
+   "start": 5.560666666666675,
+   "end": 10.495583333333336
+  },
+  "PS_22": {
+   "clip": "consulting/audio/narration/PS_19.mp3",
+   "start": 10.828916666666675,
+   "end": 13.865333333333338
+  },
+  "PS_23": {
+   "clip": "consulting/audio/narration/PS_23.mp3",
+   "start": 0,
+   "end": 3.221583333333342
+  },
+  "PS_24": {
+   "clip": "consulting/audio/narration/PS_23.mp3",
+   "start": 3.303,
+   "end": 7.525833333333338
+  },
+  "PS_25": {
+   "clip": "consulting/audio/narration/PS_25.mp3",
+   "start": 0,
+   "end": 0.741666666666679
+  },
+  "PS_26": {
+   "clip": "consulting/audio/narration/PS_25.mp3",
+   "start": 0.9341666666666745,
+   "end": 2.6200000000000045
+  },
+  "PS_27": {
+   "clip": "consulting/audio/narration/PS_25.mp3",
+   "start": 2.9416666666666678,
+   "end": 3.937500000000007
+  },
+  "PS_28": {
+   "clip": "consulting/audio/narration/PS_25.mp3",
+   "start": 4.072500000000001,
+   "end": 5.37333333333334
+  },
+  "PS_29": {
+   "clip": "consulting/audio/narration/PS_25.mp3",
+   "start": 5.489166666666669,
+   "end": 7.216666666666676
   },
   "S07_01": {
    "clip": "consulting/audio/narration/S07_01.mp3",
