@@ -36,12 +36,13 @@ export const Scene04Question: React.FC<{spec: SceneSpec<'Scene04Question'>}> = (
       <div
         style={{
           position: 'absolute',
-          top: 150,
+          top: 130,
           left: 0,
           right: 0,
           textAlign: 'center',
           whiteSpace: 'pre-line',
-          fontSize: 92,
+          // 3行の問いは文字を小さく
+          fontSize: v.question.split('\n').length > 2 ? 70 : 92,
           fontWeight: 900,
           lineHeight: 1.3,
           color: C.white,

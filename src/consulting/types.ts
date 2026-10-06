@@ -8,8 +8,8 @@ export type SceneId =
   | 'Scene04Question'
   | 'Scene05CustomerGoal'
   | 'Scene06Impact'
-  | 'Scene07YourMission'
-  | 'Scene08SensorOptions'
+  | 'Scene07SensorBasics'
+  | 'Scene08YourMission'
   | 'Scene09Ending';
 
 export type NarrationLine = {
@@ -34,7 +34,21 @@ export type Cue = {
   offset?: number;
 };
 
-export type SensorKind = 'through' | 'retro' | 'retroClear' | 'diffuse' | 'bgs';
+// 光電センサの原理図の種類
+export type SensorDiagramKind = 'basic' | 'through' | 'retro' | 'retroClear' | 'diffuse' | 'bgs';
+
+// センサ解説の1ページ（start の文から次のページの start まで表示）
+export type SensorPage = {
+  start: string;
+  tag?: string;
+  title: string;
+  diagram?: SensorDiagramKind;
+  // 原理図の動き（モノが光をさえぎる・黒いモノに変わる・判定ラインを出す 等）のきっかけ
+  action?: Cue;
+  caption?: string;
+  result?: string;
+  points?: {text: string; tone: 'plus' | 'minus' | 'info'; at: string}[];
+};
 
 export type Visuals = {
   Scene01Opening: {
@@ -64,17 +78,17 @@ export type Visuals = {
     surfaceTag: {label: string; text: string};
     rootTag: {label: string; text: string};
   };
-  Scene07YourMission: {
+  Scene07SensorBasics: {
+    pages: SensorPage[];
+    summary: {method: string; sub?: boolean; when: string; note: string}[];
+    wrong: string;
+    right: string;
+  };
+  Scene08YourMission: {
     label: string;
     negation: string;
     steps: {label: string; note: string}[];
     firstStep: {badge: string; text: string};
-  };
-  Scene08SensorOptions: {
-    heading: string;
-    sensors: {kind: SensorKind; name: string; sub?: string; desc: string}[];
-    wrong: string;
-    right: string;
   };
   Scene09Ending: {
     catchCopy: string[];
@@ -90,8 +104,8 @@ export type Animations = {
   Scene04Question: {options: Cue; spoken: {option: number; cue: Cue}[]; message: Cue};
   Scene05CustomerGoal: {left: Cue; leftDown: Cue; right: Cue; quote: Cue};
   Scene06Impact: {chain: Cue[]; surface: Cue; root: Cue};
-  Scene07YourMission: {negation: Cue; steps: Cue[]; firstStep: Cue};
-  Scene08SensorOptions: {cards: Cue; wrong: Cue; right: Cue};
+  Scene07SensorBasics: {summaryRows: Cue[]; wrong: Cue; right: Cue};
+  Scene08YourMission: {negation: Cue; steps: Cue[]; firstStep: Cue};
   Scene09Ending: {english: Cue; brand: Cue};
 };
 

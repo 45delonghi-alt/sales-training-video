@@ -19,8 +19,8 @@ import {Scene03Mission} from './scenes/Scene03Mission';
 import {Scene04Question} from './scenes/Scene04Question';
 import {Scene05CustomerGoal} from './scenes/Scene05CustomerGoal';
 import {Scene06Impact} from './scenes/Scene06Impact';
-import {Scene07YourMission} from './scenes/Scene07YourMission';
-import {Scene08SensorOptions} from './scenes/Scene08SensorOptions';
+import {Scene07SensorBasics} from './scenes/Scene07SensorBasics';
+import {Scene08YourMission} from './scenes/Scene08YourMission';
 import {Scene09Ending} from './scenes/Scene09Ending';
 
 export type ConsultingProps = {
@@ -52,10 +52,10 @@ const SceneView: React.FC<{spec: AnySceneSpec}> = ({spec}) => {
       return <Scene05CustomerGoal spec={spec as SceneSpec<'Scene05CustomerGoal'>} />;
     case 'Scene06Impact':
       return <Scene06Impact spec={spec as SceneSpec<'Scene06Impact'>} />;
-    case 'Scene07YourMission':
-      return <Scene07YourMission spec={spec as SceneSpec<'Scene07YourMission'>} />;
-    case 'Scene08SensorOptions':
-      return <Scene08SensorOptions spec={spec as SceneSpec<'Scene08SensorOptions'>} />;
+    case 'Scene07SensorBasics':
+      return <Scene07SensorBasics spec={spec as SceneSpec<'Scene07SensorBasics'>} />;
+    case 'Scene08YourMission':
+      return <Scene08YourMission spec={spec as SceneSpec<'Scene08YourMission'>} />;
     case 'Scene09Ending':
       return <Scene09Ending spec={spec as SceneSpec<'Scene09Ending'>} />;
   }

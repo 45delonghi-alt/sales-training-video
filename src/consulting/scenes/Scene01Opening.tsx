@@ -5,7 +5,7 @@ import {C} from '../theme';
 import {Backdrop} from '../components/Backdrop';
 import {useCue} from '../components/SceneShell';
 import {appear, fadeOut, keyZoom, progress} from '../components/anim';
-import {Icon} from '../components/SensorDiagram';
+import {Icon} from '../components/Icon';
 
 // 表紙 → 「営業＝商品紹介・価格提示」という一般的なイメージ → 「それだけではない。」
 export const Scene01Opening: React.FC<{spec: SceneSpec<'Scene01Opening'>}> = ({spec}) => {

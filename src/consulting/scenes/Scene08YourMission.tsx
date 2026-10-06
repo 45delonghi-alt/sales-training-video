@@ -7,7 +7,7 @@ import {useCue} from '../components/SceneShell';
 import {appear, keyZoom, progress} from '../components/anim';
 
 // YOUR MISSION：1 聞く／2 考える／3 課題を見つける／4 提案する ＋ 最初の10分はヒアリング
-export const Scene07YourMission: React.FC<{spec: SceneSpec<'Scene07YourMission'>}> = ({spec}) => {
+export const Scene08YourMission: React.FC<{spec: SceneSpec<'Scene08YourMission'>}> = ({spec}) => {
   const frame = useCurrentFrame();
   const cue = useCue();
   const {visual: v, animation: a} = spec;
@@ -24,7 +24,7 @@ export const Scene07YourMission: React.FC<{spec: SceneSpec<'Scene07YourMission'>
     <AbsoluteFill>
       <Backdrop
         tone="dark"
-        sceneNo={7}
+        sceneNo={8}
         decor={<RedSlash progress={progress(frame, 0, 20)} left={1400} width={100} opacity={0.85} />}
       />
 

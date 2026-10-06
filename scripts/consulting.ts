@@ -148,9 +148,12 @@ const OUT_DIR = join(ROOT, 'public', script.meta.narrationDir);
 
 // 自動推定では切れ目が見つからない（間を空けずに読まれた）箇所の手動指定：文ID → Scene音声上の開始秒
 const START_OVERRIDES: Record<string, number> = {
-  // 「では、皆さんなら、」と「最初に何を確認しますか？」が続けて読まれているため、声が最も小さくなる位置
-  S04_02: 1.33,
+  // 旧 scene04.mp3：問いかけ（S04_01〜02）の後の間（3.04〜3.60秒）の出口
+  S04_03: 3.52,
 };
+
+// 台本を書き換えて、手元の Scene 音声とは文面が違う文。録り直しが届くまで音声なし（字幕のみ）で扱う
+const RERECORD = new Set<string>(['S04_01', 'S04_02']);
 
 const findInput = (stem: string) =>
   EXTS.map((e) => join(IMPORT_DIR, `${stem}.${e}`)).find((f) => existsSync(f));
@@ -311,6 +314,11 @@ const importAudio = () => {
         return;
       }
       if (!ranges[k]) return;
+      if (RERECORD.has(line.id)) {
+        flush();
+        console.log(`  ${line.id}：台本変更のため録り直し待ち（字幕のみ）`);
+        return;
+      }
       group.push(ranges[k]);
       if (line.hold) flush();
     });
