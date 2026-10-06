@@ -180,45 +180,79 @@ const silences = (file: string, minSeconds: number) => {
       start = null;
     }
   }
-  return list;
+  // 息つぎ・ノイズのようなごく短い音（0.2秒未満）で区切られた無音は、1つの間としてまとめる
+  const merged: [number, number][] = [];
+  for (const s of list) {
+    const last = merged[merged.length - 1];
+    if (last && s[0] - last[1] < 0.2) last[1] = s[1];
+    else merged.push([...s]);
+  }
+  return merged;
 };
 
-// Scene単位の音声を文ごとに分ける。文字数の比から各文の境目を予測し、その近くの「長めの無音」で切る
+// Scene単位の音声を文ごとに分ける。
+// 無音の候補から「文の数−1」個の切れ目を選ぶ。各文の長さが文字数比の予測に最も近く、
+// かつ長い無音で切れる組み合わせを、動的計画法でまとめて選ぶ（1か所の誤りが後ろに波及しない）
 const splitScene = (file: string, spec: (typeof script.scenes)[number]) => {
   const lines = spec.narration;
+  const n = lines.length;
   const total = probe(file);
-  const sil = silences(file, 0.12);
+  const sil = silences(file, 0.06);
   const head = sil.length && sil[0][0] < 0.05 ? sil[0][1] : 0;
   const tail = sil.length && sil[sil.length - 1][1] > total - 0.05 ? sil[sil.length - 1][0] : total;
-  const inner = sil.filter(([a, b]) => a > head + 0.05 && b < tail - 0.05);
-  if (inner.length < lines.length - 1) {
-    throw new Error(`${spec.id}: 文と文の間の無音が足りません（必要 ${lines.length - 1}／検出 ${inner.length}）。原稿の空行（間）を確認してください`);
+  const cand = sil
+    .filter(([a, b]) => a > head + 0.05 && b < tail - 0.05)
+    .map(([a, b]) => ({mid: (a + b) / 2, len: b - a, a, b}));
+  if (cand.length < n - 1) {
+    throw new Error(`${spec.id}: 文と文の間の無音が足りません（必要 ${n - 1}／検出 ${cand.length}）。文ごとの音声で送ってください`);
   }
   const weights = lines.map((l) => [...speechText(l).replace(/[「」『』\s]/g, '')].length);
-  const sum = weights.reduce((a, b) => a + b, 0);
-  const cuts: number[] = [];
-  let acc = 0;
-  let from = 0;
-  for (let k = 0; k < lines.length - 1; k++) {
-    acc += weights[k];
-    const expected = head + ((tail - head) * acc) / sum;
-    const remaining = lines.length - 2 - k;
-    // 後の境目のために候補を残しつつ、予測位置に近く・長い無音を選ぶ
-    let best = -1;
-    let bestScore = Infinity;
-    for (let j = from; j < inner.length - remaining; j++) {
-      const [a, b] = inner[j];
-      const score = Math.abs((a + b) / 2 - expected) - 1.5 * (b - a);
-      if (score < bestScore) {
-        bestScore = score;
-        best = j;
+  const sum = weights.reduce((x, y) => x + y, 0);
+  const expected = weights.map((w) => ((tail - head) * w) / sum);
+  const segCost = (k: number, from: number, to: number) => (to - from - expected[k]) ** 2 / expected[k];
+  const GAP_BONUS = 2;
+  // best[k][j]：k+1 番目の切れ目を候補 j に置いたときの最小コスト
+  const best: number[][] = [];
+  const prev: number[][] = [];
+  for (let k = 0; k < n - 1; k++) {
+    best.push(new Array(cand.length).fill(Infinity));
+    prev.push(new Array(cand.length).fill(-1));
+    for (let j = k; j < cand.length - (n - 2 - k); j++) {
+      const bonus = -GAP_BONUS * cand[j].len;
+      if (k === 0) {
+        best[k][j] = segCost(0, head, cand[j].mid) + bonus;
+        continue;
+      }
+      for (let i = k - 1; i < j; i++) {
+        if (best[k - 1][i] === Infinity) continue;
+        const c = best[k - 1][i] + segCost(k, cand[i].mid, cand[j].mid) + bonus;
+        if (c < best[k][j]) {
+          best[k][j] = c;
+          prev[k][j] = i;
+        }
       }
     }
-    cuts.push((inner[best][0] + inner[best][1]) / 2);
-    from = best + 1;
   }
-  const bounds = [head, ...cuts, Math.min(total, tail + 0.15)];
-  lines.forEach((l, k) => writeLine(file, l.id, Math.max(0, bounds[k] - 0.05), bounds[k + 1]));
+  let j = -1;
+  let min = Infinity;
+  best[n - 2].forEach((c, idx) => {
+    const v = c + segCost(n - 1, cand[idx].mid, tail);
+    if (v < min) {
+      min = v;
+      j = idx;
+    }
+  });
+  const picked: number[] = [];
+  for (let k = n - 2; k >= 0; k--) {
+    picked.unshift(j);
+    j = prev[k][j];
+  }
+  // 文の終わりは無音の入口＋0.15秒、次の文の始まりは無音の出口−0.08秒で切る（間にある息つぎ等を含めない）
+  const gaps = picked.map((idx) => cand[idx]);
+  const starts = [Math.max(0, head - 0.05), ...gaps.map((g) => Math.max(g.a, g.b - 0.08))];
+  const ends = [...gaps.map((g) => Math.min(g.b, g.a + 0.15)), Math.min(total, tail + 0.15)];
+  lines.forEach((l, k) => writeLine(file, l.id, starts[k], ends[k]));
+  const bounds = [head, ...gaps.map((g) => g.mid), tail];
   return lines.map((l, k) => `${l.id} ${(bounds[k + 1] - bounds[k]).toFixed(1)}秒 ${speechText(l)}`);
 };
 
