@@ -8,7 +8,10 @@
     "durations": "tsx scripts/durations.ts",
     "csv": "tsx scripts/export-lines-csv.ts",
     "render": "remotion render OneOnOne out/one-on-one.mp4",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "consulting:durations": "tsx scripts/consulting.ts durations",
+    "consulting:csv": "tsx scripts/consulting.ts csv",
+    "render:consulting": "remotion render ConsultingSales out/consulting-sales.mp4"
   },
   "dependencies": {
     "@fontsource/noto-sans-jp": "5.3.0",

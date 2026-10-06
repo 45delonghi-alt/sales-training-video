@@ -9,6 +9,7 @@ import scriptJson from './script.json';
 import type {AudioDurations, Script} from './types';
 import {audioStems, buildTimeline, type Timeline} from './timeline';
 import {Main} from './Main';
+import {ConsultingSalesComposition} from './consulting/Composition';
 
 const script = scriptJson as Script;
 
@@ -32,6 +33,7 @@ const probeAudio = async (path: string): Promise<number | null> => {
 export const RemotionRoot: React.FC = () => {
   const {fps, width, height, audioExt, ambientFile} = script.meta;
   return (
+    <>
     <Composition
       id="OneOnOne"
       component={Main}
@@ -56,5 +58,8 @@ export const RemotionRoot: React.FC = () => {
         };
       }}
     />
+    {/* 新卒採用向け「コンサルティング営業体験」導入動画 */}
+    <ConsultingSalesComposition />
+    </>
   );
 };

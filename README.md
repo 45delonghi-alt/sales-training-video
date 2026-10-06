@@ -61,3 +61,43 @@ npm run render     # out/one-on-one.mp4 を書き出し
 
 - 登場人物・社名・評価シートはすべて架空です。実在の社員・取引先の名前や顔は使わないでください。
 - 評価シートUIの「行動計画」「社内連携」は画面の見た目を整えるための架空項目です（本人・上長とも同点）。
+
+---
+
+# 新卒採用「コンサルティング営業体験」導入動画
+
+学生の「営業＝商品を売る仕事」というイメージを、「聞く → 考える → 課題を見つける → 提案する仕事」へ変えるための導入動画（約3分10秒）。
+上の1on1研修動画とは独立したCompositionです（`ConsultingSales`）。既存ファイルは `src/Root.tsx` に登録を1件足しただけです。
+
+## 使い方
+
+```bash
+npm run dev                    # Remotion Studio で「ConsultingSales」を選ぶ
+npm run consulting:durations   # Sceneごとの尺（音声の長さから自動算出）
+npm run consulting:csv         # 音声合成用ナレーション一覧 consulting_narration.csv を出力
+npm run render:consulting      # out/consulting-sales.mp4 を書き出し
+```
+
+## 構成
+
+| ファイル | 役割 |
+|---|---|
+| `src/consulting/script.ts` | 台本。Sceneごとに narration（字幕つき）/ visual / animation / 尺の最低値 |
+| `src/consulting/types.ts` | 台本の型 |
+| `src/consulting/timeline.ts` | 音声の長さ → 各Scene・字幕・演出きっかけのフレームを算出 |
+| `src/consulting/components/` | 背景、字幕、コンベア線画、センサ原理図など共通部品 |
+| `src/consulting/scenes/` | Scene01Opening 〜 Scene09Ending |
+| `public/consulting/` | 表紙画像、ナレーション音声、BGM |
+
+## 尺の決まり方
+
+- Scene の尺 ＝ 冒頭の余白（leadIn）＋ Σ（ナレーション＋文後の間 pauseAfter）＋ 末尾の余白（tail）。`minSeconds` に満たなければ末尾を延ばす
+- ナレーション：`public/consulting/audio/narration/{ID}.mp3` があればその長さ、無ければ「文字数 × 0.15秒」の仮の長さ
+- 演出は「どのナレーションの開始／終了か」（Cue）で指定しているため、音声を録り直しても画面とずれない
+- 字幕は1文の音声時間を、字幕の文字数比で割り振る。重要語（聞く／考える／課題／提案／本当の課題）は自動で赤・太字
+
+## 素材の差し替え
+
+- ナレーション：同名のmp3を置き換えるだけ。読み間違い対策の読み（例：「10分」→「じゅっぷん」）は `speech` に書く
+- BGM：`public/consulting/audio/bgm.mp3` を差し替え（現在はffmpegで合成した仮BGM）。音量は `bgmVolume`、ナレーション中の下げ幅は `bgmDuck`
+- ロゴ：エンディングの「OPTEX FA」は文字で組んだ仮表記。正式ロゴを受領したら `Scene09Ending.tsx` を画像に差し替え
