@@ -1,0 +1,9 @@
+# 実行時に生成されるファイル（個人の仮想売買記録・キャッシュ）
+data/*
+logs/*
+reports/*
+!data/.gitkeep
+!logs/.gitkeep
+!reports/.gitkeep
+__pycache__/
+.venv/

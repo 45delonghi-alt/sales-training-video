@@ -1,0 +1,10 @@
+# 4100_TO_100000_CHALLENGE（Python 3.11 以上推奨）
+pandas>=2.2
+numpy>=1.26
+yfinance>=0.2.54
+requests>=2.31
+xlrd>=2.0.1          # JPX上場銘柄一覧(.xls)の読み込み
+openpyxl>=3.1
+streamlit>=1.50
+plotly>=5.20
+tzdata>=2024.1       # Windowsで日本時間(Asia/Tokyo)を扱うために必要
