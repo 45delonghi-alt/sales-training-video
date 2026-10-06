@@ -2,8 +2,10 @@
 //   npm run consulting:durations … 各Sceneの尺の一覧
 //   npm run consulting:csv       … 音声合成用のナレーション一覧（consulting_narration.csv）
 //   npm run consulting:sheet     … 印刷用のナレーション台本（out/consulting_narration.html → PDF化）
-import {execFileSync} from 'node:child_process';
-import {existsSync, writeFileSync} from 'node:fs';
+//   npm run consulting:ondoku    … 音読さん等に貼り付ける原稿（out/ondoku/）
+//   npm run consulting:import    … 外部の音声合成で作った音声を取り込む（audio_import/ → 文ごとに分割・整音）
+import {execFileSync, spawnSync} from 'node:child_process';
+import {existsSync, mkdirSync, readdirSync, writeFileSync} from 'node:fs';
 import {join} from 'node:path';
 import {script} from '../src/consulting/script';
 import {allLines, buildTimeline, speechText} from '../src/consulting/timeline';
@@ -116,7 +118,7 @@ th:nth-child(1){width:52px}th:nth-child(2){width:40px}th:nth-child(4){width:30%}
 .missing{color:#fff;background:#E60012;padding:1px 4px;font-size:8pt;font-weight:700;}
 </style></head><body>
 <header><h1>コンサルティング営業体験 導入動画｜ナレーション台本</h1>
-<p>全${tl.scenes.reduce((n, s) => n + s.lines.length, 0)}文／総尺 ${fmt(total)}／声：Kuni（ElevenLabs, eleven_multilingual_v2）／開始時刻は動画全体の経過時間（目安）</p></header>
+<p>全${tl.scenes.reduce((n, s) => n + s.lines.length, 0)}文／総尺 ${fmt(total)}／声：${esc(script.meta.narrator)}／開始時刻は動画全体の経過時間（目安）</p></header>
 ${sections}
 </body></html>`;
   const out = join(ROOT, 'out', 'consulting_narration.html');
@@ -124,6 +126,127 @@ ${sections}
   console.log(`出力しました：${out}`);
 };
 
-const command = ({durations, csv, sheet} as Record<string, () => void>)[process.argv[2]];
+// 音読さん等に貼り付ける原稿。Sceneごとのファイルと、全文を1つにしたファイルを出す。
+// 1行＝1文。文と文の間は空行を入れ、読み上げ側で間が空くようにしている（取り込み時の分割に使う）
+const ondoku = () => {
+  const dir = join(ROOT, 'out', 'ondoku');
+  mkdirSync(dir, {recursive: true});
+  const all: string[] = [];
+  script.scenes.forEach((spec, i) => {
+    const no = String(i + 1).padStart(2, '0');
+    const body = spec.narration.map((l) => speechText(l)).join('\n\n');
+    writeFileSync(join(dir, `scene${no}.txt`), body + '\n');
+    all.push(`【scene${no}｜${spec.name}】\n\n${body}`);
+  });
+  writeFileSync(join(dir, 'all.txt'), all.join('\n\n\n') + '\n');
+  console.log(`出力しました：${dir}（scene01〜${String(script.scenes.length).padStart(2, '0')}.txt と all.txt）`);
+};
+
+// 取り込み元：audio_import/ に次のどちらかを置く（mp3 / wav / m4a）
+//   ・文ごと：S01_01.mp3 など（ナレーションIDと同じ名前）
+//   ・Sceneごと：scene01.mp3 など（原稿 scene01.txt を読み上げたもの）→ 無音の位置で文ごとに自動分割
+// 出力：public/consulting/audio/narration/{ID}.mp3（前後の無音を詰め、音量をそろえる）
+const IMPORT_DIR = join(ROOT, 'audio_import');
+const EXTS = ['mp3', 'wav', 'm4a'];
+const CLEAN = [
+  'silenceremove=start_periods=1:start_threshold=-45dB:start_silence=0.03',
+  'areverse',
+  'silenceremove=start_periods=1:start_threshold=-45dB:start_silence=0.08',
+  'areverse',
+  'loudnorm=I=-16:TP=-1.5:LRA=11',
+  'aresample=44100',
+].join(',');
+
+const findInput = (stem: string) =>
+  EXTS.map((e) => join(IMPORT_DIR, `${stem}.${e}`)).find((f) => existsSync(f));
+
+const writeLine = (src: string, id: string, from?: number, to?: number) => {
+  const out = join(ROOT, 'public', script.meta.narrationDir, `${id}.${script.meta.audioExt}`);
+  const range = from === undefined ? [] : ['-ss', from.toFixed(3), '-to', (to as number).toFixed(3)];
+  execFileSync('ffmpeg', ['-v', 'error', '-y', ...range, '-i', src, '-af', CLEAN, '-ac', '1', '-b:a', '128k', out]);
+};
+
+// 無音区間 [開始, 終了] の一覧
+const silences = (file: string, minSeconds: number) => {
+  const r = spawnSync('ffmpeg', ['-i', file, '-af', `silencedetect=noise=-40dB:d=${minSeconds}`, '-f', 'null', '-'], {
+    encoding: 'utf8',
+  });
+  const list: [number, number][] = [];
+  let start: number | null = null;
+  for (const m of r.stderr.matchAll(/silence_(start|end): ([\d.]+)/g)) {
+    if (m[1] === 'start') start = Number(m[2]);
+    else if (start !== null) {
+      list.push([start, Number(m[2])]);
+      start = null;
+    }
+  }
+  return list;
+};
+
+// Scene単位の音声を文ごとに分ける。文字数の比から各文の境目を予測し、その近くの「長めの無音」で切る
+const splitScene = (file: string, spec: (typeof script.scenes)[number]) => {
+  const lines = spec.narration;
+  const total = probe(file);
+  const sil = silences(file, 0.12);
+  const head = sil.length && sil[0][0] < 0.05 ? sil[0][1] : 0;
+  const tail = sil.length && sil[sil.length - 1][1] > total - 0.05 ? sil[sil.length - 1][0] : total;
+  const inner = sil.filter(([a, b]) => a > head + 0.05 && b < tail - 0.05);
+  if (inner.length < lines.length - 1) {
+    throw new Error(`${spec.id}: 文と文の間の無音が足りません（必要 ${lines.length - 1}／検出 ${inner.length}）。原稿の空行（間）を確認してください`);
+  }
+  const weights = lines.map((l) => [...speechText(l).replace(/[「」『』\s]/g, '')].length);
+  const sum = weights.reduce((a, b) => a + b, 0);
+  const cuts: number[] = [];
+  let acc = 0;
+  let from = 0;
+  for (let k = 0; k < lines.length - 1; k++) {
+    acc += weights[k];
+    const expected = head + ((tail - head) * acc) / sum;
+    const remaining = lines.length - 2 - k;
+    // 後の境目のために候補を残しつつ、予測位置に近く・長い無音を選ぶ
+    let best = -1;
+    let bestScore = Infinity;
+    for (let j = from; j < inner.length - remaining; j++) {
+      const [a, b] = inner[j];
+      const score = Math.abs((a + b) / 2 - expected) - 1.5 * (b - a);
+      if (score < bestScore) {
+        bestScore = score;
+        best = j;
+      }
+    }
+    cuts.push((inner[best][0] + inner[best][1]) / 2);
+    from = best + 1;
+  }
+  const bounds = [head, ...cuts, Math.min(total, tail + 0.15)];
+  lines.forEach((l, k) => writeLine(file, l.id, Math.max(0, bounds[k] - 0.05), bounds[k + 1]));
+  return lines.map((l, k) => `${l.id} ${(bounds[k + 1] - bounds[k]).toFixed(1)}秒 ${speechText(l)}`);
+};
+
+const importAudio = () => {
+  if (!existsSync(IMPORT_DIR)) {
+    mkdirSync(IMPORT_DIR, {recursive: true});
+    console.log(`${IMPORT_DIR} を作成しました。ここに音声を置いてから、もう一度実行してください。`);
+    return;
+  }
+  console.log(`取り込み元：${IMPORT_DIR}（${readdirSync(IMPORT_DIR).length}ファイル）`);
+  script.scenes.forEach((spec, i) => {
+    const sceneFile = findInput(`scene${String(i + 1).padStart(2, '0')}`);
+    if (sceneFile) {
+      console.log(`■ ${spec.id}：Scene音声を${spec.narration.length}文に分割`);
+      splitScene(sceneFile, spec).forEach((r) => console.log('  ' + r));
+    }
+    // 文ごとのファイルがあれば、そちらを優先して上書き（分割がずれた文だけ差し替えたいとき用）
+    for (const l of spec.narration) {
+      const f = findInput(l.id);
+      if (f) {
+        writeLine(f, l.id);
+        console.log(`  ${l.id}：文ごとの音声を取り込み`);
+      }
+    }
+  });
+  console.log('完了。npm run consulting:durations で尺を確認できます。');
+};
+
+const command = ({durations, csv, sheet, ondoku, import: importAudio} as Record<string, () => void>)[process.argv[2]];
 if (command) command();
-else console.error('usage: consulting.ts durations|csv');
+else console.error('usage: consulting.ts durations|csv|sheet|ondoku|import');

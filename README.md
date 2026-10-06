@@ -98,6 +98,16 @@ npm run render:consulting      # out/consulting-sales.mp4 を書き出し
 
 ## 素材の差し替え
 
-- ナレーション：同名のmp3を置き換えるだけ。読み間違い対策の読み（例：「10分」→「じゅっぷん」）は `speech` に書く
+- ナレーション：同名のmp3を置き換えるだけ（下の「音読さんで作り直す」も参照）。読み間違い対策の読み（例：「10分」→「じゅっぷん」）は `speech` に書く
 - BGM：`public/consulting/audio/bgm.mp3` を差し替え（現在はffmpegで合成した仮BGM）。音量は `bgmVolume`、ナレーション中の下げ幅は `bgmDuck`
 - ロゴ：エンディングの「OPTEX FA」は文字で組んだ仮表記。正式ロゴを受領したら `Scene09Ending.tsx` を画像に差し替え
+
+## 音読さん（など外部の読み上げソフト）で作り直す
+
+1. `npm run consulting:ondoku` で `out/ondoku/` に原稿を出す（scene01〜09.txt と all.txt。1行＝1文、文の間は空行）
+2. 音読さんで Scene ごとに読み上げ、`scene01.mp3` 〜 `scene09.mp3` の名前で `audio_import/` に保存
+   - 声・話速は全Sceneで同じ設定にする。文の間に無音が入ることが分割の条件
+   - 1文だけ録り直すときは `S04_07.mp3` のように文IDの名前で置けば、その文だけ差し替わる
+3. `npm run consulting:import` で文ごとに自動分割し、前後の無音を詰めて音量をそろえ、`public/consulting/audio/narration/` に出力
+4. `npm run consulting:durations` で尺を確認 → `npm run render:consulting`
+5. `script.ts` の `meta.narrator` を音読さんの声の名前に書き換える（台本PDFに載る）

@@ -14,6 +14,7 @@ export const script: ConsultingScript = {
     minLineSeconds: 1.0,
     defaultPause: 0.3,
     fadeSeconds: 0.5,
+    narrator: 'Kuni（ElevenLabs）',
     narrationDir: 'consulting/audio/narration',
     audioExt: 'mp3',
     bgmFile: 'consulting/audio/bgm.mp3',

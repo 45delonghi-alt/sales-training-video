@@ -12,6 +12,8 @@
     "consulting:durations": "tsx scripts/consulting.ts durations",
     "consulting:csv": "tsx scripts/consulting.ts csv",
     "consulting:sheet": "tsx scripts/consulting.ts sheet",
+    "consulting:ondoku": "tsx scripts/consulting.ts ondoku",
+    "consulting:import": "tsx scripts/consulting.ts import",
     "render:consulting": "remotion render ConsultingSales out/consulting-sales.mp4"
   },
   "dependencies": {

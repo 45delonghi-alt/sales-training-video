@@ -123,6 +123,8 @@ export type ConsultingScript = {
     // 既定の文間（pauseAfter 省略時）
     defaultPause: number;
     fadeSeconds: number;
+    // 台本PDFに載せる声の名前（音声を作り直したら書き換える）
+    narrator: string;
     narrationDir: string;
     audioExt: string;
     bgmFile: string;
