@@ -22,13 +22,12 @@ export const SceneShell: React.FC<{timing: SceneTiming; children: React.ReactNod
   <TimingContext.Provider value={timing}>
     <AbsoluteFill>
       {children}
-      {timing.lines.map((l) =>
-        l.audioFile ? (
-          <Sequence key={l.line.id} from={l.from} durationInFrames={l.speechFrames + 15} layout="none">
-            <Audio src={staticFile(l.audioFile)} />
-          </Sequence>
-        ) : null,
-      )}
+      {/* ナレーションはクリップ（続けて読まれた文のまとまり）単位で切らずに再生 */}
+      {timing.clips.map((c) => (
+        <Sequence key={c.file} from={c.from} durationInFrames={c.durationInFrames + 5} layout="none">
+          <Audio src={staticFile(c.file)} />
+        </Sequence>
+      ))}
       <Subtitles timing={timing} />
     </AbsoluteFill>
   </TimingContext.Provider>

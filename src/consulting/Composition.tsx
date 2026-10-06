@@ -1,26 +1,23 @@
-// Root に登録する Composition。音声ファイルの長さを測って尺を決める。
+// Root に登録する Composition。ナレーションの配置（narrationTiming.json）から尺を決める。
 import React from 'react';
 import {Composition, staticFile} from 'remotion';
-import {getAudioDurationInSeconds} from '@remotion/media-utils';
 import {script} from './script';
-import type {AudioDurations} from './types';
-import {allLines, buildTimeline} from './timeline';
+import type {NarrationTiming} from './types';
+import narrationTiming from './narrationTiming.json';
+import {buildTimeline} from './timeline';
 import {ConsultingSales, type ConsultingProps} from './ConsultingSales';
 
-// 音声ファイルがあれば長さ（秒）、無ければ null（素材なしでも動く）
-const probeAudio = async (path: string): Promise<number | null> => {
-  const src = staticFile(path);
+// BGM ファイルがあるか（素材なしでも動くように）
+const exists = async (path: string) => {
   try {
-    const res = await fetch(src, {method: 'HEAD'});
-    if (!res.ok) return null;
-    return await getAudioDurationInSeconds(src);
+    return (await fetch(staticFile(path), {method: 'HEAD'})).ok;
   } catch {
-    return null;
+    return false;
   }
 };
 
 export const ConsultingSalesComposition: React.FC = () => {
-  const {fps, width, height, narrationDir, audioExt, bgmFile} = script.meta;
+  const {fps, width, height, bgmFile} = script.meta;
   return (
     <Composition
       id="ConsultingSales"
@@ -31,15 +28,8 @@ export const ConsultingSalesComposition: React.FC = () => {
       durationInFrames={fps}
       defaultProps={{timeline: null, hasBgm: false} as ConsultingProps}
       calculateMetadata={async () => {
-        const audio: AudioDurations = {};
-        await Promise.all(
-          allLines(script).map(async ({line}) => {
-            const s = await probeAudio(`${narrationDir}/${line.id}.${audioExt}`);
-            if (s !== null) audio[line.id] = s;
-          }),
-        );
-        const hasBgm = (await probeAudio(bgmFile)) !== null;
-        const timeline = buildTimeline(script, audio);
+        const timeline = buildTimeline(script, narrationTiming as NarrationTiming);
+        const hasBgm = await exists(bgmFile);
         return {durationInFrames: timeline.totalFrames, props: {timeline, hasBgm}};
       }}
     />

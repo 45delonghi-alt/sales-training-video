@@ -5,11 +5,11 @@
 //   npm run consulting:ondoku    … 音読さん等に貼り付ける原稿（out/ondoku/）
 //   npm run consulting:import    … 外部の音声合成で作った音声を取り込む（audio_import/ → 文ごとに分割・整音）
 import {execFileSync, spawnSync} from 'node:child_process';
-import {existsSync, mkdirSync, readdirSync, writeFileSync} from 'node:fs';
+import {existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync} from 'node:fs';
 import {join} from 'node:path';
 import {script} from '../src/consulting/script';
 import {allLines, buildTimeline, speechText} from '../src/consulting/timeline';
-import type {AudioDurations} from '../src/consulting/types';
+import type {NarrationTiming} from '../src/consulting/types';
 
 const ROOT = join(import.meta.dirname, '..');
 
@@ -20,18 +20,12 @@ const probe = (file: string) =>
     }).trim(),
   );
 
-const loadAudio = (): AudioDurations => {
-  const audio: AudioDurations = {};
-  for (const {line} of allLines(script)) {
-    const file = join(ROOT, 'public', script.meta.narrationDir, `${line.id}.${script.meta.audioExt}`);
-    if (existsSync(file)) audio[line.id] = probe(file);
-  }
-  return audio;
-};
+const TIMING_FILE = join(ROOT, 'src/consulting/narrationTiming.json');
+const loadTiming = (): NarrationTiming => JSON.parse(readFileSync(TIMING_FILE, 'utf8'));
 
 const durations = () => {
-  const audio = loadAudio();
-  const tl = buildTimeline(script, audio);
+  const timing = loadTiming();
+  const tl = buildTimeline(script, timing);
   const fmt = (s: number) => `${Math.floor(s / 60)}:${(s % 60).toFixed(1).padStart(4, '0')}`;
   console.table(
     tl.scenes.map((s) => {
@@ -49,15 +43,15 @@ const durations = () => {
     }),
   );
   console.log(`合計 ${fmt(tl.totalFrames / tl.fps)}（${tl.totalFrames}フレーム。フェードの重なり分を差し引き済み）`);
-  console.log(`音声ファイル ${Object.keys(audio).length}件。無い文は「文字数 × ${script.meta.secondsPerChar}秒」で仮算出。`);
+  console.log(`音声：${Object.keys(timing.lines).length}文（${Object.keys(timing.clips).length}クリップ、${timing.speed}倍速）。無い文は文字数から仮算出。`);
 };
 
 const csv = () => {
   const q = (s: string) => `"${s.replace(/"/g, '""')}"`;
   const rows = [
-    ['ファイル名', 'Scene', '読み上げるテキスト', '画面上の文', '後の間(秒)'].map(q).join(','),
+    ['文ID', 'Scene', '読み上げるテキスト', '画面上の文', '後に足す間(秒)'].map(q).join(','),
     ...allLines(script).map(({spec, line}) =>
-      [`${line.id}.${script.meta.audioExt}`, spec.id, speechText(line), line.text, String(line.pauseAfter ?? script.meta.defaultPause)]
+      [line.id, spec.id, speechText(line), line.text, String(line.hold ?? 0)]
         .map(q)
         .join(','),
     ),
@@ -68,8 +62,7 @@ const csv = () => {
 };
 
 const sheet = () => {
-  const audio = loadAudio();
-  const tl = buildTimeline(script, audio);
+  const tl = buildTimeline(script, loadTiming());
   const esc = (t: string) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   const fmt = (s: number) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
   const font = (w: number, subset: string) =>
@@ -88,12 +81,12 @@ const sheet = () => {
         .map((l) => {
           const at = start + l.from / tl.fps;
           const reading = l.line.speech ? `<div class="reading">読み：${esc(l.line.speech)}</div>` : '';
-          const status = l.estimated ? '<span class="missing">音声未生成</span>' : `${(l.audioSeconds ?? 0).toFixed(1)}秒`;
-          return `<tr><td class="id">${l.line.id}</td><td class="time">${fmt(at)}</td><td class="text">${esc(l.line.text)}${reading}</td><td class="sub">${l.line.subtitles.map(esc).join('<br>')}</td><td class="num">${(l.line.pauseAfter ?? script.meta.defaultPause).toFixed(1)}</td><td class="num">${status}</td></tr>`;
+          const status = l.estimated ? '<span class="missing">音声未生成</span>' : `${(l.speechFrames / tl.fps).toFixed(1)}秒`;
+          return `<tr><td class="id">${l.line.id}</td><td class="time">${fmt(at)}</td><td class="text">${esc(l.line.text)}${reading}</td><td class="sub">${l.line.subtitles.map(esc).join('<br>')}</td><td class="num">${l.line.hold ? l.line.hold.toFixed(1) : '−'}</td><td class="num">${status}</td></tr>`;
         })
         .join('');
       return `<section><h2><span class="no">${String(i + 1).padStart(2, '0')}</span>${esc(s.spec.name)}<span class="meta">${s.spec.id}｜${fmt(start)}〜${fmt(start + s.durationInFrames / tl.fps)}</span></h2>
-<table><thead><tr><th>ID</th><th>開始</th><th>ナレーション</th><th>字幕（区切り）</th><th>後の間<br>(秒)</th><th>音声</th></tr></thead><tbody>${rows}</tbody></table></section>`;
+<table><thead><tr><th>ID</th><th>開始</th><th>ナレーション</th><th>字幕（区切り）</th><th>足す間<br>(秒)</th><th>音声</th></tr></thead><tbody>${rows}</tbody></table></section>`;
     })
     .join('');
   const html = `<!doctype html><html lang="ja"><head><meta charset="utf-8"><title>ナレーション台本</title><style>
@@ -118,7 +111,7 @@ th:nth-child(1){width:52px}th:nth-child(2){width:40px}th:nth-child(4){width:30%}
 .missing{color:#fff;background:#E60012;padding:1px 4px;font-size:8pt;font-weight:700;}
 </style></head><body>
 <header><h1>コンサルティング営業体験 導入動画｜ナレーション台本</h1>
-<p>全${tl.scenes.reduce((n, s) => n + s.lines.length, 0)}文／総尺 ${fmt(total)}／声：${esc(script.meta.narrator)}／開始時刻は動画全体の経過時間（目安）</p></header>
+<p>全${tl.scenes.reduce((n, s) => n + s.lines.length, 0)}文／総尺 ${fmt(total)}／声：${esc(script.meta.narrator)}／${script.meta.speed}倍速／開始時刻は動画全体の経過時間（目安）</p></header>
 ${sections}
 </body></html>`;
   const out = join(ROOT, 'out', 'consulting_narration.html');
@@ -143,27 +136,41 @@ const ondoku = () => {
 };
 
 // 取り込み元：audio_import/ に次のどちらかを置く（mp3 / wav / m4a）
-//   ・文ごと：S01_01.mp3 など（ナレーションIDと同じ名前）
-//   ・Sceneごと：scene01.mp3 など（原稿 scene01.txt を読み上げたもの）→ 無音の位置で文ごとに自動分割
-// 出力：public/consulting/audio/narration/{ID}.mp3（前後の無音を詰め、音量をそろえる）
+//   ・Sceneごと：scene01.mp3 など（原稿 scene01.txt を読み上げたもの）→ 無音の位置から各文の開始・終了を推定
+//   ・文ごと：S01_01.mp3 など（ナレーションIDと同じ名前）→ その文だけ単独のクリップとして差し替え
+// 出力：
+//   ・public/consulting/audio/narration/{先頭の文ID}.mp3 … 続けて読まれた文のまとまり（クリップ）。
+//     hold（足す間）がある文の後ろでだけ区切り、それ以外は切らずにつなげる。meta.speed 倍速・音量そろえ済み
+//   ・src/consulting/narrationTiming.json … 各文がどのクリップの何秒から何秒か（字幕・演出のタイミング用）
 const IMPORT_DIR = join(ROOT, 'audio_import');
 const EXTS = ['mp3', 'wav', 'm4a'];
-const CLEAN = [
-  'silenceremove=start_periods=1:start_threshold=-45dB:start_silence=0.03',
-  'areverse',
-  'silenceremove=start_periods=1:start_threshold=-45dB:start_silence=0.08',
-  'areverse',
-  'loudnorm=I=-16:TP=-1.5:LRA=11',
-  'aresample=44100',
-].join(',');
+const OUT_DIR = join(ROOT, 'public', script.meta.narrationDir);
+
+// 自動推定では切れ目が見つからない（間を空けずに読まれた）箇所の手動指定：文ID → Scene音声上の開始秒
+const START_OVERRIDES: Record<string, number> = {
+  // 「では、皆さんなら、」と「最初に何を確認しますか？」が続けて読まれているため、声が最も小さくなる位置
+  S04_02: 1.33,
+};
 
 const findInput = (stem: string) =>
   EXTS.map((e) => join(IMPORT_DIR, `${stem}.${e}`)).find((f) => existsSync(f));
 
-const writeLine = (src: string, id: string, from?: number, to?: number) => {
-  const out = join(ROOT, 'public', script.meta.narrationDir, `${id}.${script.meta.audioExt}`);
+// src の from〜to 秒を切り出し、倍速・音量そろえをしてクリップとして書き出す。長さ（秒）を返す
+const writeClip = (src: string, name: string, from?: number, to?: number) => {
+  const out = join(OUT_DIR, `${name}.${script.meta.audioExt}`);
   const range = from === undefined ? [] : ['-ss', from.toFixed(3), '-to', (to as number).toFixed(3)];
-  execFileSync('ffmpeg', ['-v', 'error', '-y', ...range, '-i', src, '-af', CLEAN, '-ac', '1', '-b:a', '128k', out]);
+  const af = [`atempo=${script.meta.speed}`, 'loudnorm=I=-16:TP=-1.5:LRA=11', 'aresample=44100'].join(',');
+  execFileSync('ffmpeg', ['-v', 'error', '-y', ...range, '-i', src, '-af', af, '-ac', '1', '-b:a', '128k', out]);
+  return {file: `${script.meta.narrationDir}/${name}.${script.meta.audioExt}`, seconds: probe(out)};
+};
+
+// 文ごとの単独ファイル：前後の無音だけ詰めてからクリップにする
+const trimmedRange = (file: string) => {
+  const total = probe(file);
+  const sil = silences(file, 0.06);
+  const head = sil.length && sil[0][0] < 0.05 ? sil[0][1] : 0;
+  const tail = sil.length && sil[sil.length - 1][1] > total - 0.05 ? sil[sil.length - 1][0] : total;
+  return {start: Math.max(0, head - 0.05), end: Math.min(total, tail + 0.12)};
 };
 
 // 無音区間 [開始, 終了] の一覧
@@ -247,13 +254,19 @@ const splitScene = (file: string, spec: (typeof script.scenes)[number]) => {
     picked.unshift(j);
     j = prev[k][j];
   }
-  // 文の終わりは無音の入口＋0.15秒、次の文の始まりは無音の出口−0.08秒で切る（間にある息つぎ等を含めない）
+  // 各文の範囲：無音の出口−0.08秒 〜 次の無音の入口＋0.12秒
   const gaps = picked.map((idx) => cand[idx]);
   const starts = [Math.max(0, head - 0.05), ...gaps.map((g) => Math.max(g.a, g.b - 0.08))];
-  const ends = [...gaps.map((g) => Math.min(g.b, g.a + 0.15)), Math.min(total, tail + 0.15)];
-  lines.forEach((l, k) => writeLine(file, l.id, starts[k], ends[k]));
-  const bounds = [head, ...gaps.map((g) => g.mid), tail];
-  return lines.map((l, k) => `${l.id} ${(bounds[k + 1] - bounds[k]).toFixed(1)}秒 ${speechText(l)}`);
+  const ends = [...gaps.map((g) => Math.min(g.b, g.a + 0.12)), Math.min(total, tail + 0.12)];
+  // 手動指定の切れ目
+  lines.forEach((l, k) => {
+    const at = START_OVERRIDES[l.id];
+    if (at !== undefined && k > 0) {
+      starts[k] = at;
+      ends[k - 1] = at;
+    }
+  });
+  return lines.map((l, k) => ({id: l.id, start: starts[k], end: ends[k]}));
 };
 
 const importAudio = () => {
@@ -262,23 +275,50 @@ const importAudio = () => {
     console.log(`${IMPORT_DIR} を作成しました。ここに音声を置いてから、もう一度実行してください。`);
     return;
   }
-  console.log(`取り込み元：${IMPORT_DIR}（${readdirSync(IMPORT_DIR).length}ファイル）`);
+  const {speed} = script.meta;
+  console.log(`取り込み元：${IMPORT_DIR}（${readdirSync(IMPORT_DIR).length}ファイル）／${speed}倍速`);
+  rmSync(OUT_DIR, {recursive: true, force: true});
+  mkdirSync(OUT_DIR, {recursive: true});
+  const timing: NarrationTiming = {speed, clips: {}, lines: {}};
+
   script.scenes.forEach((spec, i) => {
     const sceneFile = findInput(`scene${String(i + 1).padStart(2, '0')}`);
-    if (sceneFile) {
-      console.log(`■ ${spec.id}：Scene音声を${spec.narration.length}文に分割`);
-      splitScene(sceneFile, spec).forEach((r) => console.log('  ' + r));
-    }
-    // 文ごとのファイルがあれば、そちらを優先して上書き（分割がずれた文だけ差し替えたいとき用）
-    for (const l of spec.narration) {
-      const f = findInput(l.id);
-      if (f) {
-        writeLine(f, l.id);
-        console.log(`  ${l.id}：文ごとの音声を取り込み`);
+    const ranges = sceneFile ? splitScene(sceneFile, spec) : [];
+    if (sceneFile) console.log(`■ ${spec.id}`);
+    // 文ごとのファイルがある文は単独クリップ。それ以外は hold の文の後ろで区切ってクリップにまとめる
+    let group: {id: string; start: number; end: number}[] = [];
+    const flush = () => {
+      if (!group.length || !sceneFile) return;
+      const from = group[0].start;
+      const to = group[group.length - 1].end;
+      const clip = writeClip(sceneFile, group[0].id, from, to);
+      timing.clips[clip.file] = clip.seconds;
+      for (const r of group) {
+        timing.lines[r.id] = {clip: clip.file, start: (r.start - from) / speed, end: (r.end - from) / speed};
       }
-    }
+      console.log(`  クリップ ${group[0].id}〜${group[group.length - 1].id}（${clip.seconds.toFixed(1)}秒）`);
+      group = [];
+    };
+    spec.narration.forEach((line, k) => {
+      const single = findInput(line.id);
+      if (single) {
+        flush();
+        const r = trimmedRange(single);
+        const clip = writeClip(single, line.id, r.start, r.end);
+        timing.clips[clip.file] = clip.seconds;
+        timing.lines[line.id] = {clip: clip.file, start: 0, end: clip.seconds};
+        console.log(`  ${line.id}：文ごとの音声を単独で取り込み（${clip.seconds.toFixed(1)}秒）`);
+        return;
+      }
+      if (!ranges[k]) return;
+      group.push(ranges[k]);
+      if (line.hold) flush();
+    });
+    flush();
   });
-  console.log('完了。npm run consulting:durations で尺を確認できます。');
+
+  writeFileSync(TIMING_FILE, JSON.stringify(timing, null, 1) + '\n');
+  console.log(`完了：${Object.keys(timing.lines).length}文／${Object.keys(timing.clips).length}クリップ。npm run consulting:durations で尺を確認できます。`);
 };
 
 const command = ({durations, csv, sheet, ondoku, import: importAudio} as Record<string, () => void>)[process.argv[2]];

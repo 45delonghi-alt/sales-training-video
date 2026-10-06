@@ -21,8 +21,9 @@ export type NarrationLine = {
   speech?: string;
   // 字幕。1枚10〜20文字。意味のまとまりで区切る
   subtitles: string[];
-  // この文の後の間（秒）。重要な文の前後は 0.3〜0.7
-  pauseAfter?: number;
+  // この文の後に足す「間」（秒・1.2倍速後の実時間）。0 または省略なら、読み上げのままの自然な間で次の文へつなぐ。
+  // 間を足す文の後ろでだけ音声を区切る（それ以外は切らずに続けて流すので、文のつながりが不自然にならない）
+  hold?: number;
 };
 
 // 演出のきっかけ。秒ではなく「どのナレーションの開始（または終了）か」で指定する。
@@ -118,10 +119,10 @@ export type ConsultingScript = {
     height: number;
     // 音声が無いときの仮の長さ（1文字あたりの秒）
     secondsPerChar: number;
-    // 字幕が読めるよう、1文の最低表示時間
+    // 字幕が読めるよう、1文の最低表示時間（音声が無い文のみ）
     minLineSeconds: number;
-    // 既定の文間（pauseAfter 省略時）
-    defaultPause: number;
+    // ナレーションの再生速度（取り込み時に音声へ適用。声の高さは変えない）
+    speed: number;
     fadeSeconds: number;
     // 台本PDFに載せる声の名前（音声を作り直したら書き換える）
     narrator: string;
@@ -137,5 +138,10 @@ export type ConsultingScript = {
   scenes: AnySceneSpec[];
 };
 
-// 音声ファイル名（拡張子なし）→ 長さ（秒）
-export type AudioDurations = Record<string, number>;
+// 取り込んだナレーションの配置（npm run consulting:import が narrationTiming.json に書き出す）
+// clips：音声ファイル → 長さ（秒）。lines：文ID → どのファイルの何秒から何秒か
+export type NarrationTiming = {
+  speed: number;
+  clips: Record<string, number>;
+  lines: Record<string, {clip: string; start: number; end: number}>;
+};
