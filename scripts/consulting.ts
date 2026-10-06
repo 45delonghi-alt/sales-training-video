@@ -153,7 +153,7 @@ const START_OVERRIDES: Record<string, number> = {
 };
 
 // 台本を書き換えて、手元の Scene 音声とは文面が違う文。録り直しが届くまで音声なし（字幕のみ）で扱う
-const RERECORD = new Set<string>([]);
+const RERECORD = new Set<string>(['PS_02', 'PS_06', 'S07_07']);
 
 const findInput = (stem: string) =>
   EXTS.map((e) => join(IMPORT_DIR, `${stem}.${e}`)).find((f) => existsSync(f));

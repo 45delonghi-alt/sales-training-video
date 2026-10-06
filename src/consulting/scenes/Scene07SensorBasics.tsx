@@ -17,6 +17,18 @@ const DRAFT_OFFSET = 5.5;
 const FREEZE = 'consulting/video/sensor_summary_freeze.png';
 const CONTENT_TOP = 175;
 
+// 元動画の中の文言のうち、モノの有無の言い方を「検出」にそろえるために差し替えるラベル。
+// page：ページ番号、from / to：元動画上で表示されている秒、box：元動画上の位置（px）
+type Relabel = {page: number; from: number; to: number; text: string; pill: boolean; box: [number, number, number, number]};
+const RELABELS: Relabel[] = [
+  {page: 0, from: 7.0, to: 99, text: '光の変化 ＝ モノを検出', pill: false, box: [400, 552, 420, 50]},
+  {page: 1, from: 27.2, to: 36.2, text: '光が遮られた → 検出', pill: true, box: [426, 572, 368, 56]},
+  {page: 2, from: 43.47, to: 52.63, text: '光が遮られた → 検出', pill: true, box: [426, 572, 368, 56]},
+  {page: 4, from: 71.33, to: 78.43, text: '光が返ってきた → 検出', pill: true, box: [410, 572, 400, 56]},
+];
+// 元動画のカードは白・半透明（α 160/255）
+const CARD = 'rgba(255,255,255,0.627)';
+
 export const Scene07SensorBasics: React.FC<{spec: SceneSpec<'Scene07SensorBasics'>}> = ({spec}) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
@@ -66,6 +78,13 @@ export const Scene07SensorBasics: React.FC<{spec: SceneSpec<'Scene07SensorBasics
               </AbsoluteFill>
             ) : null}
             {clip(page.start, start, end, page.draft[0], page.draft[1])}
+            {RELABELS.filter((r) => r.page === i).map((r) => {
+              // 元動画の秒 → 本編のフレーム
+              const toFrame = (t: number) => start + ((t - page.draft[0]) / (page.draft[1] - page.draft[0])) * (end - start);
+              const from = Math.max(start, Math.round(toFrame(r.from)));
+              const to = Math.min(end, Math.round(toFrame(r.to)));
+              return frame >= from && frame < to ? <Relabeled key={r.text + i} r={r} frame={frame} from={from} /> : null;
+            })}
           </React.Fragment>
         );
       })}
@@ -78,6 +97,46 @@ export const Scene07SensorBasics: React.FC<{spec: SceneSpec<'Scene07SensorBasics
       ) : null}
       {frame >= summaryStart ? <Message spec={spec} frame={frame} /> : null}
     </AbsoluteFill>
+  );
+};
+
+// 元の文言を、背景（本編の背景＋半透明カード）の複製で隠し、その上に差し替えの文言を描く
+const Relabeled: React.FC<{r: Relabel; frame: number; from: number}> = ({r, frame, from}) => {
+  const [x, y, w, h] = r.box;
+  const pad = 8;
+  const L = x - pad;
+  const T = CONTENT_TOP + y - pad;
+  const p = progress(frame, from, 6);
+  return (
+    <>
+      <div style={{position: 'absolute', left: L, top: T, width: w + pad * 2, height: h + pad * 2, overflow: 'hidden'}}>
+        <div style={{position: 'absolute', left: -L, top: -T, width: 1920, height: 1080}}>
+          <Backdrop tone="light" sceneNo={7} label="PHOTOELECTRIC SENSORS" />
+        </div>
+        <AbsoluteFill style={{background: CARD}} />
+      </div>
+      <div
+        style={{
+          position: 'absolute',
+          left: x,
+          top: CONTENT_TOP + y,
+          width: w,
+          height: h,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderRadius: h / 2,
+          background: r.pill ? '#EF7F1E' : 'transparent',
+          color: r.pill ? C.white : '#1E5BC6',
+          fontSize: r.pill ? 26 : 34,
+          fontWeight: 700,
+          opacity: p,
+          transform: `scale(${0.96 + 0.04 * p})`,
+        }}
+      >
+        {r.text}
+      </div>
+    </>
   );
 };
 

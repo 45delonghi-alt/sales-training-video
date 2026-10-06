@@ -6,7 +6,7 @@ import {Backdrop, RedSlash} from '../components/Backdrop';
 import {useCue} from '../components/SceneShell';
 import {appear, keyZoom, progress} from '../components/anim';
 
-// YOUR MISSION：1 聞く／2 考える／3 課題を見つける／4 提案する ＋ 最初の10分はヒアリング
+// YOUR MISSION：1 聞く／2 考える／3 課題を見つける／4 提案する ＋ まずはお客様に現状を確認
 export const Scene08YourMission: React.FC<{spec: SceneSpec<'Scene08YourMission'>}> = ({spec}) => {
   const frame = useCurrentFrame();
   const cue = useCue();
@@ -88,7 +88,7 @@ export const Scene08YourMission: React.FC<{spec: SceneSpec<'Scene08YourMission'>
         );
       })}
 
-      {/* 最初の10分 */}
+      {/* 最初の一歩 */}
       <div
         style={{
           position: 'absolute',
@@ -105,7 +105,6 @@ export const Scene08YourMission: React.FC<{spec: SceneSpec<'Scene08YourMission'>
           boxSizing: 'border-box',
         }}
       >
-        <Timer p={progress(frame, first + 6, 40)} />
         <div style={{fontSize: 26, fontWeight: 900, letterSpacing: 4, color: C.white, background: C.red, padding: '6px 16px'}}>
           {v.firstStep.badge}
         </div>
@@ -114,26 +113,5 @@ export const Scene08YourMission: React.FC<{spec: SceneSpec<'Scene08YourMission'>
         </div>
       </div>
     </AbsoluteFill>
-  );
-};
-
-const Timer: React.FC<{p: number}> = ({p}) => {
-  const r = 26;
-  const len = 2 * Math.PI * r;
-  return (
-    <svg width={68} height={68} viewBox="0 0 68 68">
-      <circle cx={34} cy={36} r={r} fill="none" stroke={C.line} strokeWidth={6} />
-      <circle
-        cx={34}
-        cy={36}
-        r={r}
-        fill="none"
-        stroke={C.red}
-        strokeWidth={6}
-        strokeDasharray={`${len * p} ${len}`}
-        transform="rotate(-90 34 36)"
-      />
-      <rect x={28} y={0} width={12} height={6} fill={C.ink} />
-    </svg>
   );
 };

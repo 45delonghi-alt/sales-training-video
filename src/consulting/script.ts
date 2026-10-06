@@ -262,8 +262,8 @@ export const script: ConsultingScript = {
         },
         {
           id: 'PS_02',
-          text: '光電センサは、光を出し、その光の変化で、モノがあるか・ないかを見分けるセンサです。',
-          subtitles: ['光電センサは、光を出し、', 'その光の変化で、', 'モノがあるか・ないかを', '見分けるセンサです。'],
+          text: '光電センサは、光を出し、その光の変化で、モノを検出するセンサです。',
+          subtitles: ['光電センサは、光を出し、', 'その光の変化で、', 'モノを検出するセンサです。'],
         },
         {id: 'PS_03', text: '光を出す側を「投光器」、受ける側を「受光器」と呼びます。', subtitles: ['光を出す側を「投光器」、', '受ける側を「受光器」と呼びます。']},
         {id: 'PS_04', text: '光の当て方の違いで、大きく3種類の方式に分かれます。', subtitles: ['光の当て方の違いで、', '大きく3種類の方式に分かれます。'], hold: 0.3},
@@ -273,7 +273,7 @@ export const script: ConsultingScript = {
           speech: 'ひとつめは「透過型」。投光器と受光器が、別々のきょうたいです。',
           subtitles: ['1つめは「透過型」。', '投光器と受光器が、別々の筐体です。'],
         },
-        {id: 'PS_06', text: 'モノが光を遮ったら「ある」と判断します。', subtitles: ['モノが光を遮ったら', '「ある」と判断します。']},
+        {id: 'PS_06', text: 'モノが光を遮ったら検出します。', subtitles: ['モノが光を遮ったら', '検出します。']},
         {id: 'PS_07', text: '色や形に左右されにくく、長い距離でも安定して検出できます。', subtitles: ['色や形に左右されにくく、', '長い距離でも安定して検出できます。']},
         {id: 'PS_08', text: 'ただし、両側に配線が必要です。', subtitles: ['ただし、両側に配線が必要です。'], hold: 0.3},
         {
@@ -324,7 +324,7 @@ export const script: ConsultingScript = {
       ],
       visual: {
         pages: [
-          {start: 'PS_01', title: '光電センサとは？', draft: [5.7, 21.1]},
+          {start: 'PS_01', title: '光電センサとは？', draft: [6.0, 21.1]},
           {start: 'PS_05', tag: '方式1', title: '透過型', draft: [21.4, 36.6]},
           {start: 'PS_09', tag: '方式2', title: '回帰反射型', draft: [36.9, 57.1]},
           {start: 'PS_13', tag: '方式2の応用', title: '回帰反射型（透明体専用）', draft: [57.4, 70.6]},
@@ -359,9 +359,8 @@ export const script: ConsultingScript = {
         {id: 'S07_06', text: '解決策を提案してください。', subtitles: ['解決策を提案してください。'], hold: 0.5},
         {
           id: 'S07_07',
-          text: '最初の10分は、お客様へのヒアリングです。',
-          speech: '最初のじゅっぷんは、お客様へのヒアリングです。',
-          subtitles: ['最初の10分は、', 'お客様へのヒアリングです。'],
+          text: 'まずはお客様に現状を確認します。',
+          subtitles: ['まずはお客様に', '現状を確認します。'],
         },
       ],
       visual: {
@@ -373,7 +372,7 @@ export const script: ConsultingScript = {
           {label: '課題を見つける', note: '本当の課題は何かを考える'},
           {label: '提案する', note: '解決策を提案する'},
         ],
-        firstStep: {badge: 'FIRST 10 MIN', text: '最初の10分は、お客様へのヒアリング'},
+        firstStep: {badge: 'FIRST STEP', text: 'まずはお客様に現状を確認'},
       },
       animation: {
         negation: {at: 'S07_02'},
