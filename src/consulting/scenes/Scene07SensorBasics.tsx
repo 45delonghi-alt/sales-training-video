@@ -1,5 +1,5 @@
 import React from 'react';
-import {AbsoluteFill, useCurrentFrame} from 'remotion';
+import {AbsoluteFill, Img, staticFile, useCurrentFrame} from 'remotion';
 import type {SceneSpec, SensorPage} from '../types';
 import {C} from '../theme';
 import {Backdrop} from '../components/Backdrop';
@@ -20,6 +20,11 @@ export const Scene07SensorBasics: React.FC<{spec: SceneSpec<'Scene07SensorBasics
   return (
     <AbsoluteFill>
       <Backdrop tone="light" sceneNo={7} label="PHOTOELECTRIC SENSORS" />
+      {/* 自社センサブランド */}
+      <Img
+        src={staticFile('consulting/images/fastus.png')}
+        style={{position: 'absolute', right: 110, top: 96, width: 230, opacity: progress(frame, 0, 14)}}
+      />
       {v.pages.map((page, i) => {
         const start = starts[i];
         const end = i + 1 < starts.length ? starts[i + 1] : summaryStart;

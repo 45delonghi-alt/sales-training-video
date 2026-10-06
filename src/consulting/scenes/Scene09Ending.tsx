@@ -7,6 +7,7 @@ import {useCue, useSceneDuration} from '../components/SceneShell';
 import {appear, progress} from '../components/anim';
 import {script} from '../script';
 import {Highlight} from './Scene04Question';
+import {BrandMark} from '../components/BrandMark';
 
 const coverImage = script.scenes[0].id === 'Scene01Opening' ? script.scenes[0].visual.coverImage : '';
 
@@ -75,12 +76,10 @@ export const Scene09Ending: React.FC<{spec: SceneSpec<'Scene09Ending'>}> = ({spe
         <div style={{height: 6, width: 300 * progress(frame, 26, 18), background: C.red, margin: '34px 0 30px'}} />
         <div style={{fontSize: 30, letterSpacing: 8, fontWeight: 700, color: C.ink2, ...appear(frame, english, {dy: 14})}}>{v.english}</div>
 
-        {/* ブランド表記（正式ロゴのデータを受領したら画像に差し替える） */}
+        {/* 社名マーク（社内テンプレートと同じ形） */}
         <div style={{marginTop: 80, ...appear(frame, brand, {dy: 20, dur: 18})}}>
-          <div style={{fontSize: 76, fontWeight: 900, letterSpacing: 2, color: C.ink, lineHeight: 1, fontStyle: 'italic'}}>
-            OPTEX <span style={{color: C.red}}>FA</span>
-          </div>
-          <div style={{fontSize: 24, fontWeight: 700, color: C.ink2, marginTop: 12, letterSpacing: 2}}>オプテックス・エフエー株式会社</div>
+          <BrandMark size={64} />
+          <div style={{fontSize: 24, fontWeight: 700, color: C.ink2, marginTop: 16, letterSpacing: 2}}>オプテックス・エフエー株式会社</div>
         </div>
       </div>
 

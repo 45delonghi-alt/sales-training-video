@@ -2,6 +2,7 @@
 import React from 'react';
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
 import {C, H, W} from '../theme';
+import {BrandMark} from './BrandMark';
 
 export const Backdrop: React.FC<{
   tone: 'light' | 'dark';
@@ -32,9 +33,10 @@ export const Backdrop: React.FC<{
       ) : null}
       {decor}
       {/* 左上：ラベル */}
-      <div style={{position: 'absolute', left: 72, top: 54, display: 'flex', alignItems: 'center', gap: 16}}>
-        <div style={{width: 6, height: 26, background: C.red}} />
-        <div style={{fontSize: 20, letterSpacing: 4, fontWeight: 700, color: text}}>{label}</div>
+      <div style={{position: 'absolute', left: 72, top: 50, display: 'flex', alignItems: 'center', gap: 18}}>
+        <BrandMark size={24} color={dark ? 'rgba(255,255,255,0.8)' : '#5A5D63'} />
+        <div style={{width: 1, height: 22, background: text, opacity: 0.6}} />
+        <div style={{fontSize: 18, letterSpacing: 4, fontWeight: 700, color: text}}>{label}</div>
       </div>
       {/* 右上：シーン番号 */}
       <div
