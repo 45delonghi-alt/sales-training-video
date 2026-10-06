@@ -25,7 +25,7 @@ export const Scene07YourMission: React.FC<{spec: SceneSpec<'Scene07YourMission'>
       <Backdrop
         tone="dark"
         sceneNo={7}
-        decor={<RedSlash progress={progress(frame, 0, 20)} left={1600} width={120} opacity={0.85} />}
+        decor={<RedSlash progress={progress(frame, 0, 20)} left={1400} width={100} opacity={0.85} />}
       />
 
       <div style={{position: 'absolute', left: left0, top: 120}}>
