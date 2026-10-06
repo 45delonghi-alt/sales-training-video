@@ -70,7 +70,12 @@ export const CountHud: React.FC<{
   error: number;
   hud: SceneSpec<'Scene03Mission'>['visual']['hud'];
 }> = ({frame, start, error, hud}) => {
-  const {actual, count, extra} = conveyorCounts(frame, error);
+  const {actual, count, extra, lastPassFrame, lastErrorFrame} = conveyorCounts(frame, error);
+  // 数字が増えた瞬間に軽く拡大して、リアルタイムに数えていることを見せる
+  const pulse = (at: number | null, amount: number) =>
+    at === null ? 1 : interpolate(frame - at, [0, 10], [amount, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  const passPulse = pulse(lastPassFrame, 1.12);
+  const errPulse = pulse(lastErrorFrame, 1.3);
   const errOn = frame >= error && extra > 0;
   const blink = errOn ? interpolate(Math.sin(frame / 4), [-1, 1], [0.55, 1]) : 1;
   return (
@@ -89,8 +94,8 @@ export const CountHud: React.FC<{
       }}
     >
       <div style={{fontSize: 17, letterSpacing: 3, color: 'rgba(255,255,255,0.6)', fontWeight: 700}}>{hud.line}</div>
-      <Row label={hud.actualLabel} value={fmt(actual)} />
-      <Row label={hud.countLabel} value={fmt(count)} color={errOn ? C.redOnDark : C.white} />
+      <Row label={hud.actualLabel} value={fmt(actual)} scale={passPulse} />
+      <Row label={hud.countLabel} value={fmt(count)} color={errOn ? C.redOnDark : C.white} scale={errOn ? Math.max(passPulse, errPulse) : passPulse} />
       <div
         style={{
           marginTop: 14,
@@ -104,15 +109,15 @@ export const CountHud: React.FC<{
         }}
       >
         <span style={{fontSize: 22, fontWeight: 700}}>{errOn ? `⚠ ${hud.alert}` : 'STATUS　NORMAL'}</span>
-        <span style={{fontSize: 26, fontWeight: 900}}>{errOn ? `+${extra}` : '±0'}</span>
+        <span style={{fontSize: 26, fontWeight: 900, display: 'inline-block', transform: `scale(${errOn ? errPulse : 1})`}}>{errOn ? `+${extra}` : '±0'}</span>
       </div>
     </div>
   );
 };
 
-const Row: React.FC<{label: string; value: string; color?: string}> = ({label, value, color = C.white}) => (
+const Row: React.FC<{label: string; value: string; color?: string; scale?: number}> = ({label, value, color = C.white, scale = 1}) => (
   <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginTop: 14}}>
     <span style={{fontSize: 24, color: 'rgba(255,255,255,0.75)', fontWeight: 500}}>{label}</span>
-    <span style={{fontSize: 48, fontWeight: 900, color}}>{value}</span>
+    <span style={{fontSize: 48, fontWeight: 900, color, display: 'inline-block', transform: `scale(${scale})`, transformOrigin: 'right center'}}>{value}</span>
   </div>
 );

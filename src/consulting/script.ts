@@ -13,7 +13,7 @@ export const script: ConsultingScript = {
     height: 1080,
     secondsPerChar: 0.15,
     minLineSeconds: 1.0,
-    speed: 1.2,
+    speed: 1,
     fadeSeconds: 0.25,
     narrator: '音読さん',
     narrationDir: 'consulting/audio/narration',

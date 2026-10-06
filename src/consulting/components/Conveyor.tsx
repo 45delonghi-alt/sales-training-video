@@ -5,7 +5,7 @@ import {interpolate} from 'remotion';
 import {C, W} from '../theme';
 import {progress} from './anim';
 
-const SPEED = 4.2; // px / frame
+const SPEED = 9; // px / frame（約0.9秒に1本がセンサを通過）
 const SPACING = 236;
 const X0 = 300;
 const SENSOR_X = 960;
@@ -42,14 +42,17 @@ export const conveyorCounts = (frame: number, errorStart: number | null) => {
   if (errorStart !== null && frame >= errorStart) {
     const k0 = passedIndex(errorStart);
     for (let i = k0 + 1; i <= k; i++) {
-      // 3 本に 1 本、二重にカウントしてしまう
-      if (((i % 3) + 3) % 3 === 1) {
+      // 5 本に 2 本、不規則に二重カウントしてしまう（「時々」誤動作）
+      const r = ((i % 5) + 5) % 5;
+      if (r === 1 || r === 3) {
         extra++;
         lastErrorFrame = (i * SPACING + SENSOR_X - X0) / SPEED;
       }
     }
   }
-  return {actual, count: actual + extra, extra, lastErrorFrame};
+  // 直近でボトルがセンサを通過した（＝カウントが増えた）フレーム
+  const lastPassFrame = (k * SPACING + SENSOR_X - X0) / SPEED;
+  return {actual, count: actual + extra, extra, lastErrorFrame, lastPassFrame};
 };
 
 export const Conveyor: React.FC<{
