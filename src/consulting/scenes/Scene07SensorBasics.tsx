@@ -1,21 +1,50 @@
 import React from 'react';
-import {AbsoluteFill, Img, staticFile, useCurrentFrame} from 'remotion';
-import type {SceneSpec, SensorPage} from '../types';
+import {AbsoluteFill, Img, OffthreadVideo, Sequence, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
+import type {SceneSpec} from '../types';
 import {C} from '../theme';
 import {Backdrop} from '../components/Backdrop';
 import {useCue} from '../components/SceneShell';
 import {appear, fadeOut, keyZoom, progress} from '../components/anim';
-import {SensorStage} from '../components/SensorStage';
 
-// 光電センサの基本：とは？ → 透過型 → 回帰反射型 → 透明体専用 → 反射型 → 距離設定型 → まとめ（最適を考えるのが営業）
-// ページはナレーションに合わせて素早くスライドで切り替える
+// 光電センサの基本：添付の解説動画（図・光の線・検出物・受光部の拡大など）をそのまま使い、
+// 見出し・背景・字幕・ナレーションだけ本編の仕様に合わせる。
+// 図の動きは、各ページの元動画の区間を、音読さんのナレーションの長さに合わせて速度調整して再生する。
+
+// 元動画（public/consulting/video/sensor_draft.webm）は、解説動画の 5.5秒〜113.2秒を
+// 本文エリア（y=160〜880）だけ切り出し、背景を透過したもの
+const DRAFT = 'consulting/video/sensor_draft.webm';
+const DRAFT_OFFSET = 5.5;
+const FREEZE = 'consulting/video/sensor_summary_freeze.png';
+const CONTENT_TOP = 175;
+
 export const Scene07SensorBasics: React.FC<{spec: SceneSpec<'Scene07SensorBasics'>}> = ({spec}) => {
   const frame = useCurrentFrame();
+  const {fps} = useVideoConfig();
   const cue = useCue();
   const {visual: v, animation: a} = spec;
   const starts = v.pages.map((p) => cue({at: p.start}));
-  const summaryStart = cue(a.summaryRows[0]) - 4;
-  const inSummary = frame >= summaryStart;
+  const summaryStart = cue(a.summary);
+  const freezeAt = cue(a.wrong) - Math.round(fps * 0.4);
+
+  // 元動画の区間 [ds, de] を、本編の from〜to フレームに合わせて再生する
+  const clip = (key: string, from: number, to: number, ds: number, de: number) => {
+    const frames = Math.max(1, to - from);
+    const rate = ((de - ds) * fps) / frames;
+    return (
+      <Sequence key={key} from={from} durationInFrames={frames} layout="none">
+        <AbsoluteFill style={{top: CONTENT_TOP, height: 720}}>
+          <OffthreadVideo
+            src={staticFile(DRAFT)}
+            transparent
+            muted
+            startFrom={Math.round((ds - DRAFT_OFFSET) * fps)}
+            playbackRate={rate}
+            style={{width: 1920, height: 720}}
+          />
+        </AbsoluteFill>
+      </Sequence>
+    );
+  };
 
   return (
     <AbsoluteFill>
@@ -23,21 +52,31 @@ export const Scene07SensorBasics: React.FC<{spec: SceneSpec<'Scene07SensorBasics
       {/* 自社センサブランド */}
       <Img
         src={staticFile('consulting/images/fastus.png')}
-        style={{position: 'absolute', right: 110, top: 96, width: 230, opacity: progress(frame, 0, 14)}}
+        style={{position: 'absolute', right: 100, top: 88, width: 190, opacity: progress(frame, 0, 14)}}
       />
+
       {v.pages.map((page, i) => {
         const start = starts[i];
         const end = i + 1 < starts.length ? starts[i + 1] : summaryStart;
-        // 表示中のページと、切り替わり直後の前ページ（短くフェードアウト）だけ描く
-        if (frame < start - 2 || frame > end + 8) return null;
-        const out = fadeOut(frame, end, 8);
         return (
-          <AbsoluteFill key={page.start} style={{opacity: out}}>
-            <Page page={page} frame={frame} start={start} action={page.action ? cue(page.action) : null} cue={cue} />
-          </AbsoluteFill>
+          <React.Fragment key={page.start}>
+            {frame >= start - 2 && frame <= end + 8 ? (
+              <AbsoluteFill style={{opacity: fadeOut(frame, end, 8)}}>
+                <Header tag={page.tag} title={page.title} frame={frame} start={start} />
+              </AbsoluteFill>
+            ) : null}
+            {clip(page.start, start, end, page.draft[0], page.draft[1])}
+          </React.Fragment>
         );
       })}
-      {inSummary ? <Summary spec={spec} frame={frame} start={summaryStart} /> : null}
+
+      {/* まとめ：表が出そろうまで元動画を再生し、その画面で止めて「最適か」のメッセージを重ねる */}
+      {frame >= summaryStart ? <Header title="まとめ：どれを選ぶ？" frame={frame} start={summaryStart} /> : null}
+      {clip('summary', summaryStart, freezeAt, v.summaryDraft[0], v.summaryDraft[1])}
+      {frame >= freezeAt ? (
+        <Img src={staticFile(FREEZE)} style={{position: 'absolute', left: 0, top: CONTENT_TOP, width: 1920, height: 720}} />
+      ) : null}
+      {frame >= summaryStart ? <Message spec={spec} frame={frame} /> : null}
     </AbsoluteFill>
   );
 };
@@ -51,168 +90,33 @@ const Header: React.FC<{tag?: string; title: string; frame: number; start: numbe
   </div>
 );
 
-const Page: React.FC<{
-  page: SensorPage;
-  frame: number;
-  start: number;
-  action: number | null;
-  cue: ReturnType<typeof useCue>;
-}> = ({page, frame, start, action, cue}) => {
-  const resultP = action === null ? 0 : progress(frame, action + 10, 10);
-  return (
-    <>
-      <Header tag={page.tag} title={page.title} frame={frame} start={start} />
-      {/* 原理図 */}
-      <div
-        style={{
-          position: 'absolute',
-          left: 110,
-          top: 200,
-          width: 1080,
-          height: 560,
-          background: C.white,
-          border: `2px solid ${C.line}`,
-          borderTop: `6px solid ${C.ink}`,
-          boxSizing: 'border-box',
-          padding: '20px 30px 0',
-          ...appear(frame, start + 2, {dx: 40, dy: 0, dur: 10}),
-        }}
-      >
-        <div style={{height: 440}}>
-          {page.diagram ? <SensorStage kind={page.diagram} frame={frame} start={start} action={action} /> : null}
-        </div>
-        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 20, marginTop: 4}}>
-          {page.caption ? <div style={{fontSize: 24, color: C.gray, fontWeight: 500}}>{page.caption}</div> : null}
-          {page.result ? (
-            <div
-              style={{
-                fontSize: 26,
-                fontWeight: 900,
-                color: C.white,
-                background: C.red,
-                padding: '4px 22px 6px',
-                opacity: resultP,
-                transform: `scale(${keyZoom(frame, (action ?? 0) + 10, 1.12)})`,
-              }}
-            >
-              {page.result}
-            </div>
-          ) : null}
-        </div>
-      </div>
-      {/* 特長・注意点 */}
-      <div style={{position: 'absolute', left: 1230, top: 200, width: 590, display: 'flex', flexDirection: 'column', gap: 18}}>
-        {(page.points ?? []).map((pt, i) => {
-          const at = cue({at: pt.at}) + i * 6;
-          const color = pt.tone === 'minus' ? C.red : pt.tone === 'plus' ? C.ink : C.gray;
-          return (
-            <div
-              key={pt.text}
-              style={{
-                ...appear(frame, at, {dx: 30, dy: 0, dur: 10}),
-                background: C.white,
-                border: `2px solid ${pt.tone === 'minus' ? C.red : C.line}`,
-                borderLeft: `8px solid ${color}`,
-                padding: '18px 22px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 16,
-              }}
-            >
-              <ToneIcon tone={pt.tone} />
-              <div style={{fontSize: 30, fontWeight: 700, color: pt.tone === 'minus' ? C.redDeep : C.ink, lineHeight: 1.35}}>{pt.text}</div>
-            </div>
-          );
-        })}
-      </div>
-    </>
-  );
-};
-
-const ToneIcon: React.FC<{tone: 'plus' | 'minus' | 'info'}> = ({tone}) => (
-  <svg width={38} height={38} viewBox="0 0 24 24" style={{flex: 'none'}}>
-    {tone === 'plus' ? (
-      <>
-        <circle cx={12} cy={12} r={11} fill={C.ink} />
-        <path d="M6.5 12.5 L10.5 16 L17.5 8" fill="none" stroke={C.white} strokeWidth={2.6} />
-      </>
-    ) : tone === 'minus' ? (
-      <>
-        <path d="M12 1.5 L23 21.5 L1 21.5 Z" fill={C.red} />
-        <path d="M12 8 L12 14.5" stroke={C.white} strokeWidth={2.6} />
-        <circle cx={12} cy={18} r={1.5} fill={C.white} />
-      </>
-    ) : (
-      <>
-        <circle cx={12} cy={12} r={11} fill={C.grayLight} />
-        <path d="M12 10.5 L12 17.5" stroke={C.white} strokeWidth={2.6} />
-        <circle cx={12} cy={6.8} r={1.6} fill={C.white} />
-      </>
-    )}
-  </svg>
-);
-
-const Summary: React.FC<{spec: SceneSpec<'Scene07SensorBasics'>; frame: number; start: number}> = ({spec, frame, start}) => {
+// どれが高性能か → 今回のお客様に、どれが最適か
+const Message: React.FC<{spec: SceneSpec<'Scene07SensorBasics'>; frame: number}> = ({spec, frame}) => {
   const cue = useCue();
   const {visual: v, animation: a} = spec;
-  const rows = a.summaryRows.map(cue);
   const wrong = cue(a.wrong);
   const right = cue(a.right);
-  const COLS = '400px 1fr 500px';
   return (
-    <>
-      <Header title="まとめ：どれを選ぶ？" frame={frame} start={start} />
-      <div style={{position: 'absolute', left: 110, top: 200, width: 1700, ...appear(frame, start + 2, {dy: 20, dur: 10})}}>
-        <div style={{display: 'grid', gridTemplateColumns: COLS, background: C.ink, color: C.white, fontSize: 24, fontWeight: 700, padding: '12px 24px'}}>
-          <div>方式</div>
-          <div>こんなときに</div>
-          <div>注意点</div>
-        </div>
-        {v.summary.map((r, i) => (
-          <div
-            key={r.method}
-            style={{
-              display: 'grid',
-              gridTemplateColumns: COLS,
-              alignItems: 'center',
-              background: C.white,
-              borderBottom: `2px solid ${C.line}`,
-              padding: '14px 24px',
-              fontSize: 28,
-              ...appear(frame, rows[i], {dx: 30, dy: 0, dur: 10}),
-            }}
-          >
-            <div style={{fontWeight: 900, color: C.ink, paddingLeft: r.sub ? 28 : 0}}>
-              {r.sub ? <span style={{color: C.red, marginRight: 8}}>└</span> : null}
-              {r.method}
-            </div>
-            <div style={{fontWeight: 700, color: C.ink}}>{r.when}</div>
-            <div style={{fontSize: 23, color: C.gray}}>{r.note}</div>
-          </div>
-        ))}
+    <div style={{position: 'absolute', top: 720, left: 0, right: 0, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 40}}>
+      <div style={{position: 'relative', fontSize: 52, fontWeight: 700, color: C.gray, opacity: progress(frame, wrong, 10)}}>
+        {v.wrong}
+        <div style={{position: 'absolute', left: -8, top: '54%', height: 7, background: C.red, width: `${progress(frame, wrong + 14, 10) * 106}%`}} />
       </div>
-      {/* どれが高性能か → 今回のお客様に、どれが最適か */}
-      <div style={{position: 'absolute', top: 700, left: 0, right: 0, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 40}}>
-        <div style={{position: 'relative', fontSize: 52, fontWeight: 700, color: C.gray, opacity: progress(frame, wrong, 10)}}>
-          {v.wrong}
-          <div style={{position: 'absolute', left: -8, top: '54%', height: 7, background: C.red, width: `${progress(frame, wrong + 14, 10) * 106}%`}} />
-        </div>
-        <svg width={90} height={40} style={{opacity: progress(frame, right - 4, 8)}}>
-          <line x1={0} y1={20} x2={70} y2={20} stroke={C.red} strokeWidth={4} />
-          <path d="M 88 20 L 66 8 L 66 32 Z" fill={C.red} />
-        </svg>
-        <div
-          style={{
-            fontSize: 62,
-            fontWeight: 900,
-            color: C.red,
-            opacity: progress(frame, right, 10),
-            transform: `translateX(${(1 - progress(frame, right, 10)) * 30}px) scale(${keyZoom(frame, right)})`,
-          }}
-        >
-          {v.right}
-        </div>
+      <svg width={90} height={40} style={{opacity: progress(frame, right - 4, 8)}}>
+        <line x1={0} y1={20} x2={70} y2={20} stroke={C.red} strokeWidth={4} />
+        <path d="M 88 20 L 66 8 L 66 32 Z" fill={C.red} />
+      </svg>
+      <div
+        style={{
+          fontSize: 62,
+          fontWeight: 900,
+          color: C.red,
+          opacity: progress(frame, right, 10),
+          transform: `translateX(${(1 - progress(frame, right, 10)) * 30}px) scale(${keyZoom(frame, right)})`,
+        }}
+      >
+        {v.right}
       </div>
-    </>
+    </div>
   );
 };

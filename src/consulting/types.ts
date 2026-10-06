@@ -34,20 +34,13 @@ export type Cue = {
   offset?: number;
 };
 
-// 光電センサの原理図の種類
-export type SensorDiagramKind = 'basic' | 'through' | 'retro' | 'retroClear' | 'diffuse' | 'bgs';
-
-// センサ解説の1ページ（start の文から次のページの start まで表示）
+// センサ解説の1ページ（start の文から次のページの start まで表示）。
+// 図は添付の解説動画（sensor_draft）の該当区間 draft:[開始秒, 終了秒]（元動画の時刻）を、ナレーションの長さに合わせて再生する
 export type SensorPage = {
   start: string;
   tag?: string;
   title: string;
-  diagram?: SensorDiagramKind;
-  // 原理図の動き（モノが光をさえぎる・黒いモノに変わる・判定ラインを出す 等）のきっかけ
-  action?: Cue;
-  caption?: string;
-  result?: string;
-  points?: {text: string; tone: 'plus' | 'minus' | 'info'; at: string}[];
+  draft: [number, number];
 };
 
 export type Visuals = {
@@ -80,7 +73,8 @@ export type Visuals = {
   };
   Scene07SensorBasics: {
     pages: SensorPage[];
-    summary: {method: string; sub?: boolean; when: string; note: string}[];
+    // まとめの表：元動画の区間（終了時刻の画面で止める）
+    summaryDraft: [number, number];
     wrong: string;
     right: string;
   };
@@ -104,7 +98,7 @@ export type Animations = {
   Scene04Question: {options: Cue; spoken: {option: number; cue: Cue}[]; message: Cue};
   Scene05CustomerGoal: {left: Cue; leftDown: Cue; right: Cue; quote: Cue};
   Scene06Impact: {chain: Cue[]; surface: Cue; root: Cue};
-  Scene07SensorBasics: {summaryRows: Cue[]; wrong: Cue; right: Cue};
+  Scene07SensorBasics: {summary: Cue; wrong: Cue; right: Cue};
   Scene08YourMission: {negation: Cue; steps: Cue[]; firstStep: Cue};
   Scene09Ending: {english: Cue; brand: Cue};
 };
