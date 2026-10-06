@@ -11,6 +11,7 @@
     "typecheck": "tsc --noEmit",
     "consulting:durations": "tsx scripts/consulting.ts durations",
     "consulting:csv": "tsx scripts/consulting.ts csv",
+    "consulting:sheet": "tsx scripts/consulting.ts sheet",
     "render:consulting": "remotion render ConsultingSales out/consulting-sales.mp4"
   },
   "dependencies": {
