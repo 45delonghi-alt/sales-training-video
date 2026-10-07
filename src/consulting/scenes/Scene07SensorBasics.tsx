@@ -20,6 +20,8 @@ const CONTENT_TOP = 175;
 // 元動画の中の文言のうち、モノの有無の言い方を「検出」にそろえるために差し替えるラベル。
 // page：ページ番号、from / to：元動画上で表示されている秒、box：元動画上の位置（px）
 type Relabel = {page: number; from: number; to: number; text: string; pill: boolean; box: [number, number, number, number]};
+// まとめ表から消す文言（回帰反射型の注意点「光沢物は偏光フィルタ付き」）。from は元動画上で出てくる秒
+const SUMMARY_ERASE: Relabel = {page: -1, from: 102.6, to: 999, text: '', pill: false, box: [1306, 188, 372, 40]};
 const RELABELS: Relabel[] = [
   {page: 0, from: 7.0, to: 99, text: '光の変化 ＝ モノを検出', pill: false, box: [400, 552, 420, 50]},
   {page: 1, from: 27.2, to: 36.2, text: '光が遮られた → 検出', pill: true, box: [426, 572, 368, 56]},
@@ -95,6 +97,11 @@ export const Scene07SensorBasics: React.FC<{spec: SceneSpec<'Scene07SensorBasics
       {frame >= freezeAt ? (
         <Img src={staticFile(FREEZE)} style={{position: 'absolute', left: 0, top: CONTENT_TOP, width: 1920, height: 720}} />
       ) : null}
+      {(() => {
+        const [ds, de] = v.summaryDraft;
+        const from = Math.round(summaryStart + ((SUMMARY_ERASE.from - ds) / (de - ds)) * (freezeAt - summaryStart));
+        return frame >= from ? <Relabeled r={SUMMARY_ERASE} frame={frame} from={from} /> : null;
+      })()}
       {frame >= summaryStart ? <Message spec={spec} frame={frame} /> : null}
     </AbsoluteFill>
   );
