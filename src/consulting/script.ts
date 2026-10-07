@@ -326,7 +326,7 @@ export const script: ConsultingScript = {
           {start: 'PS_01', title: '光電センサとは？', draft: [6.0, 21.1]},
           {start: 'PS_05', tag: '方式1', title: '透過型', draft: [21.4, 36.6]},
           {start: 'PS_09', tag: '方式2', title: '回帰反射型', draft: [36.9, 52.5]},
-          {start: 'PS_13', tag: '方式2の応用', title: '回帰反射型（透明体専用）', draft: [57.4, 70.6]},
+          {start: 'PS_13', tag: '方式2の応用', title: '回帰反射型（透明体専用）', draft: [57.7, 70.6]},
           {start: 'PS_16', tag: '方式3', title: '反射型', draft: [70.9, 82.9]},
           {start: 'PS_19', tag: '方式3の応用', title: '距離設定型（BGS）', draft: [83.2, 101.6]},
         ],
