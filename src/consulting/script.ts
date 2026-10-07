@@ -283,8 +283,7 @@ export const script: ConsultingScript = {
           subtitles: ['2つめは「回帰反射型」。', '投光と受光が1つの筐体です。'],
         },
         {id: 'PS_10', text: '反射板で折り返した光が、遮られたら検出します。', subtitles: ['反射板で折り返した光が、', '遮られたら検出します。']},
-        {id: 'PS_11', text: '配線は片側だけ。透過型に近い安定性で、設置がラクです。', subtitles: ['配線は片側だけ。', '透過型に近い安定性で、設置がラクです。']},
-        {id: 'PS_12', text: '鏡のように光るモノは、偏光フィルタ付きで対策します。', subtitles: ['鏡のように光るモノは、', '偏光フィルタ付きで対策します。'], hold: 0.3},
+        {id: 'PS_11', text: '配線は片側だけ。透過型に近い安定性で、設置がラクです。', subtitles: ['配線は片側だけ。', '透過型に近い安定性で、設置がラクです。'], hold: 0.3},
         {id: 'PS_13', text: '回帰反射型には「透明体専用」タイプもあります。', subtitles: ['回帰反射型には', '「透明体専用」タイプもあります。']},
         {
           id: 'PS_14',
@@ -326,7 +325,7 @@ export const script: ConsultingScript = {
         pages: [
           {start: 'PS_01', title: '光電センサとは？', draft: [6.0, 21.1]},
           {start: 'PS_05', tag: '方式1', title: '透過型', draft: [21.4, 36.6]},
-          {start: 'PS_09', tag: '方式2', title: '回帰反射型', draft: [36.9, 57.1]},
+          {start: 'PS_09', tag: '方式2', title: '回帰反射型', draft: [36.9, 52.5]},
           {start: 'PS_13', tag: '方式2の応用', title: '回帰反射型（透明体専用）', draft: [57.4, 70.6]},
           {start: 'PS_16', tag: '方式3', title: '反射型', draft: [70.9, 82.9]},
           {start: 'PS_19', tag: '方式3の応用', title: '距離設定型（BGS）', draft: [83.2, 101.6]},

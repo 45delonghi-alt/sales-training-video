@@ -9,7 +9,7 @@ import {existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync}
 import {join} from 'node:path';
 import {script} from '../src/consulting/script';
 import {allLines, buildTimeline, speechText} from '../src/consulting/timeline';
-import type {NarrationTiming} from '../src/consulting/types';
+import type {NarrationLine, NarrationTiming} from '../src/consulting/types';
 
 const ROOT = join(import.meta.dirname, '..');
 
@@ -153,6 +153,12 @@ const START_OVERRIDES: Record<string, number> = {
 // 台本を書き換えて、手元の Scene 音声とは文面が違う文。録り直しが届くまで音声なし（字幕のみ）で扱う
 const RERECORD = new Set<string>([]);
 
+// 台本から削除したが、手元の Scene 音声には読まれている文。切れ目の推定にだけ使い、音声は捨てる
+// （after の文の直後に読まれている）
+const DROPPED: Record<string, {after: string; text: string}[]> = {
+  Scene07SensorBasics: [{after: 'PS_11', text: '鏡のように光るモノは、偏光フィルタ付きで対策します。'}],
+};
+
 const findInput = (stem: string) =>
   EXTS.map((e) => join(IMPORT_DIR, `${stem}.${e}`)).find((f) => existsSync(f));
 
@@ -202,7 +208,11 @@ const silences = (file: string, minSeconds: number) => {
 // 無音の候補から「文の数−1」個の切れ目を選ぶ。各文の長さが文字数比の予測に最も近く、
 // かつ長い無音で切れる組み合わせを、動的計画法でまとめて選ぶ（1か所の誤りが後ろに波及しない）
 const splitScene = (file: string, spec: (typeof script.scenes)[number]) => {
-  const lines = spec.narration;
+  const lines: NarrationLine[] = [];
+  for (const l of spec.narration) {
+    lines.push(l);
+    (DROPPED[spec.id] ?? []).filter((d) => d.after === l.id).forEach((d, k) => lines.push({id: `DROPPED_${l.id}_${k}`, text: d.text, subtitles: []}));
+  }
   const n = lines.length;
   const total = probe(file);
   const sil = silences(file, 0.06);
@@ -284,7 +294,7 @@ const importAudio = () => {
 
   script.scenes.forEach((spec, i) => {
     const sceneFile = findInput(`scene${String(i + 1).padStart(2, '0')}`);
-    const ranges = sceneFile ? splitScene(sceneFile, spec) : [];
+    const ranges = sceneFile ? splitScene(sceneFile, spec).filter((r) => !r.id.startsWith('DROPPED_')) : [];
     if (sceneFile) console.log(`■ ${spec.id}`);
     // 文ごとのファイルがある文は単独クリップ。それ以外は hold の文の後ろで区切ってクリップにまとめる
     let group: {id: string; start: number; end: number}[] = [];
