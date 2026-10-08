@@ -4,7 +4,7 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {phases, sceneById, scenes} from '../data';
 import type {DemoScene, PitchScene, QuestionScene, ReflectionScene, Scene} from '../types';
-import {ClipPlayer, type PlayerControl} from './ClipPlayer';
+import {ClipPlayer, pauseFrames, type PlayerControl} from './ClipPlayer';
 import {demoGate, discoveries, judge, phaseOf, useExperience, type Action, type ChoiceId, type DemoResult, type State} from './state';
 
 const role: 'control' | 'projector' = new URLSearchParams(location.search).get('view') === 'projector' ? 'projector' : 'control';
@@ -44,6 +44,7 @@ type Ctx = {
   demoFiles: Record<string, string>;
   setDemoFile: (sceneId: string, url: string) => void;
   projectorOpen: boolean;
+  sendCmd: (c: 'play' | 'pause') => void;
 };
 
 export const App: React.FC = () => {
@@ -97,6 +98,7 @@ export const App: React.FC = () => {
     demoFiles,
     setDemoFile: (id, url) => setDemoFiles((f) => ({...f, [id]: url})),
     projectorOpen,
+    sendCmd,
   };
 
   const fullscreen = () => {
@@ -238,9 +240,9 @@ const NavBar: React.FC<{ctx: Ctx}> = ({ctx}) => {
 const SceneView: React.FC<{scene: Scene; ctx: Ctx}> = ({scene, ctx}) => {
   switch (scene.type) {
     case 'video':
-      return <ClipView ctx={ctx} assetId="intro" title={scene.title} />;
+      return <ClipView ctx={ctx} assetId="intro" title={scene.title} sceneId={scene.sceneId} />;
     case 'clip':
-      return <ClipView ctx={ctx} assetId={scene.assetId} title={scene.title} />;
+      return <ClipView ctx={ctx} assetId={scene.assetId} title={scene.title} sceneId={scene.sceneId} />;
     case 'question':
       return <QuestionView q={scene} ctx={ctx} />;
     case 'pitch':
@@ -264,8 +266,9 @@ const playerProps = (ctx: Ctx) => ({
   controlRef: ctx.controlRef,
 });
 
-const ClipView: React.FC<{ctx: Ctx; assetId: string; title: string}> = ({ctx, assetId, title}) => {
+const ClipView: React.FC<{ctx: Ctx; assetId: string; title: string; sceneId: string}> = ({ctx, assetId, title, sceneId}) => {
   const {state, dispatch} = ctx;
+  const pauses = useMemo(() => pauseFrames(sceneId, assetId), [sceneId, assetId]);
   return (
     <div className="clip-view">
       <ClipPlayer
@@ -273,6 +276,9 @@ const ClipView: React.FC<{ctx: Ctx; assetId: string; title: string}> = ({ctx, as
         autoPlay={state.step === 'playing'}
         playToken={state.playToken}
         onEnded={() => !ctx.projector && dispatch({type: 'step', step: 'done'})}
+        pauses={pauses}
+        readOnly={ctx.projector}
+        onResume={() => ctx.projectorOpen && ctx.sendCmd('play')}
         {...playerProps(ctx)}
       />
       {state.step === 'ready' && !ctx.projector ? (

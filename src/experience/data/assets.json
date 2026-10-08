@@ -1,276 +1,856 @@
 [
-  {"assetId": "p1-situation", "kind": "factory", "variant": "miscount", "seconds": 9, "dialogAt": 2.5,
-   "visualDescription": "飲料工場 LINE 03。透明PETボトルがコンベアを流れ、光電センサでカウント。右上の表示で「実際の本数」より「センサのカウント」が1多くなる。",
-   "cameraDirection": "ライン正面（カメラA：手前から水平）。ゆっくり右へパン。",
-   "animationDirection": "ボトルが等間隔で流れる → 1本が通過した瞬間にカウントが2増え、差が赤く点滅。",
-   "status": ["implemented", "awaiting-footage"],
-   "needs": ["実写：飲料工場のPETボトルライン（正面）", "実写：お客様（設備担当）の相談カット"]},
-
-  {"assetId": "p1-q1-a", "kind": "sensor", "variant": "existing", "seconds": 8, "dialogAt": 3.5,
-   "visualDescription": "既設センサにカメラが寄る。本体の外観、取付金具、反射板への向き、型式ラベル（読み取れない）。メーカーロゴは表示しない。",
-   "cameraDirection": "一人称で近づく（カメラA→センサ寄り）。ラベルでいったん止まる。",
-   "animationDirection": "ズームイン → 型式ラベルにフォーカス枠 → 「型式：確認中」。",
-   "status": ["implemented", "awaiting-footage"],
-   "needs": ["実写：既設センサの外観（メーカー・型式が特定できない撮り方、または教育用の架空設定であることを明示）"]},
-
-  {"assetId": "p1-q1-b", "kind": "factory", "variant": "disturbed", "seconds": 11, "dialogAt": 6.5,
-   "visualDescription": "通常運転のコンベア → ボトルの流れが乱れる（間隔が詰まり、位置がずれる）→ その場面でカウント表示が実際より増える。",
-   "cameraDirection": "ライン正面。乱れる区間はスローモーション。",
-   "animationDirection": "前半：正常にカウント → 後半：ボトルが寄り、揺れる → カウント+1の差が出る。",
-   "status": ["implemented", "awaiting-footage"],
-   "needs": ["実写：ボトルの流れが乱れる様子（スロー撮影）"]},
-
-  {"assetId": "p1-q1-c", "kind": "customer", "variant": "thinking", "seconds": 7, "dialogAt": 2.0,
-   "visualDescription": "お客様が腕を組んで考え込む。背景にライン。",
-   "cameraDirection": "営業担当の一人称。お客様を正面からバストショット。",
-   "animationDirection": "わずかに視線を落とす → 返答。",
-   "status": ["placeholder", "awaiting-footage"],
-   "needs": ["実写：お客様役（30〜40代・設備担当）の考え込むカット"]},
-
-  {"assetId": "p2-situation", "kind": "factory", "variant": "wobble", "seconds": 9, "dialogAt": 2.5,
-   "visualDescription": "ボトルが寄り合い、揺れながら流れる様子をスローモーションで。センサ付近の乱れに注目させる。",
-   "cameraDirection": "センサ付近をローアングルで寄る。スロー（約0.4倍）。",
-   "animationDirection": "ボトルが詰まって揺れる → センサの位置にマーカー。",
-   "status": ["implemented", "awaiting-footage"],
-   "needs": ["実写：センサ付近のボトルの揺れ（スロー）"]},
-
-  {"assetId": "p2-q2-a", "kind": "bottle", "variant": "closeup-lightpath", "seconds": 13, "dialogAt": 7.5,
-   "visualDescription": "透明PETボトルの接写（曲面・凹凸・透明部分）→ 真上から見たライン：片側にセンサ、反対側に反射板。光の経路をCGで表示。",
-   "cameraDirection": "ボトル接写 → 俯瞰（カメラB：真上）に切り替え。",
-   "animationDirection": "ボトルの輪郭を線でなぞる → 俯瞰でセンサ→反射板→センサの光路が往復 → ボトルが光路を横切る。",
-   "status": ["implemented", "awaiting-footage"],
-   "needs": ["実写：透明PETボトルのマクロ撮影", "実写：センサと反射板の設置状況"]},
-
-  {"assetId": "p2-q2-b", "kind": "factory", "variant": "overview-speed", "seconds": 9, "dialogAt": 3.5,
-   "visualDescription": "生産ライン全体を俯瞰し、ライン速度の表示と生産計画の進み具合を示す。",
-   "cameraDirection": "高い位置から全景（カメラC：俯瞰）。",
-   "animationDirection": "速度メーターが一定を保つ → 生産計画のバーが進む。",
-   "status": ["implemented", "awaiting-footage"],
-   "needs": ["実写：工場の全景（俯瞰）"]},
-
-  {"assetId": "p2-q2-c", "kind": "document", "variant": "maintenance-log", "seconds": 8, "dialogAt": 3.0,
-   "visualDescription": "設備の点検履歴（導入日・点検日・内容）を確認する。故障の記録はない。",
-   "cameraDirection": "書類（タブレット）を一人称で覗き込む。",
-   "animationDirection": "行が順に表示 → 導入日にマーカー。",
-   "status": ["implemented"],
-   "needs": []},
-
-  {"assetId": "p2-light", "kind": "tech", "variant": "transparent-light", "seconds": 30, "dialogAt": 0.8,
-   "visualDescription": "回帰反射型の原理（俯瞰）→ 透明ボトル通過時の受光量グラフ。不透明なモノは大きく減り、透明なボトルはわずかに減り、曲面で上下する。基準線付近を行き来すると出力が複数回切り替わる。",
-   "cameraDirection": "CG。俯瞰図と波形を左右に並べる。",
-   "animationDirection": "光路の往復 → 不透明体の受光量 → 透明体の受光量 → 基準線付近の上下でON/OFFが2回 → 「条件しだい」の注記。",
-   "status": ["implemented"],
-   "needs": []},
-
-  {"assetId": "p2-isolation", "kind": "tech", "variant": "isolation", "seconds": 16, "dialogAt": 0.8,
-   "visualDescription": "センサ → 配線 → PLC（カウント処理）のつながりを示し、数が増えうる場所を3つ挙げる。",
-   "cameraDirection": "CG。左から右への信号の流れ。",
-   "animationDirection": "信号パルスが流れる → 3か所に「？」 → 「切り分け」の文字。",
-   "status": ["implemented"],
-   "needs": []},
-
-  {"assetId": "p3-backdrop", "kind": "factory", "variant": "overview", "seconds": 8,
-   "visualDescription": "ラインが通常どおり動いている全景。問いの背景に使う。",
-   "cameraDirection": "ライン正面（カメラA）・やや引き。",
-   "animationDirection": "ボトルが流れるだけの静かなカット。",
-   "status": ["implemented", "awaiting-footage"],
-   "needs": ["実写：ライン全景（静かなカット）"]},
-
-  {"assetId": "p3-q3-a", "kind": "document", "variant": "production-log", "seconds": 8, "dialogAt": 3.5,
-   "visualDescription": "生産記録・カウント履歴。誤カウントの発生日に印（教育用の架空データ）。",
-   "cameraDirection": "タブレットの画面を一人称で。",
-   "animationDirection": "曜日ごとの記録が並び、発生日に赤い印。",
-   "status": ["implemented"],
-   "needs": []},
-
-  {"assetId": "p3-q3-b", "kind": "factory", "variant": "stopped-recount", "seconds": 11, "dialogAt": 5.0,
-   "visualDescription": "ラインが停止し、作業者がボトルを数え直す。現場担当者が対応に追われる。",
-   "cameraDirection": "ライン正面 → 作業者の手元。",
-   "animationDirection": "停止ランプ点灯 → ボトルが止まる → 作業者が1本ずつ数える（カウント表示）。",
-   "status": ["implemented", "awaiting-footage"],
-   "needs": ["実写：作業者が数量を確認するカット"]},
-
-  {"assetId": "p3-q3-c", "kind": "document", "variant": "budget", "seconds": 7, "dialogAt": 2.5,
-   "visualDescription": "お客様が設備予算の資料を開く（金額は表示しない）。",
-   "cameraDirection": "資料を一人称で。",
-   "animationDirection": "資料が開く → お客様がページを閉じる。",
-   "status": ["implemented"],
-   "needs": []},
-
-  {"assetId": "p3-chain", "kind": "tech", "variant": "chain", "seconds": 18, "dialogAt": 0.8,
-   "visualDescription": "誤カウント → 数量不一致 → 確認作業 → 作業負担 → 生産効率への影響。最後に「正確な数量管理と安定した生産」。",
-   "cameraDirection": "CG。上から下へ連鎖。",
-   "animationDirection": "矢印でつながる順次表示 → 最後の2段を赤で強調。",
-   "status": ["implemented"],
-   "needs": []},
-
-  {"assetId": "p4-situation", "kind": "customer", "variant": "request", "seconds": 7, "dialogAt": 1.5,
-   "visualDescription": "お客様がまっすぐこちらを見て要望を伝える。背景にライン。",
-   "cameraDirection": "営業の一人称。正面バストショット。",
-   "animationDirection": "わずかに身を乗り出す。",
-   "status": ["placeholder", "awaiting-footage"],
-   "needs": ["実写：お客様役の要望カット"]},
-
-  {"assetId": "p4-q4-a", "kind": "document", "variant": "catalog-generic", "seconds": 8, "dialogAt": 3.5,
-   "visualDescription": "一般的な製品紹介（「高性能」「高速応答」などの言葉が並ぶ）。メーカー名・型式は表示しない。",
-   "cameraDirection": "カタログを一人称で。",
-   "animationDirection": "特長の項目が並ぶ → お客様の問いかけ。",
-   "status": ["implemented"],
-   "needs": []},
-
-  {"assetId": "p4-q4-b", "kind": "product", "variant": "proposal", "seconds": 12, "dialogAt": 7.0,
-   "visualDescription": "OPTEX-FA の透明体検出センサ（公式製品画像）が登場 → 透明PETボトルの特徴 → 検出の考え方を簡単なCGで。",
-   "cameraDirection": "製品画像を大きく → 横にボトルと光路の図。",
-   "animationDirection": "製品がスライドイン → ボトルを通過した光のわずかな変化をとらえる図。",
-   "status": ["implemented", "awaiting-license"],
-   "imagePath": "experience/products/optex-fa/transparent-sensor.png",
-   "needs": ["OPTEX-FA 公式製品画像（現行の透明体検出センサ。型式確定後・許諾後）"]},
-
-  {"assetId": "p4-q4-c", "kind": "factory", "variant": "manual-check", "seconds": 9, "dialogAt": 4.5,
-   "visualDescription": "作業者がラインの横で目視で数を確認し続ける。",
-   "cameraDirection": "ライン正面・作業者を手前に。",
-   "animationDirection": "作業者の視線がボトルを追う → 手元のカウンタを押す。",
-   "status": ["implemented", "awaiting-footage"],
-   "needs": ["実写：目視確認のカット"]},
-
-  {"assetId": "p4-product", "kind": "product", "variant": "intro", "seconds": 24, "dialogAt": 0.8,
-   "visualDescription": "OPTEX-FA 透明体検出センサの紹介：外観（公式画像）、用途（PETボトル等の透明体）、検出の考え方、期待できる改善、検証が必要な条件。",
-   "cameraDirection": "左に製品、右に説明。",
-   "animationDirection": "製品 → 用途 → 原理 → 期待できること → 検証が必要な条件 の順に表示。",
-   "status": ["implemented", "awaiting-license"],
-   "imagePath": "experience/products/optex-fa/transparent-sensor.png",
-   "needs": ["OPTEX-FA 公式製品画像と型式（現行品の確認・許諾）"]},
-
-  {"assetId": "p5-bench", "kind": "demo", "variant": "bench", "seconds": 8,
-   "visualDescription": "実機デモの検証台：小型コンベア、センサ、反射板、透明PETボトル、検出表示、カウンター。",
-   "cameraDirection": "検証台の全景（正面）。",
-   "animationDirection": "静かなカット。各部の名前を表示。",
-   "status": ["implemented", "awaiting-footage"],
-   "needs": ["実写：実機デモ検証台の全景"]},
-
-  {"assetId": "p5-s1-a", "kind": "customer", "variant": "uneasy", "seconds": 7, "dialogAt": 2.0,
-   "visualDescription": "お客様が不安そうに首をかしげる。",
-   "cameraDirection": "営業の一人称。正面バストショット。",
-   "animationDirection": "首をかしげる → 返答。",
-   "status": ["placeholder", "awaiting-footage"],
-   "needs": ["実写：お客様役の不安そうなカット"]},
-
-  {"assetId": "p5-s1-b", "kind": "customer", "variant": "bottles", "seconds": 8, "dialogAt": 2.5,
-   "visualDescription": "お客様が実際の製品ボトルを持ってくる。",
-   "cameraDirection": "営業の一人称。お客様がボトルを差し出す。",
-   "animationDirection": "ボトルを机に置く → 返答。",
-   "status": ["placeholder", "awaiting-footage"],
-   "needs": ["実写：お客様役がボトルを用意するカット"]},
-
-  {"assetId": "p5-s1-c", "kind": "document", "variant": "price", "seconds": 7, "dialogAt": 2.5,
-   "visualDescription": "価格表を開こうとする（金額は表示しない）。",
-   "cameraDirection": "資料を一人称で。",
-   "animationDirection": "価格表 → お客様の手が止める。",
-   "status": ["implemented"],
-   "needs": []},
-
-  {"assetId": "p5-plan", "kind": "document", "variant": "test-plan", "seconds": 14, "dialogAt": 1.0,
-   "visualDescription": "検証項目と合格基準（試す前に決める）：①1本ずつ検出 ②出力が何度も切り替わらない ③カウント値＝実際の本数 ④位置ずれ等でも①〜③を満たす。",
-   "cameraDirection": "ホワイトボードを正面から。",
-   "animationDirection": "項目が順に書き込まれる。",
-   "status": ["implemented"],
-   "needs": []},
-
-  {"assetId": "p5-demo-normal", "kind": "demo", "variant": "normal", "seconds": 16,
-   "visualDescription": "シミュレーション：通常条件でボトルが1本通るたびに検出表示がONになり、カウントが1増える様子（理想的な動作の説明）。",
-   "cameraDirection": "実機全景 → センサ → ボトル通過 → 検出表示 → カウンターの順に寄る。",
-   "animationDirection": "通過本数・ON回数・カウント値を並べて表示。「シミュレーション」の表示を常時。",
-   "status": ["implemented", "awaiting-footage"],
-   "needs": ["実写：実機デモ（センサ正面・側面・反射板・ボトル・配線・検出表示・カウンター・全体）"]},
-
-  {"assetId": "p5-demo-offset", "kind": "demo", "variant": "offset", "seconds": 14,
-   "visualDescription": "シミュレーション：ボトルの位置がコンベアの手前・奥にずれて流れる。観察ポイントを示し、結果は実機で測る。",
-   "cameraDirection": "俯瞰（カメラB）で位置ずれを見せる。",
-   "animationDirection": "ボトルが左右にずれて通過 → 観察ポイント → 「結果：実機で測定」。",
-   "status": ["implemented", "awaiting-footage"],
-   "needs": ["実写：位置ずれ条件での実機テスト"]},
-
-  {"assetId": "p5-demo-gap", "kind": "demo", "variant": "gap", "seconds": 14,
-   "visualDescription": "シミュレーション：ボトルどうしの間隔が詰まって流れる。結果は実機で測る。",
-   "cameraDirection": "ライン正面（カメラA）。",
-   "animationDirection": "間隔が詰まって通過 → 観察ポイント → 「結果：実機で測定」。",
-   "status": ["implemented", "awaiting-footage"],
-   "needs": ["実写：間隔が詰まる条件での実機テスト"]},
-
-  {"assetId": "p5-demo-orientation", "kind": "demo", "variant": "orientation", "seconds": 14,
-   "visualDescription": "シミュレーション：ボトルの向き（凹凸の位置）が変わって流れる。結果は実機で測る。",
-   "cameraDirection": "ライン正面（カメラA）。",
-   "animationDirection": "向きの違うボトルが通過 → 観察ポイント → 「結果：実機で測定」。",
-   "status": ["implemented", "awaiting-footage"],
-   "needs": ["実写：向きを変えた条件での実機テスト"]},
-
-  {"assetId": "p5-s3-a", "kind": "customer", "variant": "worried", "seconds": 7, "dialogAt": 2.0,
-   "visualDescription": "お客様が「流れが乱れたとき」を思い浮かべて心配する（吹き出しに乱れたライン）。",
-   "cameraDirection": "営業の一人称。",
-   "animationDirection": "吹き出しにボトルの乱れ → 返答。",
-   "status": ["placeholder", "awaiting-footage"],
-   "needs": ["実写：お客様役の心配するカット"]},
-
-  {"assetId": "p5-s3-b", "kind": "demo", "variant": "setup-conditions", "seconds": 9, "dialogAt": 4.5,
-   "visualDescription": "悪条件（位置ずれ・間隔・向き）の再現を準備する。",
-   "cameraDirection": "検証台の正面。",
-   "animationDirection": "3つの条件カードが並ぶ → チェック欄。",
-   "status": ["implemented", "awaiting-footage"],
-   "needs": ["実写：悪条件を準備するカット"]},
-
-  {"assetId": "p5-s3-c", "kind": "document", "variant": "catalog-spec", "seconds": 7, "dialogAt": 2.5,
-   "visualDescription": "カタログの仕様表（項目名のみ、数値は伏せる）。",
-   "cameraDirection": "資料を一人称で。",
-   "animationDirection": "仕様表 → お客様の返答。",
-   "status": ["implemented"],
-   "needs": []},
-
-  {"assetId": "p5-s4-a", "kind": "customer", "variant": "cool", "seconds": 7, "dialogAt": 2.0,
-   "visualDescription": "お客様の反応が薄い。",
-   "cameraDirection": "営業の一人称。",
-   "animationDirection": "目線をそらす → 返答。",
-   "status": ["placeholder", "awaiting-footage"],
-   "needs": ["実写：お客様役の反応が薄いカット"]},
-
-  {"assetId": "p5-s4-b", "kind": "document", "variant": "quote", "seconds": 7, "dialogAt": 2.5,
-   "visualDescription": "見積書（金額は表示しない）をお客様が受け取りかねる。",
-   "cameraDirection": "資料を一人称で。",
-   "animationDirection": "見積書 → お客様の返答。",
-   "status": ["implemented"],
-   "needs": []},
-
-  {"assetId": "p5-s4-c", "kind": "customer", "variant": "together", "seconds": 8, "dialogAt": 2.0,
-   "visualDescription": "お客様が前向きにうなずき、設備担当者と一緒に確認することを提案する。",
-   "cameraDirection": "営業の一人称。お客様の横に設備担当者。",
-   "animationDirection": "うなずく → 設備担当者が加わる。",
-   "status": ["placeholder", "awaiting-footage"],
-   "needs": ["実写：お客様役と設備担当者役の前向きなカット"]},
-
-  {"assetId": "p5-followup", "kind": "tech", "variant": "followup", "seconds": 16, "dialogAt": 0.8,
-   "visualDescription": "結果が基準に届かなかったときの次の手：設置位置・角度、感度設定、PLC側の処理、別の検出方式。",
-   "cameraDirection": "CG。",
-   "animationDirection": "4つの選択肢カードが順に表示。",
-   "status": ["implemented"],
-   "needs": []},
-
-  {"assetId": "p5-message", "kind": "tech", "variant": "message", "seconds": 13, "dialogAt": 0.8,
-   "visualDescription": "「実機デモは売り込みではない。お客様と一緒に確かめる活動」というメッセージ。",
-   "cameraDirection": "CG（黒背景）。",
-   "animationDirection": "「売り込み」に取り消し線 → 「一緒に確かめる」を赤で。",
-   "status": ["implemented"],
-   "needs": []},
-
-  {"assetId": "r-applications", "kind": "applications", "variant": "montage", "seconds": 16,
-   "visualDescription": "さまざまな製造現場（食品・容器・包装・設備の位置確認）をテンポよく見せる。",
-   "cameraDirection": "現場ごとに短いカット（各約3秒）。",
-   "animationDirection": "カットごとに検出の光と「検出」のラベル。",
-   "status": ["implemented", "awaiting-footage"],
-   "needs": ["実写：食品・容器・包装・組立など複数の製造現場"]},
-
-  {"assetId": "ending", "kind": "ending", "variant": "main", "seconds": 18,
-   "visualDescription": "「売るだけでは、終わらない。」→ 聞く。考える。提案する。そして、確かめる。→ 「お客様と一緒に、課題解決を実現する。」→ OPTEX-FA CONSULTING SALES EXPERIENCE。",
-   "cameraDirection": "黒背景のタイポグラフィ。",
-   "animationDirection": "1語ずつテンポよく表示 → ロゴ。",
-   "status": ["implemented", "awaiting-footage"],
-   "needs": ["実写：製造現場・実製品・実機デモ・お客様との対話（エンディング用の短いカット）"]}
+ {
+  "assetId": "p1-situation",
+  "kind": "factory",
+  "variant": "miscount",
+  "seconds": 9,
+  "dialogAt": 2.5,
+  "visualDescription": "飲料工場 LINE 03。透明PETボトルがコンベアを流れ、光電センサでカウント。右上の表示で「実際の本数」より「センサのカウント」が1多くなる。",
+  "cameraDirection": "ライン正面の全景（カメラA）→ 誤カウントの瞬間にセンサへズームイン。",
+  "animationDirection": "ボトルが等間隔で流れる → 1本の通過でカウントが2増え、そのボトルが赤く光る → センサへ寄る。お客様の相談の間は、右下に困った表情の小窓。",
+  "status": [
+   "implemented",
+   "awaiting-footage"
+  ],
+  "needs": [
+   "実写：飲料工場のPETボトルライン（正面）",
+   "実写：お客様（設備担当）の相談カット"
+  ],
+  "production": {
+   "method": "composite",
+   "prompt": "Front view at bottle height of a stainless steel conveyor line in a modern Japanese beverage factory, clear 500ml PET bottles of green tea with ribbed bodies and white labels moving left to right, evenly spaced, steady motion, bright clean LED lighting, 35mm lens",
+   "negativePrompt": "no logos, no brand names, no readable text, no sensors or electronic devices (unless filmed for real), no distorted hands or faces",
+   "note": "センサ部分は実機撮影または公式画像を合成。HUDはCGで重ねる"
+  }
+ },
+ {
+  "assetId": "p1-q1-a",
+  "kind": "sensor",
+  "variant": "existing",
+  "seconds": 8,
+  "dialogAt": 3.5,
+  "visualDescription": "既設センサにカメラが寄る。本体の外観、取付金具、反射板への向き、型式ラベル（読み取れない）。メーカーロゴは表示しない。",
+  "cameraDirection": "一人称で近づく（カメラA→センサ寄り）。ラベルでいったん止まる。",
+  "animationDirection": "ズームイン → 型式ラベルにフォーカス枠 → 「型式：確認中」。",
+  "status": [
+   "implemented",
+   "awaiting-footage"
+  ],
+  "needs": [
+   "実写：既設センサの外観（メーカー・型式が特定できない撮り方、または教育用の架空設定であることを明示）"
+  ],
+  "production": {
+   "method": "shoot",
+   "prompt": "Close-up push-in on an industrial photoelectric sensor mounted on a bracket beside a conveyor, label area out of focus",
+   "negativePrompt": "",
+   "note": "既設センサは実物を撮影し、メーカー・型式が読めない撮り方にする（AI生成しない）"
+  }
+ },
+ {
+  "assetId": "p1-q1-b",
+  "kind": "factory",
+  "variant": "disturbed",
+  "seconds": 11,
+  "dialogAt": 6.5,
+  "visualDescription": "通常運転のコンベア → ボトルの流れが乱れる（間隔が詰まり、位置がずれる）→ その場面でカウント表示が実際より増える。",
+  "cameraDirection": "少し引いたライン正面 → 流れが乱れ始めたらスローモーションでセンサへズームイン。",
+  "animationDirection": "前半：正常にカウント → 後半：ボトルが寄り、揺れる → カウント+1の差が出る。",
+  "status": [
+   "implemented",
+   "awaiting-footage"
+  ],
+  "needs": [
+   "実写：ボトルの流れが乱れる様子（スロー撮影）"
+  ],
+  "production": {
+   "method": "composite",
+   "prompt": "stainless steel conveyor line in a modern Japanese beverage factory, clear 500ml PET bottles of green tea with ribbed bodies and white labels moving left to right; after a few seconds the bottles bunch together and wobble, filmed at 120fps slow motion, front view at bottle height",
+   "negativePrompt": "no logos, no brand names, no readable text, no sensors or electronic devices (unless filmed for real), no distorted hands or faces",
+   "note": "カウント表示はCGで重ねる"
+  }
+ },
+ {
+  "assetId": "p1-q1-c",
+  "kind": "customer",
+  "variant": "thinking",
+  "seconds": 7,
+  "dialogAt": 2.0,
+  "visualDescription": "お客様が腕を組んで考え込む。背景にライン。",
+  "cameraDirection": "営業担当の一人称。お客様を正面からバストショット。",
+  "animationDirection": "わずかに視線を落とす → 返答。",
+  "status": [
+   "placeholder",
+   "awaiting-footage"
+  ],
+  "needs": [
+   "実写：お客様役（30〜40代・設備担当）の考え込むカット"
+  ],
+  "production": {
+   "method": "ai-image",
+   "prompt": "Japanese male maintenance engineer in his late 30s, navy work jacket and cap, name badge, arms crossed, thinking, factory line softly blurred behind, eye-level medium close-up, natural light",
+   "negativePrompt": "no logos, no brand names, no readable text, no sensors or electronic devices (unless filmed for real), no distorted hands or faces",
+   "note": "同一人物で全カットを通すため、実写撮影を推奨。AIで作る場合は参照画像で人物を固定"
+  }
+ },
+ {
+  "assetId": "p2-situation",
+  "kind": "factory",
+  "variant": "wobble",
+  "seconds": 9,
+  "dialogAt": 2.5,
+  "visualDescription": "ボトルが寄り合い、揺れながら流れる様子をスローモーションで。センサ付近の乱れに注目させる。",
+  "cameraDirection": "センサ付近をローアングルで寄る。スロー（約0.4倍）。",
+  "animationDirection": "ボトルが詰まって揺れる → センサの位置にマーカー。",
+  "status": [
+   "implemented",
+   "awaiting-footage"
+  ],
+  "needs": [
+   "実写：センサ付近のボトルの揺れ（スロー）"
+  ],
+  "production": {
+   "method": "composite",
+   "prompt": "Low-angle close shot near the middle of a stainless steel conveyor line in a modern Japanese beverage factory, clear 500ml PET bottles of green tea with ribbed bodies and white labels moving left to right, bottles jostling and tilting slightly, 120fps slow motion, shallow depth of field",
+   "negativePrompt": "no logos, no brand names, no readable text, no sensors or electronic devices (unless filmed for real), no distorted hands or faces",
+   "note": "センサは実機撮影を合成"
+  }
+ },
+ {
+  "assetId": "p2-q2-a",
+  "kind": "bottle",
+  "variant": "closeup-lightpath",
+  "seconds": 13,
+  "dialogAt": 7.5,
+  "visualDescription": "透明PETボトルの接写（曲面・凹凸・透明部分）→ 真上から見たライン：片側にセンサ、反対側に反射板。光の経路をCGで表示。",
+  "cameraDirection": "ボトル接写 → 俯瞰（カメラB：真上）に切り替え。",
+  "animationDirection": "ボトルの輪郭を線でなぞる → 俯瞰でセンサ→反射板→センサの光路が往復 → ボトルが光路を横切る。",
+  "status": [
+   "implemented",
+   "awaiting-footage"
+  ],
+  "needs": [
+   "実写：透明PETボトルのマクロ撮影",
+   "実写：センサと反射板の設置状況"
+  ],
+  "production": {
+   "method": "ai-image",
+   "prompt": "Macro shot of a clear ribbed 500ml PET bottle of green tea on a dark background, rim light revealing the curved shoulder and ribs, transparent highlights",
+   "negativePrompt": "no logos, no brand names, no readable text, no sensors or electronic devices (unless filmed for real), no distorted hands or faces",
+   "note": "後半の真上からの光路図はCG"
+  }
+ },
+ {
+  "assetId": "p2-q2-b",
+  "kind": "factory",
+  "variant": "overview-speed",
+  "seconds": 9,
+  "dialogAt": 3.5,
+  "visualDescription": "生産ライン全体を俯瞰し、ライン速度の表示と生産計画の進み具合を示す。",
+  "cameraDirection": "センサ付近からクレーンで引き、ライン全体の俯瞰へ（カメラC）。",
+  "animationDirection": "速度メーターが一定を保つ → 生産計画のバーが進む。",
+  "status": [
+   "implemented",
+   "awaiting-footage"
+  ],
+  "needs": [
+   "実写：工場の全景（俯瞰）"
+  ],
+  "production": {
+   "method": "ai-image",
+   "prompt": "High-angle wide establishing shot of a large modern Japanese beverage factory floor, long stainless steel conveyor line in a modern Japanese beverage factory, clear 500ml PET bottles of green tea with ribbed bodies and white labels moving left to right, workers in the distance, clean and orderly",
+   "negativePrompt": "no logos, no brand names, no readable text, no sensors or electronic devices (unless filmed for real), no distorted hands or faces",
+   "note": "速度表示はCGで重ねる"
+  }
+ },
+ {
+  "assetId": "p2-q2-c",
+  "kind": "document",
+  "variant": "maintenance-log",
+  "seconds": 8,
+  "dialogAt": 3.0,
+  "visualDescription": "設備の点検履歴（導入日・点検日・内容）を確認する。故障の記録はない。",
+  "cameraDirection": "書類（タブレット）を一人称で覗き込む。わずかに傾いた状態から正面へ起こし、ゆっくり寄る。",
+  "animationDirection": "行が順に表示 → 導入日にマーカー。",
+  "status": [
+   "implemented"
+  ],
+  "needs": [],
+  "production": {
+   "method": "cg",
+   "prompt": "Tablet screen showing a maintenance log table",
+   "negativePrompt": "",
+   "note": "表はCG（教育用の架空データ）"
+  }
+ },
+ {
+  "assetId": "p2-light",
+  "kind": "tech",
+  "variant": "transparent-light",
+  "seconds": 30,
+  "dialogAt": 0.8,
+  "visualDescription": "左：3D CG（回帰反射型。手前にセンサ、奥に反射板。光がコンベアを横切って往復）。不透明なモノは光を遮り、透明なボトルは光を通す。その場の受光量と出力ON/OFFを表示。右：受光量のグラフ（模式図）。透明ボトルはわずかに減り、曲面で2回くぼむ → 出力が2回ON。",
+  "cameraDirection": "3D：カメラがゆっくり回り込む（オービット）。右は2Dグラフ。",
+  "animationDirection": "不透明なモノで原理 → 「考えよう」で一時停止（透明なボトルだとどうなる？）→ 透明ボトルに切り替え → 受光量が基準付近を行き来 → 出力が2回ON → 「必ず誤検出するわけではない」。",
+  "status": [
+   "implemented"
+  ],
+  "needs": [],
+  "production": {
+   "method": "cg",
+   "prompt": "3D CG: top-down and perspective views of a retro-reflective photoelectric sensor across a conveyor, red light beam passing through a clear bottle, received-light graph",
+   "negativePrompt": "",
+   "note": "光学原理はCGで制作。数値は入れない"
+  }
+ },
+ {
+  "assetId": "p2-isolation",
+  "kind": "tech",
+  "variant": "isolation",
+  "seconds": 16,
+  "dialogAt": 0.8,
+  "visualDescription": "センサ → 配線 → PLC（カウント処理）のつながりを示し、数が増えうる場所を3つ挙げる。",
+  "cameraDirection": "CG。左から右への信号の流れ。",
+  "animationDirection": "信号パルスが流れる → 3か所に「？」 → 「切り分け」の文字。",
+  "status": [
+   "implemented"
+  ],
+  "needs": [],
+  "production": {
+   "method": "cg",
+   "prompt": "Diagram: sensor output, wiring, PLC counting",
+   "negativePrompt": "",
+   "note": "CG"
+  }
+ },
+ {
+  "assetId": "p3-backdrop",
+  "kind": "factory",
+  "variant": "overview",
+  "seconds": 8,
+  "visualDescription": "ラインが通常どおり動いている全景。問いの背景に使う。",
+  "cameraDirection": "ライン正面（カメラA）。横へゆっくり移動。",
+  "animationDirection": "ボトルが流れるだけの静かなカット。",
+  "status": [
+   "implemented",
+   "awaiting-footage"
+  ],
+  "needs": [
+   "実写：ライン全景（静かなカット）"
+  ],
+  "production": {
+   "method": "ai-image",
+   "prompt": "Calm front view of a stainless steel conveyor line in a modern Japanese beverage factory, clear 500ml PET bottles of green tea with ribbed bodies and white labels moving left to right, steady production, soft light",
+   "negativePrompt": "no logos, no brand names, no readable text, no sensors or electronic devices (unless filmed for real), no distorted hands or faces",
+   "note": "静かな背景用"
+  }
+ },
+ {
+  "assetId": "p3-q3-a",
+  "kind": "document",
+  "variant": "production-log",
+  "seconds": 8,
+  "dialogAt": 3.5,
+  "visualDescription": "生産記録・カウント履歴。誤カウントの発生日に印（教育用の架空データ）。",
+  "cameraDirection": "タブレットの画面を一人称で。わずかに傾いた状態から正面へ起こし、ゆっくり寄る。",
+  "animationDirection": "曜日ごとの記録が並び、発生日に赤い印。",
+  "status": [
+   "implemented"
+  ],
+  "needs": [],
+  "production": {
+   "method": "cg",
+   "prompt": "Tablet screen with weekly count records",
+   "negativePrompt": "",
+   "note": "CG（教育用の架空データ）"
+  }
+ },
+ {
+  "assetId": "p3-q3-b",
+  "kind": "factory",
+  "variant": "stopped-recount",
+  "seconds": 11,
+  "dialogAt": 5.0,
+  "visualDescription": "ラインが停止し、作業者がボトルを数え直す。現場担当者が対応に追われる。",
+  "cameraDirection": "ライン正面 → 停止後、数え直す作業者へ寄る。",
+  "animationDirection": "停止ランプ点灯 → ボトルが止まる → 作業者が1本ずつ数える（カウント表示）。",
+  "status": [
+   "implemented",
+   "awaiting-footage"
+  ],
+  "needs": [
+   "実写：作業者が数量を確認するカット"
+  ],
+  "production": {
+   "method": "shoot",
+   "prompt": "The conveyor line stops, a red stop lamp lights up, two workers in navy work jackets count bottles by hand along the stainless steel conveyor line in a modern Japanese beverage factory, clear 500ml PET bottles of green tea with ribbed bodies and white labels moving left to right",
+   "negativePrompt": "",
+   "note": "作業者役2名で撮影"
+  }
+ },
+ {
+  "assetId": "p3-q3-c",
+  "kind": "document",
+  "variant": "budget",
+  "seconds": 7,
+  "dialogAt": 2.5,
+  "visualDescription": "お客様が設備予算の資料を開く（金額は表示しない）。",
+  "cameraDirection": "資料を一人称で。わずかに傾いた状態から正面へ起こし、ゆっくり寄る。",
+  "animationDirection": "資料が開く → お客様がページを閉じる。",
+  "status": [
+   "implemented"
+  ],
+  "needs": [],
+  "production": {
+   "method": "cg",
+   "prompt": "Budget document with amounts hidden",
+   "negativePrompt": "",
+   "note": "CG"
+  }
+ },
+ {
+  "assetId": "p3-chain",
+  "kind": "tech",
+  "variant": "chain",
+  "seconds": 18,
+  "dialogAt": 0.8,
+  "visualDescription": "誤カウント → 数量不一致 → 確認作業 → 作業負担 → 生産効率への影響。最後に「正確な数量管理と安定した生産」。",
+  "cameraDirection": "CG。上から下へ連鎖。",
+  "animationDirection": "矢印でつながる順次表示 → 最後の2段を赤で強調。",
+  "status": [
+   "implemented"
+  ],
+  "needs": [],
+  "production": {
+   "method": "cg",
+   "prompt": "Cause-and-effect chain diagram",
+   "negativePrompt": "",
+   "note": "CG"
+  }
+ },
+ {
+  "assetId": "p4-situation",
+  "kind": "customer",
+  "variant": "request",
+  "seconds": 7,
+  "dialogAt": 1.5,
+  "visualDescription": "お客様がまっすぐこちらを見て要望を伝える。背景にライン。",
+  "cameraDirection": "営業の一人称。正面バストショット。",
+  "animationDirection": "わずかに身を乗り出す。",
+  "status": [
+   "placeholder",
+   "awaiting-footage"
+  ],
+  "needs": [
+   "実写：お客様役の要望カット"
+  ],
+  "production": {
+   "method": "ai-image",
+   "prompt": "Same Japanese maintenance engineer (late 30s, navy work jacket and cap, name badge) leaning slightly forward, earnest expression, speaking to camera, factory line blurred behind, eye-level medium close-up",
+   "negativePrompt": "no logos, no brand names, no readable text, no sensors or electronic devices (unless filmed for real), no distorted hands or faces",
+   "note": "人物は全カットで同一に"
+  }
+ },
+ {
+  "assetId": "p4-q4-a",
+  "kind": "document",
+  "variant": "catalog-generic",
+  "seconds": 8,
+  "dialogAt": 3.5,
+  "visualDescription": "一般的な製品紹介（「高性能」「高速応答」などの言葉が並ぶ）。メーカー名・型式は表示しない。",
+  "cameraDirection": "カタログを一人称で。わずかに傾いた状態から正面へ起こし、ゆっくり寄る。",
+  "animationDirection": "特長の項目が並ぶ → お客様の問いかけ。",
+  "status": [
+   "implemented"
+  ],
+  "needs": [],
+  "production": {
+   "method": "cg",
+   "prompt": "Generic sensor catalog page without brand names",
+   "negativePrompt": "",
+   "note": "CG（メーカー名・型式なし）"
+  }
+ },
+ {
+  "assetId": "p4-q4-b",
+  "kind": "product",
+  "variant": "proposal",
+  "seconds": 12,
+  "dialogAt": 7.0,
+  "visualDescription": "OPTEX-FA の透明体検出センサ（公式製品画像）が登場 → 透明PETボトルの特徴 → 検出の考え方を簡単なCGで。",
+  "cameraDirection": "製品画像を大きく → 横にボトルと光路の図。",
+  "animationDirection": "製品がスライドイン → ボトルを通過した光のわずかな変化をとらえる図。",
+  "status": [
+   "implemented",
+   "awaiting-license"
+  ],
+  "imagePath": "experience/products/optex-fa/transparent-sensor.png",
+  "needs": [
+   "OPTEX-FA 公式製品画像（現行の透明体検出センサ。型式確定後・許諾後）"
+  ],
+  "production": {
+   "method": "composite",
+   "prompt": "Clean product presentation background, soft gradient, space on the left for a product photo",
+   "negativePrompt": "no logos, no brand names, no readable text, no sensors or electronic devices (unless filmed for real), no distorted hands or faces",
+   "note": "製品は公式画像のみ（許諾後）"
+  }
+ },
+ {
+  "assetId": "p4-q4-c",
+  "kind": "factory",
+  "variant": "manual-check",
+  "seconds": 9,
+  "dialogAt": 4.5,
+  "visualDescription": "作業者がラインの横で目視で数を確認し続ける。",
+  "cameraDirection": "作業者の寄り → ライン全体へ引く。",
+  "animationDirection": "作業者の視線がボトルを追う → 手元のカウンタを押す。",
+  "status": [
+   "implemented",
+   "awaiting-footage"
+  ],
+  "needs": [
+   "実写：目視確認のカット"
+  ],
+  "production": {
+   "method": "ai-image",
+   "prompt": "A worker in a navy work jacket standing beside a stainless steel conveyor line in a modern Japanese beverage factory, clear 500ml PET bottles of green tea with ribbed bodies and white labels moving left to right, counting bottles by eye with a handheld tally counter",
+   "negativePrompt": "no logos, no brand names, no readable text, no sensors or electronic devices (unless filmed for real), no distorted hands or faces",
+   "note": "—"
+  }
+ },
+ {
+  "assetId": "p4-product",
+  "kind": "product",
+  "variant": "intro",
+  "seconds": 24,
+  "dialogAt": 0.8,
+  "visualDescription": "OPTEX-FA 透明体検出センサの紹介：外観（公式画像）、用途（PETボトル等の透明体）、検出の考え方、期待できる改善、検証が必要な条件。",
+  "cameraDirection": "左に製品、右に説明。",
+  "animationDirection": "製品 → 用途 → 原理 → 期待できること → 検証が必要な条件 の順に表示。",
+  "status": [
+   "implemented",
+   "awaiting-license"
+  ],
+  "imagePath": "experience/products/optex-fa/transparent-sensor.png",
+  "needs": [
+   "OPTEX-FA 公式製品画像と型式（現行品の確認・許諾）"
+  ],
+  "production": {
+   "method": "composite",
+   "prompt": "Clean product presentation layout",
+   "negativePrompt": "no logos, no brand names, no readable text, no sensors or electronic devices (unless filmed for real), no distorted hands or faces",
+   "note": "製品は公式画像のみ（許諾後）。型式は公式情報で確定してから表示"
+  }
+ },
+ {
+  "assetId": "p5-bench",
+  "kind": "demo",
+  "variant": "bench",
+  "seconds": 8,
+  "visualDescription": "実機デモの検証台：小型コンベア、センサ、反射板、透明PETボトル、検出表示、カウンター。",
+  "cameraDirection": "検証台の全景（正面）。",
+  "animationDirection": "静かなカット。各部の名前を表示。",
+  "status": [
+   "implemented",
+   "awaiting-footage"
+  ],
+  "needs": [
+   "実写：実機デモ検証台の全景"
+  ],
+  "production": {
+   "method": "shoot",
+   "prompt": "Demo bench: small conveyor, OPTEX-FA sensor and reflector, clear PET bottles, counter display",
+   "negativePrompt": "",
+   "note": "実機を撮影（AI生成しない）"
+  }
+ },
+ {
+  "assetId": "p5-s1-a",
+  "kind": "customer",
+  "variant": "uneasy",
+  "seconds": 7,
+  "dialogAt": 2.0,
+  "visualDescription": "お客様が不安そうに首をかしげる。",
+  "cameraDirection": "営業の一人称。正面バストショット。",
+  "animationDirection": "首をかしげる → 返答。",
+  "status": [
+   "placeholder",
+   "awaiting-footage"
+  ],
+  "needs": [
+   "実写：お客様役の不安そうなカット"
+  ],
+  "production": {
+   "method": "ai-image",
+   "prompt": "Same engineer tilting his head, uneasy expression, eye-level medium close-up, factory office meeting table",
+   "negativePrompt": "no logos, no brand names, no readable text, no sensors or electronic devices (unless filmed for real), no distorted hands or faces",
+   "note": "人物を固定"
+  }
+ },
+ {
+  "assetId": "p5-s1-b",
+  "kind": "customer",
+  "variant": "bottles",
+  "seconds": 8,
+  "dialogAt": 2.5,
+  "visualDescription": "お客様が実際の製品ボトルを持ってくる。",
+  "cameraDirection": "営業の一人称。お客様がボトルを差し出す。",
+  "animationDirection": "ボトルを机に置く → 返答。",
+  "status": [
+   "placeholder",
+   "awaiting-footage"
+  ],
+  "needs": [
+   "実写：お客様役がボトルを用意するカット"
+  ],
+  "production": {
+   "method": "ai-image",
+   "prompt": "Same engineer placing two clear PET bottles of green tea on the table toward the camera, friendly expression",
+   "negativePrompt": "no logos, no brand names, no readable text, no sensors or electronic devices (unless filmed for real), no distorted hands or faces",
+   "note": "人物を固定"
+  }
+ },
+ {
+  "assetId": "p5-s1-c",
+  "kind": "document",
+  "variant": "price",
+  "seconds": 7,
+  "dialogAt": 2.5,
+  "visualDescription": "価格表を開こうとする（金額は表示しない）。",
+  "cameraDirection": "資料を一人称で。わずかに傾いた状態から正面へ起こし、ゆっくり寄る。",
+  "animationDirection": "価格表 → お客様の手が止める。",
+  "status": [
+   "implemented"
+  ],
+  "needs": [],
+  "production": {
+   "method": "cg",
+   "prompt": "Price list with amounts hidden",
+   "negativePrompt": "",
+   "note": "CG"
+  }
+ },
+ {
+  "assetId": "p5-plan",
+  "kind": "document",
+  "variant": "test-plan",
+  "seconds": 14,
+  "dialogAt": 1.0,
+  "visualDescription": "検証項目と合格基準（試す前に決める）：①1本ずつ検出 ②出力が何度も切り替わらない ③カウント値＝実際の本数 ④位置ずれ等でも①〜③を満たす。",
+  "cameraDirection": "ホワイトボードを正面から。わずかに傾いた状態から正面へ起こし、ゆっくり寄る。",
+  "animationDirection": "項目が順に書き込まれる。",
+  "status": [
+   "implemented"
+  ],
+  "needs": [],
+  "production": {
+   "method": "cg",
+   "prompt": "Whiteboard listing test items and pass criteria",
+   "negativePrompt": "",
+   "note": "CG（実際の基準は当日に設備担当と決める）"
+  }
+ },
+ {
+  "assetId": "p5-demo-normal",
+  "kind": "demo",
+  "variant": "normal",
+  "seconds": 16,
+  "visualDescription": "シミュレーション：最初の1本だけで、検出表示がONになりカウントが1増える「見方」を示す。2本目以降の結果は見せず、「この先は実機で確かめる」につなぐ（結果をネタバレしない）。",
+  "cameraDirection": "実機全景 → センサ → ボトル通過 → 検出表示 → カウンターの順に寄る。",
+  "animationDirection": "1本目の通過で ON 1回・カウント+1 を説明 → 2本目から表示を「—」にして実機へ。「シミュレーション」の表示を常時。",
+  "status": [
+   "implemented",
+   "awaiting-footage"
+  ],
+  "needs": [
+   "実写：実機デモ（センサ正面・側面・反射板・ボトル・配線・検出表示・カウンター・全体）"
+  ],
+  "production": {
+   "method": "shoot",
+   "prompt": "Live demo: bottles pass the sensor one by one, indicator lamp and counter visible",
+   "negativePrompt": "",
+   "note": "実機を撮影。数値は実測としてのみ扱う"
+  }
+ },
+ {
+  "assetId": "p5-demo-offset",
+  "kind": "demo",
+  "variant": "offset",
+  "seconds": 14,
+  "visualDescription": "シミュレーション：ボトルの位置がコンベアの手前・奥にずれて流れる。観察ポイントを示し、結果は実機で測る。",
+  "cameraDirection": "俯瞰（カメラB）で位置ずれを見せる。",
+  "animationDirection": "ボトルが左右にずれて通過 → 観察ポイント → 「結果：実機で測定」。",
+  "status": [
+   "implemented",
+   "awaiting-footage"
+  ],
+  "needs": [
+   "実写：位置ずれ条件での実機テスト"
+  ],
+  "production": {
+   "method": "shoot",
+   "prompt": "Live demo: bottles pass with positions shifted toward and away from the sensor",
+   "negativePrompt": "",
+   "note": "実機を撮影"
+  }
+ },
+ {
+  "assetId": "p5-demo-gap",
+  "kind": "demo",
+  "variant": "gap",
+  "seconds": 14,
+  "visualDescription": "シミュレーション：ボトルどうしの間隔が詰まって流れる。結果は実機で測る。",
+  "cameraDirection": "ライン正面（カメラA）。",
+  "animationDirection": "間隔が詰まって通過 → 観察ポイント → 「結果：実機で測定」。",
+  "status": [
+   "implemented",
+   "awaiting-footage"
+  ],
+  "needs": [
+   "実写：間隔が詰まる条件での実機テスト"
+  ],
+  "production": {
+   "method": "shoot",
+   "prompt": "Live demo: bottles pass with very small gaps",
+   "negativePrompt": "",
+   "note": "実機を撮影"
+  }
+ },
+ {
+  "assetId": "p5-demo-orientation",
+  "kind": "demo",
+  "variant": "orientation",
+  "seconds": 14,
+  "visualDescription": "シミュレーション：ボトルの向き（凹凸の位置）が変わって流れる。結果は実機で測る。",
+  "cameraDirection": "ライン正面（カメラA）。",
+  "animationDirection": "向きの違うボトルが通過 → 観察ポイント → 「結果：実機で測定」。",
+  "status": [
+   "implemented",
+   "awaiting-footage"
+  ],
+  "needs": [
+   "実写：向きを変えた条件での実機テスト"
+  ],
+  "production": {
+   "method": "shoot",
+   "prompt": "Live demo: bottles pass with labels and ribs facing different directions",
+   "negativePrompt": "",
+   "note": "実機を撮影"
+  }
+ },
+ {
+  "assetId": "p5-s3-a",
+  "kind": "customer",
+  "variant": "worried",
+  "seconds": 7,
+  "dialogAt": 2.0,
+  "visualDescription": "お客様が「流れが乱れたとき」を思い浮かべて心配する（吹き出しに乱れたライン）。",
+  "cameraDirection": "営業の一人称。",
+  "animationDirection": "吹き出しにボトルの乱れ → 返答。",
+  "status": [
+   "placeholder",
+   "awaiting-footage"
+  ],
+  "needs": [
+   "実写：お客様役の心配するカット"
+  ],
+  "production": {
+   "method": "ai-image",
+   "prompt": "Same engineer looking worried, imagining bunched bottles, eye-level medium close-up",
+   "negativePrompt": "no logos, no brand names, no readable text, no sensors or electronic devices (unless filmed for real), no distorted hands or faces",
+   "note": "人物を固定"
+  }
+ },
+ {
+  "assetId": "p5-s3-b",
+  "kind": "demo",
+  "variant": "setup-conditions",
+  "seconds": 9,
+  "dialogAt": 4.5,
+  "visualDescription": "悪条件（位置ずれ・間隔・向き）の再現を準備する。",
+  "cameraDirection": "検証台の正面。",
+  "animationDirection": "3つの条件カードが並ぶ → チェック欄。",
+  "status": [
+   "implemented",
+   "awaiting-footage"
+  ],
+  "needs": [
+   "実写：悪条件を準備するカット"
+  ],
+  "production": {
+   "method": "shoot",
+   "prompt": "Preparing test conditions on the demo bench: shifting bottle positions, narrowing gaps, rotating bottles",
+   "negativePrompt": "",
+   "note": "実機を撮影"
+  }
+ },
+ {
+  "assetId": "p5-s3-c",
+  "kind": "document",
+  "variant": "catalog-spec",
+  "seconds": 7,
+  "dialogAt": 2.5,
+  "visualDescription": "カタログの仕様表（項目名のみ、数値は伏せる）。",
+  "cameraDirection": "資料を一人称で。わずかに傾いた状態から正面へ起こし、ゆっくり寄る。",
+  "animationDirection": "仕様表 → お客様の返答。",
+  "status": [
+   "implemented"
+  ],
+  "needs": [],
+  "production": {
+   "method": "cg",
+   "prompt": "Specification table with values hidden",
+   "negativePrompt": "",
+   "note": "CG"
+  }
+ },
+ {
+  "assetId": "p5-s4-a",
+  "kind": "customer",
+  "variant": "cool",
+  "seconds": 7,
+  "dialogAt": 2.0,
+  "visualDescription": "お客様の反応が薄い。",
+  "cameraDirection": "営業の一人称。",
+  "animationDirection": "目線をそらす → 返答。",
+  "status": [
+   "placeholder",
+   "awaiting-footage"
+  ],
+  "needs": [
+   "実写：お客様役の反応が薄いカット"
+  ],
+  "production": {
+   "method": "ai-image",
+   "prompt": "Same engineer with a lukewarm, polite expression, looking slightly away",
+   "negativePrompt": "no logos, no brand names, no readable text, no sensors or electronic devices (unless filmed for real), no distorted hands or faces",
+   "note": "人物を固定"
+  }
+ },
+ {
+  "assetId": "p5-s4-b",
+  "kind": "document",
+  "variant": "quote",
+  "seconds": 7,
+  "dialogAt": 2.5,
+  "visualDescription": "見積書（金額は表示しない）をお客様が受け取りかねる。",
+  "cameraDirection": "資料を一人称で。わずかに傾いた状態から正面へ起こし、ゆっくり寄る。",
+  "animationDirection": "見積書 → お客様の返答。",
+  "status": [
+   "implemented"
+  ],
+  "needs": [],
+  "production": {
+   "method": "cg",
+   "prompt": "Quotation document with amounts hidden",
+   "negativePrompt": "",
+   "note": "CG"
+  }
+ },
+ {
+  "assetId": "p5-s4-c",
+  "kind": "customer",
+  "variant": "together",
+  "seconds": 8,
+  "dialogAt": 2.0,
+  "visualDescription": "お客様が前向きにうなずき、設備担当者と一緒に確認することを提案する。",
+  "cameraDirection": "営業の一人称。お客様の横に設備担当者。",
+  "animationDirection": "うなずく → 設備担当者が加わる。",
+  "status": [
+   "placeholder",
+   "awaiting-footage"
+  ],
+  "needs": [
+   "実写：お客様役と設備担当者役の前向きなカット"
+  ],
+  "production": {
+   "method": "ai-image",
+   "prompt": "Same engineer nodding positively, a colleague in the same navy work jacket joins beside him, eye-level medium shot",
+   "negativePrompt": "no logos, no brand names, no readable text, no sensors or electronic devices (unless filmed for real), no distorted hands or faces",
+   "note": "人物を固定"
+  }
+ },
+ {
+  "assetId": "p5-followup",
+  "kind": "tech",
+  "variant": "followup",
+  "seconds": 16,
+  "dialogAt": 0.8,
+  "visualDescription": "結果が基準に届かなかったときの次の手：設置位置・角度、感度設定、PLC側の処理、別の検出方式。",
+  "cameraDirection": "CG。",
+  "animationDirection": "4つの選択肢カードが順に表示。",
+  "status": [
+   "implemented"
+  ],
+  "needs": [],
+  "production": {
+   "method": "cg",
+   "prompt": "Four option cards",
+   "negativePrompt": "",
+   "note": "CG"
+  }
+ },
+ {
+  "assetId": "p5-message",
+  "kind": "tech",
+  "variant": "message",
+  "seconds": 13,
+  "dialogAt": 0.8,
+  "visualDescription": "「実機デモは売り込みではない。お客様と一緒に確かめる活動」というメッセージ。",
+  "cameraDirection": "CG（黒背景）。",
+  "animationDirection": "「売り込み」に取り消し線 → 「一緒に確かめる」を赤で。",
+  "status": [
+   "implemented"
+  ],
+  "needs": [],
+  "production": {
+   "method": "cg",
+   "prompt": "Typography on black",
+   "negativePrompt": "",
+   "note": "CG"
+  }
+ },
+ {
+  "assetId": "r-applications",
+  "kind": "applications",
+  "variant": "montage",
+  "seconds": 16,
+  "visualDescription": "さまざまな製造現場（食品・容器・包装・設備の位置確認）をテンポよく見せる。",
+  "cameraDirection": "現場ごとに短いカット（各約3秒）。",
+  "animationDirection": "カットごとに検出の光と「検出」のラベル。",
+  "status": [
+   "implemented",
+   "awaiting-footage"
+  ],
+  "needs": [
+   "実写：食品・容器・包装・組立など複数の製造現場"
+  ],
+  "production": {
+   "method": "ai-image",
+   "prompt": "Four quick shots of Japanese factories: food trays on a conveyor, cups on a filling line, cardboard boxes being packed, a robotic jig arriving at position",
+   "negativePrompt": "no logos, no brand names, no readable text, no sensors or electronic devices (unless filmed for real), no distorted hands or faces",
+   "note": "自社の導入事例の実写があれば優先"
+  }
+ },
+ {
+  "assetId": "ending",
+  "kind": "ending",
+  "variant": "main",
+  "seconds": 18,
+  "visualDescription": "「売るだけでは、終わらない。」→ 聞く。考える。提案する。そして、確かめる。→ 「お客様と一緒に、課題解決を実現する。」→ OPTEX-FA CONSULTING SALES EXPERIENCE。",
+  "cameraDirection": "黒背景のタイポグラフィ。",
+  "animationDirection": "1語ずつテンポよく表示 → ロゴ。",
+  "status": [
+   "implemented",
+   "awaiting-footage"
+  ],
+  "needs": [
+   "実写：製造現場・実製品・実機デモ・お客様との対話（エンディング用の短いカット）"
+  ],
+  "production": {
+   "method": "shoot",
+   "prompt": "Montage: factory floor, OPTEX-FA product (official footage), demo bench, sales rep talking with customer",
+   "negativePrompt": "",
+   "note": "実写・公式素材で構成"
+  }
+ }
 ]

@@ -141,6 +141,22 @@ await page.locator('.fac select').selectOption('p5-s3-q');
 await page.waitForTimeout(200);
 ok('未記録：記録を促す', (await page.locator('.gate-title').innerText()).includes('未記録'));
 
+// 映像の途中の「考えよう」：解説クリップを再生すると、2文目の前で止まって問いを出す
+await page.locator('.fac select').selectOption('p2-light');
+await page.waitForTimeout(300);
+await page.getByRole('button', {name: /▶ 解説：透明なボトルと光/}).click();
+let paused = false;
+try {
+  await page.waitForSelector('.think-pause', {timeout: 25000});
+  paused = true;
+} catch {}
+ok('解説の途中で「考えよう」が出て止まる', paused && (await page.locator('.tp-prompt').innerText()).includes('透明なボトル'));
+if (SHOTS) await page.screenshot({path: join(SHOTS, '07-think-pause.png')});
+if (paused) {
+  await page.getByRole('button', {name: '続きを見る ▶'}).click();
+  ok('「続きを見る」で再開する', (await page.locator('.think-pause').count()) === 0);
+}
+
 // 学生画面では進行役の情報を出さない
 await page.getByRole('button', {name: '進行役モード'}).click();
 ok('学生画面：進行役パネルを出さない', (await page.locator('.fac').count()) === 0 && (await page.locator('.disc').isVisible()));

@@ -16,14 +16,17 @@ const main = async () => {
   const out = outArg || join(ROOT, 'out', 'experience', cmd === 'videos' ? 'videos' : 'stills');
   mkdirSync(out, {recursive: true});
   const serveUrl = await bundle({entryPoint: join(ROOT, 'src', 'index.ts'), publicDir: join(ROOT, 'public')});
-  const ids = cmd === 'videos' && rest.length ? rest : assets.map((a) => a.assetId);
-  const at = cmd === 'stills' ? Number(rest[0] ?? 0.6) : 0;
-  for (const id of ids) {
+  // stills は「素材ID@割合」で個別指定もできる（例：p2-light@0.3 p2-light@0.8）
+  const picks = rest.filter((r) => r.includes('@')).map((r) => r.split('@'));
+  const ids = cmd === 'videos' && rest.length ? rest : picks.length ? picks.map((p) => p[0]) : assets.map((a) => a.assetId);
+  const atFor = (k: number) => (picks.length ? Number(picks[k][1]) : Number(rest[0] ?? 0.6));
+  for (const [k, id] of ids.entries()) {
+    const at = atFor(k);
     const inputProps = {assetId: id, showSubtitles: true, showStatus: true};
     const composition = await selectComposition({serveUrl, id: compositionIdFor(id), inputProps, browserExecutable, logLevel: 'error'});
     if (cmd === 'stills') {
       const frame = Math.min(composition.durationInFrames - 1, Math.round(composition.durationInFrames * at));
-      await renderStill({serveUrl, composition, frame, output: join(out, `${id}.png`), inputProps, browserExecutable, scale: 0.5, logLevel: 'error'});
+      await renderStill({serveUrl, composition, frame, output: join(out, picks.length ? `${id}@${at}.png` : `${id}.png`), inputProps, browserExecutable, scale: 0.5, logLevel: 'error'});
     } else {
       await renderMedia({serveUrl, composition, codec: 'h264', crf: 23, outputLocation: join(out, `${id}.mp4`), inputProps, browserExecutable, concurrency: 4, logLevel: 'error'});
     }

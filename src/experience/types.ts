@@ -43,6 +43,8 @@ export type Asset = {
   videoPath?: string;
   imagePath?: string;
   needs?: string[]; // 不足している素材
+  // 素材の作り方（実写撮影／AI画像／CG／合成）と、生成用プロンプト
+  production: {method: 'shoot' | 'ai-image' | 'cg' | 'composite'; prompt: string; negativePrompt: string; note: string};
 };
 
 export type Line = {speaker: 'customer' | 'narration' | 'sales'; text: string};
@@ -54,7 +56,12 @@ export type Choice = {
   customerResponse: string;
   discovered: string; // この選択で新しく分かったこと
   learningPoint: string;
+  customerMood: 'neutral' | 'thinking' | 'uneasy' | 'worried' | 'cool' | 'positive' | 'request'; // お客様の反応（表情）
+  technicalInsight?: string; // この選択で見えた技術的な発見
 };
+
+// 映像の途中で止めて考えさせるポイント
+export type Pause = {beforeLine?: number; atLineId?: string; prompt: string; hint?: string};
 
 type Base = {
   sceneId: string;
@@ -65,12 +72,13 @@ type Base = {
   facilitatorNote?: string;
 };
 
-export type VideoScene = Base & {type: 'video'; compositionId: string; description: string};
+export type VideoScene = Base & {type: 'video'; compositionId: string; description: string; pauses?: Pause[]};
 
 export type ClipScene = Base & {
   type: 'clip';
   assetId: string;
   lines: Line[];
+  pauses?: Pause[];
 };
 
 export type QuestionScene = Base & {

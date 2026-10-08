@@ -1,7 +1,8 @@
 // 素材ID → 映像。assets.json の kind / variant で描き分け、セリフは場面データから取る。
 import React from 'react';
 import {AbsoluteFill, OffthreadVideo, staticFile} from 'remotion';
-import {assetById, linesForAsset, phases, scenes, videoPathFor} from '../data';
+import {assetById, audioPathFor, linesForAsset, phases, scenes, videoPathFor} from '../data';
+import type {Mood} from './Person';
 import {ClipShell} from './ClipShell';
 import {FactoryScene} from './scenes/FactoryScene';
 import {SensorScene, BottleScene} from './scenes/CloseupScenes';
@@ -20,6 +21,20 @@ export type ExperienceClipProps = {
   useVideo?: boolean;
   // 製品画像が配置済みか
   hasImage?: boolean;
+  // 音声（public/experience/audio/<素材ID>.mp3）が配置済みか
+  hasAudio?: boolean;
+};
+
+// この素材でお客様が話すときの表情（選択肢のデータから。場面のセリフなら困っている顔）
+const moodFor = (assetId: string): Mood | undefined => {
+  for (const s of scenes) {
+    if (s.type === 'question') {
+      const c = s.choices.find((ch) => ch.assetId === assetId);
+      if (c) return c.customerMood;
+    }
+    if (s.type === 'clip' && s.assetId === assetId && s.lines.some((l) => l.speaker === 'customer')) return 'worried';
+  }
+  return undefined;
 };
 
 const LIGHT = new Set(['document', 'tech', 'product', 'applications']);
@@ -35,7 +50,7 @@ export const phaseLabelFor = (assetId: string) => {
   return p ? p.title.toUpperCase() : 'CONSULTING SALES EXPERIENCE';
 };
 
-export const ExperienceClip: React.FC<ExperienceClipProps> = ({assetId, showSubtitles, showStatus, useVideo, hasImage}) => {
+export const ExperienceClip: React.FC<ExperienceClipProps> = ({assetId, showSubtitles, showStatus, useVideo, hasImage, hasAudio}) => {
   const a = assetById.get(assetId);
   if (!a) return <AbsoluteFill style={{background: '#000', color: '#fff', fontSize: 40}}>素材 {assetId} がありません</AbsoluteFill>;
   const lines = linesForAsset(assetId);
@@ -54,6 +69,8 @@ export const ExperienceClip: React.FC<ExperienceClipProps> = ({assetId, showSubt
       status={hasImage ? status.filter((s) => s !== 'awaiting-license') : status}
       kind={a.kind}
       simulation={simulation && !useVideo}
+      customerMood={moodFor(assetId)}
+      audioPath={hasAudio ? audioPathFor(assetId) : undefined}
     >
       {useVideo ? (
         <AbsoluteFill>

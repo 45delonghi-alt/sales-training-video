@@ -13,7 +13,8 @@ const SP = 260;
 
 const FLOWS: Record<string, Flow> = {
   bench: (t, i) => ({x: 180 + i * 0 - i * SP + 600, z: 86}),
-  normal: (t, i) => ({x: 120 + SPEED * t - i * SP, z: 86}),
+  // 1本目のあとに間を空け、見方を説明する時間をつくる
+  normal: (t, i) => ({x: -200 + SPEED * t - i * SP - (i >= 1 ? 420 : 0), z: 86}),
   gap: (t, i) => ({x: 120 + SPEED * t - i * 96 - Math.floor(i / 3) * 260, z: 86}),
   orientation: (t, i) => ({x: 120 + SPEED * t - i * SP, z: 86, turn: [-1, 0.2, 1, -0.4, 0.7][((i % 5) + 5) % 5]}),
 };
@@ -32,7 +33,7 @@ const Bench: React.FC<{variant: string}> = ({variant}) => {
   const t = frame / fps;
   const v: View = variant === 'bench' ? {ox: 110, oy: 790, s: 0.95} : {ox: 70, oy: 800, s: 0.82};
   const flow = FLOWS[variant] ?? FLOWS.normal;
-  const range: [number, number] = variant === 'bench' ? [0, 0] : [-1, 14];
+  const range: [number, number] = variant === 'bench' ? [0, 0] : variant === 'normal' ? [0, 14] : [-1, 14];
   const bottles = variant === 'bench' ? [{key: 0, x: 380, z: 86}, {key: 1, x: 900, z: 86}] : bottlesAt(flow, t, range, SENSOR_X);
   const passes = variant === 'bench' ? [] : passTimes(flow, t, range, SENSOR_X, fps).filter((p) => p.t <= t);
   const hit = bottles.some((b) => 'state' in b && b.state === 'hit');
@@ -76,37 +77,45 @@ const BenchLabels: React.FC<{v: View; frame: number}> = ({v, frame}) => {
   );
 };
 
-// 理想的な動作の説明：1本 → 出力ON 1回 → カウント +1
+// 見方の説明：最初の1本だけで「1本 → 出力ON 1回 → カウント +1」を示す。
+// 2本目以降の結果は見せない（実機デモの前に結果をネタバレしない）
 const SimPanel: React.FC<{passes: number; t: number; passTimes: number[]; frame: number; hit: boolean}> = ({passes, t, passTimes: times, frame, hit}) => {
   const W = 520;
-  const span = 4; // 直近4秒の出力
+  const first = times[0];
+  const explained = passes >= 1;
+  const handover = times.length >= 2 && t >= times[1] - 0.3;
+  const span = 4;
   const pts: string[] = [];
   for (let k = 0; k <= 160; k++) {
     const tt = t - span + (k / 160) * span;
-    const on = times.some((p) => tt >= p && tt < p + 0.42);
+    const on = first !== undefined && tt >= first && tt < first + 0.42 && !handover;
     pts.push(`${(k / 160) * W},${on ? 10 : 60}`);
   }
+  const val = (n: number) => (handover ? '—' : String(n));
   return (
     <div style={{position: 'absolute', right: 72, top: 150, width: W + 56, background: 'rgba(16,17,19,0.85)', border: '2px solid rgba(255,255,255,0.3)', padding: '20px 28px 24px', color: X.white, fontVariantNumeric: 'tabular-nums', opacity: progress(frame, 6, 14)}}>
-      <div style={{display: 'flex', alignItems: 'center', gap: 14}}>
-        <div style={{width: 26, height: 26, borderRadius: 13, background: hit ? '#FFB020' : 'rgba(255,255,255,0.18)', boxShadow: hit ? '0 0 18px #FFB020' : 'none'}} />
-        <div style={{fontSize: 24, fontWeight: 700}}>検出表示 {hit ? 'ON' : 'OFF'}</div>
+      <div style={{fontSize: 18, letterSpacing: 2, color: '#FFB020', fontWeight: 700}}>見方の説明（1本目）</div>
+      <div style={{display: 'flex', alignItems: 'center', gap: 14, marginTop: 10}}>
+        <div style={{width: 26, height: 26, borderRadius: 13, background: hit && !handover ? '#FFB020' : 'rgba(255,255,255,0.18)', boxShadow: hit && !handover ? '0 0 18px #FFB020' : 'none'}} />
+        <div style={{fontSize: 24, fontWeight: 700}}>検出表示 {hit && !handover ? 'ON' : 'OFF'}</div>
       </div>
       {[
-        ['通過した本数', passes],
-        ['出力がONになった回数', passes],
-        ['カウント値', passes],
+        ['通過した本数', explained ? 1 : 0],
+        ['出力がONになった回数', explained ? 1 : 0],
+        ['カウント値', explained ? 1 : 0],
       ].map(([l, n]) => (
-        <div key={l as string} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginTop: 14}}>
+        <div key={l as string} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginTop: 12}}>
           <span style={{fontSize: 24, color: 'rgba(255,255,255,0.75)'}}>{l}</span>
-          <span style={{fontSize: 46, fontWeight: 900}}>{n}</span>
+          <span style={{fontSize: 46, fontWeight: 900}}>{val(n as number)}</span>
         </div>
       ))}
-      <div style={{fontSize: 18, color: 'rgba(255,255,255,0.6)', marginTop: 16}}>センサの出力（直近4秒）</div>
+      <div style={{fontSize: 18, color: 'rgba(255,255,255,0.6)', marginTop: 14}}>センサの出力</div>
       <svg width={W} height={70} style={{marginTop: 6}}>
         <polyline points={pts.join(' ')} fill="none" stroke="#FFB020" strokeWidth={3} />
       </svg>
-      <div style={{fontSize: 20, color: 'rgba(255,255,255,0.75)', marginTop: 10}}>理想的な動作：1本 → ON 1回 → カウント +1</div>
+      <div style={{fontSize: 21, marginTop: 10, color: handover ? '#FFB020' : 'rgba(255,255,255,0.8)', fontWeight: handover ? 900 : 500}}>
+        {handover ? 'この先は、実機で確かめる' : '合格の動き：1本 → ON 1回 → カウント +1'}
+      </div>
     </div>
   );
 };

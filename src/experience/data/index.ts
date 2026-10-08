@@ -24,25 +24,42 @@ export const linesForAsset = (assetId: string): {speaker: string; text: string}[
   return [];
 };
 
-// 選択肢 → 映像の対応表（branches.json として書き出す）
+// 選択肢 → 映像の対応表（branches.json として書き出す）。1つの選択肢に、専用の映像が1本だけ対応する
 export const branches = () =>
   questions.flatMap((q) =>
-    q.choices.map((c) => ({
-      branchId: `${q.sceneId}-${c.choiceId}`,
-      phaseId: q.phaseId,
-      questionId: q.sceneId,
-      choiceId: c.choiceId,
-      assetId: c.assetId,
-      compositionId: compositionIdFor(c.assetId),
-      recommended: q.recommendedChoice === c.choiceId,
-      nextSceneId: q.nextSceneId,
-    })),
+    q.choices.map((c) => {
+      const a = assetById.get(c.assetId);
+      return {
+        branchId: `${q.sceneId}-${c.choiceId}`,
+        phaseId: q.phaseId,
+        questionId: q.sceneId,
+        choiceId: c.choiceId,
+        choiceText: c.choiceText,
+        visualSubject: a?.visualDescription ?? '',
+        cameraDirection: a?.cameraDirection ?? '',
+        animationDirection: a?.animationDirection ?? '',
+        customerResponse: c.customerResponse,
+        customerMood: c.customerMood,
+        technicalInsight: c.technicalInsight ?? '',
+        // 実写・実機の映像の置き場所（置けばそれを再生）
+        assetPath: videoPathFor(c.assetId),
+        // 映像が未配置のときに描く、同じ内容の CG（別の内容の映像では代用しない）
+        fallbackVisual: compositionIdFor(c.assetId),
+        assetId: c.assetId,
+        assetStatus: a?.status ?? [],
+        recommended: q.recommendedChoice === c.choiceId,
+        nextSceneId: q.nextSceneId,
+      };
+    }),
   );
 
 export const compositionIdFor = (assetId: string) => `XP-${assetId}`;
 
 // 実写・実機の映像の置き場所（assets.json に videoPath がなければ、素材IDと同じ名前の MP4）
 export const videoPathFor = (assetId: string) => assetById.get(assetId)?.videoPath ?? `experience/videos/${assetId}.mp4`;
+
+// お客様の声・ナレーションの音声の置き場所（素材ごとに1ファイル。セリフの開始時刻から再生）
+export const audioPathFor = (assetId: string) => `experience/audio/${assetId}.mp3`;
 
 // セリフの読み上げ時間の目安（字幕を出しておく秒数）
 export const readSeconds = (text: string) => Math.max(2.2, [...text].length * 0.17 + 0.8);

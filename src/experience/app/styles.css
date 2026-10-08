@@ -209,3 +209,9 @@ button.danger-ghost { color: var(--red); border-color: var(--red); background: t
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
 }
+
+/* 映像の途中の「考えよう」 */
+.think-pause { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(80%, 900px); background: rgba(255,255,255,0.97); border-top: 6px solid var(--red); padding: 28px 34px 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.35); display: grid; gap: 10px; justify-items: start; }
+.tp-label { font-size: 14px; font-weight: 900; color: var(--red); letter-spacing: 2px; }
+.tp-prompt { font-size: clamp(22px, 2.4vw, 36px); font-weight: 900; line-height: 1.4; }
+.tp-hint { color: var(--gray); font-size: 18px; }

@@ -90,6 +90,31 @@ const CONFIG = (variant: string): Cfg => {
   }
 };
 
+// カメラワーク（画角・ズーム・パン）。focus は画面上の注目点、zoom は倍率
+type Cam = {zoom: number; fx: number; fy: number};
+const lerp = (t: number, ts: number[], vs: number[]) => interpolate(t, ts, vs, {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: (x) => x * x * (3 - 2 * x)});
+const camera = (variant: string, t: number, sensor: [number, number]): Cam => {
+  const [sx, sy] = sensor;
+  switch (variant) {
+    case 'miscount': // 全景 → 誤カウントの瞬間にセンサへ寄る
+      return {zoom: lerp(t, [0, 4.6, 6.2], [1, 1, 1.32]), fx: lerp(t, [4.6, 6.2], [960, sx]), fy: lerp(t, [4.6, 6.2], [560, sy])};
+    case 'disturbed': // 少し引いた画 → 乱れ始めたらスローでセンサへ寄る
+      return {zoom: lerp(t, [0, 4.2, 6.0], [0.94, 0.94, 1.42]), fx: lerp(t, [4.2, 6.0], [960, sx]), fy: lerp(t, [4.2, 6.0], [560, sy])};
+    case 'wobble': // ゆっくり寄る
+      return {zoom: lerp(t, [0, 8], [1, 1.12]), fx: sx, fy: sy};
+    case 'overview-speed': // クレーンで引く
+      return {zoom: lerp(t, [0, 4], [1.3, 1]), fx: lerp(t, [0, 4], [sx, 960]), fy: lerp(t, [0, 4], [sy, 540])};
+    case 'overview': // 横へゆっくり移動
+      return {zoom: 1.04, fx: lerp(t, [0, 8], [900, 1020]), fy: 560};
+    case 'stopped-recount': // 停止後、作業者へ寄る
+      return {zoom: lerp(t, [3.4, 5.0], [1, 1.18]), fx: lerp(t, [3.4, 5.0], [960, 620]), fy: lerp(t, [3.4, 5.0], [540, 640])};
+    case 'manual-check': // 作業者 → ライン
+      return {zoom: lerp(t, [0, 3], [1.25, 1]), fx: lerp(t, [0, 3], [420, 960]), fy: lerp(t, [0, 3], [700, 540])};
+    default:
+      return {zoom: 1, fx: 960, fy: 540};
+  }
+};
+
 export const FactoryScene: React.FC<{variant: string}> = ({variant}) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
@@ -104,9 +129,11 @@ export const FactoryScene: React.FC<{variant: string}> = ({variant}) => {
   // 誤カウントの瞬間は、そのボトルを赤く
   const shown = bottles.map((b) => (cfg.extraBottles?.includes(b.key) && b.state === 'hit' && t - lastError < 0.8 ? {...b, state: 'error' as const} : b));
   const slow = cfg.slowFrom !== undefined && t >= cfg.slowFrom;
+  const cam = camera(variant, t, project(cfg.view, cfg.sensorX, 120, DEPTH / 2));
   return (
     <AbsoluteFill>
       <svg width={1920} height={1080} style={{position: 'absolute', inset: 0}}>
+        <g transform={`translate(960 540) scale(${cam.zoom}) translate(${-cam.fx} ${-cam.fy})`}>
         {variant === 'manual-check' ? <ManualWorker t={t} /> : null}
         <FactoryLine
           v={cfg.view}
@@ -121,6 +148,7 @@ export const FactoryScene: React.FC<{variant: string}> = ({variant}) => {
         {t - lastError < 0.9 ? <ErrorFlash v={cfg.view} x={cfg.sensorX} since={t - lastError} /> : null}
         {variant === 'wobble' ? <FocusRing v={cfg.view} x={cfg.sensorX} frame={frame} /> : null}
         {variant === 'stopped-recount' ? <Recount t={t} v={cfg.view} bottles={shown.map((b) => b.x)} /> : null}
+        </g>
       </svg>
       {cfg.hud === 'count' ? <CountHud actual={BASE_COUNT + passes.length} count={BASE_COUNT + passes.length + errors.length} errorPulse={t - lastError} passPulse={t - lastPass} frame={frame} /> : null}
       {cfg.hud === 'speed' ? <SpeedHud t={t} /> : null}

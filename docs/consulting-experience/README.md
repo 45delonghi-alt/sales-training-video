@@ -33,6 +33,25 @@ npm run experience:serve      # http://localhost:4173/ で配信（会場PC）
 | 07 | 再レンダリング手順・素材差し替え手順 | 下記 | 実装済み |
 | 08 | 全分岐動作テスト・技術表現の確認・未取得素材と未解決事項 | [qa-report.md](qa-report.md)、[technical-review.md](technical-review.md) | テスト済み（技術表現は**公式ページとの直接照合が未了**） |
 
+## ビジュアル演出強化の最終成果物（7点）
+
+| # | 成果物 | 場所 | 状態 |
+|---|---|---|---|
+| 1 | シーン別映像台本（Scene 1〜8） | [scene-script.md](scene-script.md)（自動生成） | 実装済み |
+| 2 | 選択肢別の映像素材一覧（phaseId・choiceId・visualSubject・cameraDirection・animationDirection・customerResponse・technicalInsight・assetPath・fallbackVisual） | [choice-visuals.md](choice-visuals.md)、`src/experience/data/visual-branches.json` | 実装済み・検証済み |
+| 3 | 素材生成用プロンプト一覧 | [generation-prompts.md](generation-prompts.md)（自動生成） | 実装済み（**生成は未実行**：費用の承認待ち） |
+| 4 | インタラクティブReact画面 | `src/experience/app/` | テスト済み（81項目） |
+| 5 | Remotion動画コンポーネント | `src/experience/remotion/` | 実装済み（**CG・仮素材**） |
+| 6 | 実機デモ映像の差し替え機能 | アプリの「実機の動画」／`public/experience/videos/<素材ID>.mp4` | テスト済み |
+| 7 | フルHD動画と操作マニュアル | `out/experience/videos/*.mp4`（1920×1080・39本）、[facilitator-guide.md](facilitator-guide.md) | 実装済み（CG版） |
+
+### 演出の強化点
+- **カメラワーク**：誤カウントの瞬間にセンサへズームイン、流れの乱れはスローモーションで寄る、全景はクレーンで引く、作業者へパン、資料は手に取るように起こして寄る。
+- **光の仕組みの3D CG**：手前にセンサ・奥に反射板の3D空間を、カメラが回り込みながら見せる。不透明なモノは光を遮り、透明ボトルは通す。その場の受光量と出力ON/OFFが連動する。
+- **お客様の反応**：資料やラインの映像でお客様が話すときは、右下の小窓に表情（考え込む・不安・前向きなど、選択肢ごとに設定）を出す。音声ファイルを置けば声も流れる。
+- **考える時間**：導入動画（3か所）と光の解説（1か所）で自動的に止まり、問いを出す。学生が見ているだけの時間は、最長でも約1分30秒。
+- **実機デモのネタバレ防止**：シミュレーションは1本目だけで「見方」を説明し、2本目以降の結果は見せない（「この先は実機で確かめる」）。
+
 ## 仕組み
 
 ```
@@ -54,6 +73,7 @@ tests/experience.e2e.mjs 全分岐の自動テスト（Playwright）
 
 | 届いたもの | 置き場所 | 設定 |
 |---|---|---|
+| お客様の声・ナレーション | `public/experience/audio/<素材ID>.mp3` | 置くだけで再生（セリフの開始時刻から）。セリフは `out/experience/ondoku/` |
 | 実写・実機の映像 | `public/experience/videos/<素材ID>.mp4` | 置くだけで切り替わる（別の名前にしたいときは `assets.json` の `videoPath` で指定） |
 | OPTEX-FA 公式製品画像 | `public/experience/products/optex-fa/transparent-sensor.png` | 設定済み（置くだけで表示が切り替わる） |
 | セリフ・選択肢の変更 | `src/experience/data/scenes.json` | 変更後に `npm run experience:export`（台本・ストーリーボードを更新） |

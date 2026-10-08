@@ -1,11 +1,12 @@
 // すべての体験クリップ共通の枠：背景・見出し・素材の状態表示・字幕（セリフ）。
 import React from 'react';
-import {AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig} from 'remotion';
+import {AbsoluteFill, Audio, Sequence, interpolate, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {BrandMark} from '../../consulting/components/BrandMark';
 import type {AssetStatus} from '../types';
 import {lineSchedule} from '../data';
 import {FONT, X} from './theme';
 import {progress} from '../../consulting/components/anim';
+import {Bust, type Mood} from './Person';
 
 export type ClipLine = {speaker: string; text: string};
 
@@ -21,6 +22,10 @@ export type ClipProps = {
   status: AssetStatus[];
   kind: string;
   simulation?: boolean;
+  // お客様の反応（表情）。お客様が映っていないクリップで、話している間だけ小窓で見せる
+  customerMood?: Mood;
+  // お客様の声・ナレーションの音声（配置されていれば dialogAt から再生）
+  audioPath?: string;
 };
 
 export {clipSeconds, lineSchedule} from '../data';
@@ -55,12 +60,33 @@ export const ClipShell: React.FC<ClipProps & {children: React.ReactNode}> = (p) 
       ) : null}
       {p.simulation ? <SimulationBadge /> : null}
       {p.showStatus ? <StatusTag status={p.status} kind={p.kind} dark={dark} /> : null}
+      {p.customerMood && current?.speaker === 'customer' && p.kind !== 'customer' ? (
+        <CustomerInset mood={p.customerMood} frame={frame} fromFrame={Math.round(current.from * fps)} />
+      ) : null}
+      {p.audioPath ? (
+        <Sequence from={Math.round(p.dialogAt * fps)} layout="none">
+          <Audio src={staticFile(p.audioPath)} />
+        </Sequence>
+      ) : null}
       {p.showSubtitles && current ? <Subtitle line={current} frame={frame} fromFrame={Math.round(current.from * fps)} /> : null}
     </AbsoluteFill>
   );
 };
 
 const fade = (frame: number, start: number) => ({opacity: progress(frame, start, 12)});
+
+// お客様の反応の小窓（右下）
+const CustomerInset: React.FC<{mood: Mood; frame: number; fromFrame: number}> = ({mood, frame, fromFrame}) => {
+  const p = interpolate(frame - fromFrame, [0, 8], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  return (
+    <div style={{position: 'absolute', right: 72, bottom: 190, width: 250, height: 250, borderRadius: 125, overflow: 'hidden', background: '#1A1C20', border: `4px solid ${X.red}`, opacity: p, transform: `scale(${0.9 + 0.1 * p})`, boxShadow: '0 12px 40px rgba(0,0,0,0.35)'}}>
+      <svg width={250} height={250} viewBox="-260 -330 520 520">
+        <Bust mood={mood} blink={(frame / 30) % 3.2 > 3.05} />
+      </svg>
+      <div style={{position: 'absolute', left: 0, right: 0, bottom: 14, textAlign: 'center', fontSize: 18, fontWeight: 700, color: X.white}}>お客様の反応</div>
+    </div>
+  );
+};
 
 const SPEAKER: Record<string, string> = {customer: 'お客様', sales: '営業', narration: ''};
 

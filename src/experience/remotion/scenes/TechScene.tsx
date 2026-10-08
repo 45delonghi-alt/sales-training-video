@@ -5,6 +5,7 @@ import {X} from '../theme';
 import {assetById, linesForAsset} from '../../data';
 import {lineSchedule} from '../ClipShell';
 import {appear, keyZoom, progress} from '../../../consulting/components/anim';
+import {Optics3D, receivedLight} from '../Optics3D';
 
 const ASSET: Record<string, string> = {
   'transparent-light': 'p2-light',
@@ -81,7 +82,6 @@ const TransparentLight: React.FC = () => {
     <AbsoluteFill>
       {/* 左：真上から見た回帰反射型 */}
       <svg width={1920} height={1080} style={{position: 'absolute', inset: 0}}>
-        <PlanView frame={frame} clear={isClear} />
         {/* 右：受光量グラフ */}
         <g opacity={progress(frame, s[0] ?? 0, 14)}>
           <line x1={G.x} y1={G.y} x2={G.x} y2={G.y + G.h + 30} stroke={X.ink} strokeWidth={2} />
@@ -108,6 +108,7 @@ const TransparentLight: React.FC = () => {
           <polyline points={step >= 4 ? out(CLEAR, s[3], 50) : out(OPAQUE, s[0] + 30, 70)} fill="none" stroke={step >= 4 ? X.red : X.ink} strokeWidth={4} />
         </g>
       </svg>
+      <OpticsPanel clear={isClear} />
       {step >= 3 ? (
         <div style={{position: 'absolute', left: G.x + 16, top: G.y + G.h * 0.62 + 16, fontSize: 24, fontWeight: 700, color: X.ink, background: 'rgba(255,255,255,0.9)', padding: '6px 12px', ...appear(frame, s[2] + 20)}}>
           曲面で光が曲がり、受光量が上下する
@@ -120,7 +121,7 @@ const TransparentLight: React.FC = () => {
         </div>
       ) : null}
       {step >= 5 ? (
-        <div style={{position: 'absolute', left: 110, top: 760, width: 760, ...appear(frame, s[4])}}>
+        <div style={{position: 'absolute', left: G.x, top: 112, width: 820, background: X.paper, ...appear(frame, s[4])}}>
           <div style={{fontSize: 34, fontWeight: 900, color: X.ink}}>
             透明だから<span style={{color: X.red}}>必ず</span>誤検出する、ではない
           </div>
@@ -132,7 +133,39 @@ const TransparentLight: React.FC = () => {
   );
 };
 
-const PlanView: React.FC<{frame: number; clear: boolean}> = ({frame, clear}) => {
+// 左：3D CG と、その場の受光量・出力
+const OpticsPanel: React.FC<{clear: boolean}> = ({clear}) => {
+  const frame = useCurrentFrame();
+  const {fps} = useVideoConfig();
+  const mode = clear ? 'clear' : 'opaque';
+  const v = receivedLight(frame, fps, mode);
+  const on = v < TH;
+  return (
+    <div style={{position: 'absolute', left: 60, top: 150, width: 860, height: 640, background: '#14161A', border: `1px solid ${X.line}`}}>
+      <Optics3D frame={frame} fps={fps} mode={mode} width={860} height={500} />
+      <div style={{position: 'absolute', left: 0, top: 0, padding: '8px 16px', background: 'rgba(20,22,26,0.85)', color: 'rgba(255,255,255,0.85)', fontSize: 20, fontWeight: 700}}>
+        3D：回帰反射型（手前にセンサ、奥に反射板）
+      </div>
+      <div style={{position: 'absolute', left: 24, right: 24, bottom: 22, display: 'flex', alignItems: 'center', gap: 22, color: X.white}}>
+        <div style={{fontSize: 20, width: 120, color: 'rgba(255,255,255,0.75)'}}>受光量</div>
+        <div style={{position: 'relative', flex: 1, height: 26, background: 'rgba(255,255,255,0.1)'}}>
+          <div style={{position: 'absolute', left: 0, top: 0, bottom: 0, width: `${v * 100}%`, background: X.beam}} />
+          <div style={{position: 'absolute', left: `${TH * 100}%`, top: -8, bottom: -8, width: 3, background: X.white}} />
+        </div>
+        <div style={{display: 'flex', alignItems: 'center', gap: 10, width: 170}}>
+          <div style={{width: 26, height: 26, borderRadius: 13, background: on ? '#FFB020' : 'rgba(255,255,255,0.18)', boxShadow: on ? '0 0 16px #FFB020' : 'none'}} />
+          <span style={{fontSize: 22, fontWeight: 700}}>出力 {on ? 'ON' : 'OFF'}</span>
+        </div>
+      </div>
+      <div style={{position: 'absolute', left: 24, bottom: 62, fontSize: 18, color: 'rgba(255,255,255,0.6)'}}>
+        {clear ? '透明なボトル：光の大部分が通り抜ける（白線＝判定の基準）' : '不透明なモノ：光が遮られる（白線＝判定の基準）'}
+      </div>
+    </div>
+  );
+};
+
+// 旧・真上から見た図（参考として残す）
+export const PlanView: React.FC<{frame: number; clear: boolean}> = ({frame, clear}) => {
   const y0 = 300;
   const y1 = 560;
   const sx = 480;

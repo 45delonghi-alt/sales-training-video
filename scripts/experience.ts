@@ -3,8 +3,10 @@
 //   npm run experience:export   … data/branches.json・素材管理表（CSV）・音読さん用セリフを書き出す
 import {existsSync, mkdirSync, writeFileSync} from 'node:fs';
 import {join} from 'node:path';
-import {assetById, assetSeconds, assets, branches, lineSchedule, linesForAsset, phases, questions, readSeconds, sceneById, scenes} from '../src/experience/data';
+import {assetById, assetSeconds, assets, branches, lineSchedule, linesForAsset, phases, questions, readSeconds, sceneById, scenes, videoPathFor} from '../src/experience/data';
 import {VARIANTS} from '../src/experience/remotion/variants';
+import {allLines} from '../src/consulting/timeline';
+import {script as introScript} from '../src/consulting/script';
 
 const ROOT = join(__dirname, '..');
 const PUBLIC = join(ROOT, 'public');
@@ -48,6 +50,25 @@ export const validate = (): Issue[] => {
       for (const f of ['choiceText', 'customerResponse', 'discovered', 'learningPoint'] as const)
         if (!c[f]?.trim()) err(`${key}：${f} が空`);
     }
+  }
+
+  // 映像の途中で止めるポイント
+  const introIds = new Set(allLines(introScript).map((l) => l.line.id));
+  for (const sc of scenes) {
+    if (sc.type !== 'clip' && sc.type !== 'video') continue;
+    for (const p of sc.pauses ?? []) {
+      if (p.atLineId && !introIds.has(p.atLineId)) err(`${sc.sceneId}：止めるポイントの文ID ${p.atLineId} が導入動画の台本にない`);
+      if (p.beforeLine !== undefined && (sc.type !== 'clip' || p.beforeLine >= sc.lines.length)) err(`${sc.sceneId}：止めるポイント（${p.beforeLine}文目の前）が範囲外`);
+    }
+  }
+
+  // 選択肢ごとの映像の属性（visual-branches）
+  const paths = new Set<string>();
+  for (const b of branches()) {
+    for (const f of ['visualSubject', 'cameraDirection', 'animationDirection', 'customerResponse', 'assetPath', 'fallbackVisual'] as const)
+      if (!String(b[f]).trim()) err(`${b.branchId}：${f} が空`);
+    if (paths.has(b.assetPath)) err(`${b.branchId}：映像の置き場所 ${b.assetPath} が他の選択肢と重複`);
+    paths.add(b.assetPath);
   }
 
   // 素材
@@ -190,11 +211,158 @@ const storyboardMd = () => {
   return out.join('\n');
 };
 
+// 体験のストーリー（Scene 1〜8）と、アプリの場面の対応
+const STORY: {no: number; title: string; feeling: string; sceneIds: string[]}[] = [
+  {no: 1, title: '工場で誤カウント発生', feeling: '何が起きたのか分からない', sceneIds: ['intro-video', 'p1-situation']},
+  {no: 2, title: '学生が質問を選択', feeling: '選んだ質問によって、違う現場の映像を見る', sceneIds: ['p1-q1', 'p2-situation']},
+  {no: 3, title: '透明PETの検出条件を発見', feeling: 'なぜ検出が難しいのか、疑問が生まれる', sceneIds: ['p2-q2']},
+  {no: 4, title: '光の仕組みをCGで解説', feeling: 'OPTEX-FAのセンシング技術に興味を持つ', sceneIds: ['p2-light', 'p2-isolation', 'p3-q3', 'p3-chain']},
+  {no: 5, title: '課題に合ったセンサを提案', feeling: '本当に解決できるのか、確かめたくなる', sceneIds: ['p4-situation', 'p4-q4', 'p4-product', 'p4-pitch']},
+  {no: 6, title: '実機デモ', feeling: 'ボトルを通して、出力とカウントを検証する', sceneIds: ['p5-s1-q', 'p5-s1-plan', 'p5-s2-demo', 'p5-s3-q', 'p5-s3-offset', 'p5-s3-gap', 'p5-s3-orientation']},
+  {no: 7, title: 'お客様の評価', feeling: '営業の提案が、お客様の課題解決につながる', sceneIds: ['p5-s4-q', 'p5-followup', 'p5-message']},
+  {no: 8, title: 'エンディング', feeling: '営業の仕事の価値と技術力を印象に残す', sceneIds: ['r-q1', 'r-q2', 'r-q3', 'r-q4', 'ending']},
+];
+
+const clipBlock = (assetId: string, heading: string) => {
+  const a = assetById.get(assetId)!;
+  const out = [
+    `#### ${heading}　\`${assetId}\`（約${sec(assetSeconds(assetId))}）`,
+    '',
+    `- **映像**：${a.visualDescription}`,
+    `- **カメラ**：${a.cameraDirection}`,
+    `- **動き**：${a.animationDirection}`,
+  ];
+  const lines = lineSchedule(linesForAsset(assetId), a.dialogAt ?? 0.8);
+  if (lines.length) {
+    out.push('- **音声・字幕**：');
+    lines.forEach((l) => out.push(`  - ${l.from.toFixed(1)}秒〜 ${SPEAKER[l.speaker] ?? l.speaker}「${l.text}」`));
+  }
+  out.push('');
+  return out;
+};
+
+// シーン別映像台本（docs/consulting-experience/scene-script.md）
+const sceneScriptMd = () => {
+  const out: string[] = [
+    '# シーン別映像台本',
+    '',
+    '> `npm run experience:export` で自動生成。体験のストーリー（Scene 1〜8）ごとに、アプリの場面・分岐映像・カメラ・字幕・操作のタイミングを並べています。',
+    '',
+    '| Scene | 内容 | 学生の気持ちの動き | アプリの場面 |',
+    '|---|---|---|---|',
+    ...STORY.map((st) => `| ${st.no} | ${st.title} | ${st.feeling} | ${st.sceneIds.map((id) => sceneById.get(id)?.title).join('／')} |`),
+    '',
+  ];
+  for (const st of STORY) {
+    out.push(`## Scene ${st.no}　${st.title}`, '', `**ねらい**：${st.feeling}`, '');
+    for (const id of st.sceneIds) {
+      const s = sceneById.get(id)!;
+      out.push(`### ${s.title}（${phases.find((p) => p.phaseId === s.phaseId)?.title}）`, '');
+      if (s.type === 'video') {
+        out.push(`既存の導入動画（約4分30秒）。途中で止めて考えさせるポイント：`, '');
+        (s.pauses ?? []).forEach((p) => out.push(`- 「${p.prompt}」（${p.hint ?? ''}）`));
+        out.push('');
+      }
+      if (s.type === 'clip') {
+        out.push(...clipBlock(s.assetId, '映像'));
+        (s.pauses ?? []).forEach((p) => out.push(`- **一時停止（考えよう）**：「${p.prompt}」`, ''));
+      }
+      if (s.type === 'question') {
+        if (s.situationLine) out.push(`お客様：「${s.situationLine}」`, '');
+        out.push(`**問い**：${s.questionText}`, '', `**操作**：考える時間（${s.thinkSeconds}秒）→ 選択肢を表示 → 選択 → 選んだ選択肢の映像 → お客様の反応 → 新しく分かったこと → 比較・解説`, '');
+        for (const c of s.choices) out.push(...clipBlock(c.assetId, `選択肢 ${c.choiceId}${c.choiceId === s.recommendedChoice ? '（推奨）' : ''}：${c.choiceText}`), `  → 新しく分かったこと：${c.discovered}`, '');
+      }
+      if (s.type === 'demo') {
+        out.push(...clipBlock(s.assetId, 'シミュレーション（見方の説明）'), `**実機**：${s.condition}。確かめること：${s.checks.join('／')}。結果はアプリに記録する。`, '');
+      }
+      if (s.type === 'pitch') out.push(`30秒の提案トーク（${s.parts.map((p) => p.label).join('・')}）。`, '');
+      if (s.type === 'reflection') {
+        out.push(`**問い**：${s.question}（${s.minutes}分）`, '');
+        if (s.assetId) out.push(...clipBlock(s.assetId, '現場の例'));
+      }
+    }
+  }
+  return out.join('\n');
+};
+
+const MOOD_JA: Record<string, string> = {neutral: '普通', thinking: '考え込む', uneasy: '不安', worried: '困っている', cool: '反応が薄い', positive: '前向き', request: '身を乗り出す'};
+const STATUS_JA: Record<string, string> = {implemented: '実装済み', placeholder: '仮素材', 'awaiting-footage': '実写待ち', 'awaiting-license': '許諾待ち'};
+
+// 選択肢別の映像素材一覧（docs/consulting-experience/choice-visuals.md）
+const choiceVisualsMd = () => {
+  const out: string[] = [
+    '# 選択肢別の映像素材一覧',
+    '',
+    '> `npm run experience:export` で自動生成（データ：`src/experience/data/visual-branches.json`）。1つの選択肢に、専用の映像が1本だけ対応します。同じ映像の使い回しは `npm run experience:validate` がエラーにします。',
+    '> **assetPath** に実写・実機の映像を置くと、それが再生されます。置くまでは **fallbackVisual**（同じ内容のCG）が再生されます。別の内容の映像で代用することはありません。',
+    '',
+  ];
+  for (const q of questions) {
+    out.push(`## ${q.title}　\`${q.sceneId}\`（${phases.find((p) => p.phaseId === q.phaseId)?.title}）`, '', `**問い**：${q.questionText}`, '');
+    out.push('| 項目 | A | B | C |', '|---|---|---|---|');
+    const bs = branches().filter((b) => b.questionId === q.sceneId);
+    const row = (label: string, f: (b: (typeof bs)[number]) => string) => out.push(`| ${label} | ${bs.map(f).join(' | ')} |`);
+    row('選択肢', (b) => `${b.choiceText}${b.recommended ? '（推奨）' : ''}`);
+    row('visualSubject', (b) => b.visualSubject);
+    row('cameraDirection', (b) => b.cameraDirection);
+    row('animationDirection', (b) => b.animationDirection);
+    row('customerResponse', (b) => `「${b.customerResponse}」（表情：${MOOD_JA[b.customerMood]}）`);
+    row('technicalInsight', (b) => b.technicalInsight || '—');
+    row('assetPath', (b) => `\`public/${b.assetPath}\``);
+    row('fallbackVisual', (b) => `\`${b.fallbackVisual}\``);
+    row('状態', (b) => b.assetStatus.map((x) => STATUS_JA[x]).join('・'));
+    out.push('');
+  }
+  return out.join('\n');
+};
+
+const METHOD_JA: Record<string, string> = {shoot: '実写撮影', 'ai-image': 'AI画像（実写風）', cg: 'CG（Remotion）', composite: '合成（AI背景＋実写・公式画像）'};
+
+// 素材生成用プロンプト一覧（docs/consulting-experience/generation-prompts.md）
+const promptsMd = () => {
+  const out: string[] = [
+    '# 素材生成用プロンプト一覧',
+    '',
+    '> `npm run experience:export` で自動生成（データ：`src/experience/data/assets.json` の `production`）。',
+    '',
+    '## 共通ルール',
+    '',
+    '- **センサ製品は生成しない。**実機を撮影するか、OPTEX-FA の公式画像（許諾済み）を合成する。他社製品・ロゴは映さない。',
+    '- 舞台・人物・設備の位置関係は [setting.md](setting.md) に合わせる（LINE 03、手前にセンサ、奥に反射板、左から右へ流れる）。',
+    '- お客様役は全カットで同一人物にする。AI画像で作る場合は、1枚目を参照画像にして人物を固定する（実写撮影を推奨）。',
+    '- 画面に数値を出す素材（カウント・検出結果）は、実測値かシミュレーション表示のCGだけを使う。生成画像に数値を描かせない。',
+    '- 共通のスタイル指定（各プロンプトの末尾に付ける）：`photorealistic, Japanese factory, natural color grading, 16:9, 1920x1080, documentary style, no text overlay`',
+    '- 共通のネガティブ指定：`no logos, no brand names, no readable text, no sensors or electronic devices (unless filmed for real), no distorted hands or faces`',
+    '',
+    '## 作り方の内訳',
+    '',
+    '| 作り方 | 本数 |',
+    '|---|---|',
+    ...Object.entries(METHOD_JA).map(([k, v]) => `| ${v} | ${assets.filter((a) => a.production.method === k).length} |`),
+    '',
+    '## 素材ごとのプロンプト',
+    '',
+  ];
+  for (const a of assets) {
+    const pr = a.production;
+    out.push(`### \`${a.assetId}\`　${METHOD_JA[pr.method]}`, '', `- **内容**：${a.visualDescription}`, `- **カメラ**：${a.cameraDirection}`);
+    if (pr.method === 'cg') out.push(`- **制作**：Remotion で実装済み（\`XP-${a.assetId}\`）。${pr.note}`);
+    else {
+      out.push('', '```text', pr.prompt, '```');
+      if (pr.negativePrompt) out.push('', `- **ネガティブ**：${pr.negativePrompt}`);
+      out.push(`- **注意**：${pr.note}`, `- **置き場所**：\`public/${videoPathFor(a.assetId)}\`（動画）`);
+    }
+    out.push('');
+  }
+  return out.join('\n');
+};
+
 const csvCell = (v: unknown) => `"${String(v ?? '').replace(/"/g, '""')}"`;
 
 const exportAll = () => {
   const outData = join(ROOT, 'src', 'experience', 'data');
   writeFileSync(join(outData, 'branches.json'), JSON.stringify(branches(), null, 2) + '\n');
+  writeFileSync(join(outData, 'visual-branches.json'), JSON.stringify(branches(), null, 2) + '\n');
 
   // 素材管理表
   const docs = join(ROOT, 'docs', 'consulting-experience');
@@ -254,6 +422,9 @@ const exportAll = () => {
 
   writeFileSync(join(docs, 'script.md'), scriptMd() + '\n');
   writeFileSync(join(docs, 'storyboard.md'), storyboardMd() + '\n');
+  writeFileSync(join(docs, 'scene-script.md'), sceneScriptMd() + '\n');
+  writeFileSync(join(docs, 'choice-visuals.md'), choiceVisualsMd() + '\n');
+  writeFileSync(join(docs, 'generation-prompts.md'), promptsMd() + '\n');
   const total = assets.reduce((n, a) => n + assetSeconds(a.assetId), 0);
   console.log(`branches.json：${branches().length}分岐／素材管理表：${assets.length}件（映像の合計 約${Math.round(total)}秒）／script.md・storyboard.md／音読さん用：お客様${voice.customer.length}・ナレーション${voice.narration.length}文`);
   console.log(`セリフの目安：最長 ${Math.max(...Object.values(voice).flat().map((l) => readSeconds(l.split('\t')[1]))).toFixed(1)}秒`);

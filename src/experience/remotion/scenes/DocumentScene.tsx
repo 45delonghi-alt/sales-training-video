@@ -1,6 +1,6 @@
 // 資料・記録を一人称で確認するカット。金額・型式・仕様値は表示しない（伏せ字）。
 import React from 'react';
-import {AbsoluteFill, useCurrentFrame, useVideoConfig} from 'remotion';
+import {AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig} from 'remotion';
 import {X} from '../theme';
 import {appear, progress} from '../../../consulting/components/anim';
 
@@ -121,8 +121,11 @@ export const DocumentScene: React.FC<{variant: string}> = ({variant}) => {
   const {fps} = useVideoConfig();
   const d = DOCS[variant] ?? DOCS['test-plan'];
   const width = d.widths.reduce((a, b) => a + b, 0);
+  // 一人称で資料を手に取る：わずかに傾いた状態から正面へ、ゆっくり寄る
+  const push = interpolate(frame, [0, 8 * fps], [1, 1.06], {extrapolateRight: 'clamp'});
+  const tilt = interpolate(frame, [0, 0.8 * fps], [10, 0], {extrapolateRight: 'clamp', easing: (x) => 1 - (1 - x) ** 3});
   return (
-    <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center'}}>
+    <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center', perspective: 1600, transform: `scale(${push})`}}>
       <div
         style={{
           width: width + 120,
@@ -132,7 +135,8 @@ export const DocumentScene: React.FC<{variant: string}> = ({variant}) => {
           border: `1px solid ${X.line}`,
           padding: '44px 60px 50px',
           position: 'relative',
-          ...appear(frame, 0, {dy: 40, dur: 16}),
+          opacity: appear(frame, 0, {dy: 40, dur: 16}).opacity,
+          transform: `${appear(frame, 0, {dy: 40, dur: 16}).transform} rotateX(${tilt}deg)`,
         }}
       >
         <div style={{fontSize: 44, fontWeight: 900, color: X.ink}}>{d.title}</div>
