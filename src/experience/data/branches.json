@@ -1,0 +1,212 @@
+[
+  {
+    "branchId": "p1-q1-A",
+    "phaseId": "p1",
+    "questionId": "p1-q1",
+    "choiceId": "A",
+    "assetId": "p1-q1-a",
+    "compositionId": "XP-p1-q1-a",
+    "recommended": false,
+    "nextSceneId": "p2-situation"
+  },
+  {
+    "branchId": "p1-q1-B",
+    "phaseId": "p1",
+    "questionId": "p1-q1",
+    "choiceId": "B",
+    "assetId": "p1-q1-b",
+    "compositionId": "XP-p1-q1-b",
+    "recommended": true,
+    "nextSceneId": "p2-situation"
+  },
+  {
+    "branchId": "p1-q1-C",
+    "phaseId": "p1",
+    "questionId": "p1-q1",
+    "choiceId": "C",
+    "assetId": "p1-q1-c",
+    "compositionId": "XP-p1-q1-c",
+    "recommended": false,
+    "nextSceneId": "p2-situation"
+  },
+  {
+    "branchId": "p2-q2-A",
+    "phaseId": "p2",
+    "questionId": "p2-q2",
+    "choiceId": "A",
+    "assetId": "p2-q2-a",
+    "compositionId": "XP-p2-q2-a",
+    "recommended": true,
+    "nextSceneId": "p2-light"
+  },
+  {
+    "branchId": "p2-q2-B",
+    "phaseId": "p2",
+    "questionId": "p2-q2",
+    "choiceId": "B",
+    "assetId": "p2-q2-b",
+    "compositionId": "XP-p2-q2-b",
+    "recommended": false,
+    "nextSceneId": "p2-light"
+  },
+  {
+    "branchId": "p2-q2-C",
+    "phaseId": "p2",
+    "questionId": "p2-q2",
+    "choiceId": "C",
+    "assetId": "p2-q2-c",
+    "compositionId": "XP-p2-q2-c",
+    "recommended": false,
+    "nextSceneId": "p2-light"
+  },
+  {
+    "branchId": "p3-q3-A",
+    "phaseId": "p3",
+    "questionId": "p3-q3",
+    "choiceId": "A",
+    "assetId": "p3-q3-a",
+    "compositionId": "XP-p3-q3-a",
+    "recommended": false,
+    "nextSceneId": "p3-chain"
+  },
+  {
+    "branchId": "p3-q3-B",
+    "phaseId": "p3",
+    "questionId": "p3-q3",
+    "choiceId": "B",
+    "assetId": "p3-q3-b",
+    "compositionId": "XP-p3-q3-b",
+    "recommended": true,
+    "nextSceneId": "p3-chain"
+  },
+  {
+    "branchId": "p3-q3-C",
+    "phaseId": "p3",
+    "questionId": "p3-q3",
+    "choiceId": "C",
+    "assetId": "p3-q3-c",
+    "compositionId": "XP-p3-q3-c",
+    "recommended": false,
+    "nextSceneId": "p3-chain"
+  },
+  {
+    "branchId": "p4-q4-A",
+    "phaseId": "p4",
+    "questionId": "p4-q4",
+    "choiceId": "A",
+    "assetId": "p4-q4-a",
+    "compositionId": "XP-p4-q4-a",
+    "recommended": false,
+    "nextSceneId": "p4-product"
+  },
+  {
+    "branchId": "p4-q4-B",
+    "phaseId": "p4",
+    "questionId": "p4-q4",
+    "choiceId": "B",
+    "assetId": "p4-q4-b",
+    "compositionId": "XP-p4-q4-b",
+    "recommended": true,
+    "nextSceneId": "p4-product"
+  },
+  {
+    "branchId": "p4-q4-C",
+    "phaseId": "p4",
+    "questionId": "p4-q4",
+    "choiceId": "C",
+    "assetId": "p4-q4-c",
+    "compositionId": "XP-p4-q4-c",
+    "recommended": false,
+    "nextSceneId": "p4-product"
+  },
+  {
+    "branchId": "p5-s1-q-A",
+    "phaseId": "p5",
+    "questionId": "p5-s1-q",
+    "choiceId": "A",
+    "assetId": "p5-s1-a",
+    "compositionId": "XP-p5-s1-a",
+    "recommended": false,
+    "nextSceneId": "p5-s1-plan"
+  },
+  {
+    "branchId": "p5-s1-q-B",
+    "phaseId": "p5",
+    "questionId": "p5-s1-q",
+    "choiceId": "B",
+    "assetId": "p5-s1-b",
+    "compositionId": "XP-p5-s1-b",
+    "recommended": true,
+    "nextSceneId": "p5-s1-plan"
+  },
+  {
+    "branchId": "p5-s1-q-C",
+    "phaseId": "p5",
+    "questionId": "p5-s1-q",
+    "choiceId": "C",
+    "assetId": "p5-s1-c",
+    "compositionId": "XP-p5-s1-c",
+    "recommended": false,
+    "nextSceneId": "p5-s1-plan"
+  },
+  {
+    "branchId": "p5-s3-q-A",
+    "phaseId": "p5",
+    "questionId": "p5-s3-q",
+    "choiceId": "A",
+    "assetId": "p5-s3-a",
+    "compositionId": "XP-p5-s3-a",
+    "recommended": false,
+    "nextSceneId": "p5-s3-offset"
+  },
+  {
+    "branchId": "p5-s3-q-B",
+    "phaseId": "p5",
+    "questionId": "p5-s3-q",
+    "choiceId": "B",
+    "assetId": "p5-s3-b",
+    "compositionId": "XP-p5-s3-b",
+    "recommended": true,
+    "nextSceneId": "p5-s3-offset"
+  },
+  {
+    "branchId": "p5-s3-q-C",
+    "phaseId": "p5",
+    "questionId": "p5-s3-q",
+    "choiceId": "C",
+    "assetId": "p5-s3-c",
+    "compositionId": "XP-p5-s3-c",
+    "recommended": false,
+    "nextSceneId": "p5-s3-offset"
+  },
+  {
+    "branchId": "p5-s4-q-A",
+    "phaseId": "p5",
+    "questionId": "p5-s4-q",
+    "choiceId": "A",
+    "assetId": "p5-s4-a",
+    "compositionId": "XP-p5-s4-a",
+    "recommended": false,
+    "nextSceneId": "p5-message"
+  },
+  {
+    "branchId": "p5-s4-q-B",
+    "phaseId": "p5",
+    "questionId": "p5-s4-q",
+    "choiceId": "B",
+    "assetId": "p5-s4-b",
+    "compositionId": "XP-p5-s4-b",
+    "recommended": false,
+    "nextSceneId": "p5-message"
+  },
+  {
+    "branchId": "p5-s4-q-C",
+    "phaseId": "p5",
+    "questionId": "p5-s4-q",
+    "choiceId": "C",
+    "assetId": "p5-s4-c",
+    "compositionId": "XP-p5-s4-c",
+    "recommended": true,
+    "nextSceneId": "p5-message"
+  }
+]

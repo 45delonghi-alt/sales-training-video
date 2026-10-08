@@ -14,7 +14,13 @@
     "consulting:sheet": "tsx scripts/consulting.ts sheet",
     "consulting:ondoku": "tsx scripts/consulting.ts ondoku",
     "consulting:import": "tsx scripts/consulting.ts import",
-    "render:consulting": "remotion render ConsultingSales out/consulting-sales.mp4"
+    "render:consulting": "remotion render ConsultingSales out/consulting-sales.mp4",
+    "experience:validate": "tsx scripts/experience.ts validate",
+    "experience:export": "tsx scripts/experience.ts export",
+    "experience:build": "tsx scripts/experience-app.ts build",
+    "experience:serve": "tsx scripts/experience-app.ts serve",
+    "experience:stills": "tsx scripts/experience-render.ts stills",
+    "experience:render": "tsx scripts/experience-render.ts videos"
   },
   "dependencies": {
     "@fontsource/noto-sans-jp": "5.3.0",

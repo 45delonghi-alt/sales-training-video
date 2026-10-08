@@ -10,6 +10,7 @@ import type {AudioDurations, Script} from './types';
 import {audioStems, buildTimeline, type Timeline} from './timeline';
 import {Main} from './Main';
 import {ConsultingSalesComposition} from './consulting/Composition';
+import {ExperienceCompositions} from './experience/remotion/Compositions';
 
 const script = scriptJson as Script;
 
@@ -60,6 +61,7 @@ export const RemotionRoot: React.FC = () => {
     />
     {/* 新卒採用向け「コンサルティング営業体験」導入動画 */}
     <ConsultingSalesComposition />
+    <ExperienceCompositions />
     </>
   );
 };

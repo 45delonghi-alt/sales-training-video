@@ -1,0 +1,9 @@
+[
+  {"phaseId": "intro", "title": "導入・MISSION理解", "minutes": 5, "goal": "営業の役割と、今回お客様が困っていることを理解する", "short": "導入"},
+  {"phaseId": "p1", "title": "Phase1 現状確認", "minutes": 7, "goal": "お客様の言う「誤カウント」を、具体的な現象として理解する", "short": "現状確認"},
+  {"phaseId": "p2", "title": "Phase2 原因の深掘り", "minutes": 9, "goal": "検出対象と設備の条件を確認し、原因の候補を整理する", "short": "原因の深掘り"},
+  {"phaseId": "p3", "title": "Phase3 真因・顧客課題の特定", "minutes": 9, "goal": "誤カウントが、お客様の業務にどんな影響を与えているかを理解する", "short": "本当の課題"},
+  {"phaseId": "p4", "title": "Phase4 解決提案", "minutes": 8, "goal": "お客様の課題に対して、センシング技術を使った解決の仮説を示す", "short": "解決提案"},
+  {"phaseId": "p5", "title": "Phase5 実機デモ・検証", "minutes": 12, "goal": "解決の仮説を実機で確かめ、お客様と一緒に結果を確認する", "short": "実機デモ"},
+  {"phaseId": "reflection", "title": "振り返り", "minutes": 10, "goal": "体験を通じて分かった営業の仕事とOPTEX-FAの技術を、自分の言葉にする", "short": "振り返り"}
+]
