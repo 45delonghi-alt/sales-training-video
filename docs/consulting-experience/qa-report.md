@@ -8,9 +8,9 @@
 |---|---|---|
 | 型チェック | `npm run typecheck` | 合格（エラー 0） |
 | シナリオデータの検証 | `npm run experience:validate` | エラー 0／注意 2（公式製品画像が未配置。CG・仮表示で代用中） |
-| 全分岐の動作テスト | `node tests/experience.e2e.mjs` | __E2E__ |
+| 全分岐の動作テスト | `node tests/experience.e2e.mjs` | **79項目すべて合格**（21分岐・基準未達の分岐・投影同期・再読み込み・404なし） |
 | 日本語の機械チェック | 半角の「!?」・全角英数の混在・空白の連続・句読点の重複・字幕の長さ | 167件中 問題 0（最長の字幕 47字＝2行以内） |
-| クリップの書き出し | `npm run experience:render` | __RENDER__ |
+| クリップの書き出し | `npm run experience:render` | 39本すべて書き出し成功（合計 約8分15秒・28MB、`out/experience/videos/`） |
 
 ### 全分岐テストで確かめたこと
 
