@@ -1,12 +1,18 @@
 // 寄りのカット：既設センサ／透明PETボトルと光の経路
 import React from 'react';
-import {AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig} from 'remotion';
+import {AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {X} from '../theme';
 import {BOTTLE_PATH} from '../FactoryLine';
 import {appear, progress} from '../../../consulting/components/anim';
 
 // 既設センサ。メーカー・型式が特定できない描き方にする（教育用の架空設定）
-export const SensorScene: React.FC<{variant: string}> = () => {
+export const SensorScene: React.FC<{variant: string; imagePath?: string}> = ({variant, imagePath}) => {
+  if (variant === 'reflector-check') return <ReflectorCheck />;
+  return <ExistingSensor imagePath={imagePath} question={variant === 'maker-question'} />;
+};
+
+// 既設センサ（透明体用の回帰反射型）。正式な製品写真が配置されていれば、それを使う
+const ExistingSensor: React.FC<{imagePath?: string; question: boolean}> = ({imagePath, question}) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
   const zoom = interpolate(frame, [0, 2.8 * fps], [0.72, 1.1], {extrapolateRight: 'clamp', easing: (x) => 1 - (1 - x) ** 3});
@@ -47,12 +53,25 @@ export const SensorScene: React.FC<{variant: string}> = () => {
         </g>
       </svg>
       <div style={{position: 'absolute', left: 120, top: 190, color: X.white, ...appear(frame, 3.1 * fps, {dx: -20, dy: 0})}}>
-        <div style={{fontSize: 22, letterSpacing: 2, color: 'rgba(255,255,255,0.65)', fontWeight: 700}}>既設センサ</div>
+        <div style={{fontSize: 22, letterSpacing: 2, color: 'rgba(255,255,255,0.65)', fontWeight: 700}}>既設センサ（透明体用・回帰反射型）</div>
         <div style={{fontSize: 44, fontWeight: 900, marginTop: 6}}>
           型式：<span style={{color: X.redOnDark}}>確認中</span>
         </div>
         <div style={{fontSize: 22, color: 'rgba(255,255,255,0.6)', marginTop: 8}}>ラベルが小さく、すぐには読み取れない</div>
       </div>
+      {imagePath ? (
+        <AbsoluteFill style={{background: X.dark, alignItems: 'center', justifyContent: 'center'}}>
+          <Img src={staticFile(imagePath)} style={{maxWidth: '60%', maxHeight: '70%', objectFit: 'contain', transform: `scale(${zoom})`}} />
+        </AbsoluteFill>
+      ) : null}
+      {question ? (
+        <div style={{position: 'absolute', left: 0, right: 0, top: 640, textAlign: 'center', color: X.white, ...appear(frame, 1.2 * fps)}}>
+          <div style={{display: 'inline-block', background: 'rgba(16,17,19,0.9)', border: `3px solid ${X.redOnDark}`, padding: '14px 30px'}}>
+            <div style={{fontSize: 48, fontWeight: 900}}>メーカーが古いから？</div>
+            <div style={{fontSize: 28, color: '#FFB020', marginTop: 6, opacity: progress(frame, 4.5 * fps, 12)}}>→ まだ分からない（原因は決まっていない）</div>
+          </div>
+        </div>
+      ) : null}
     </AbsoluteFill>
   );
 };
@@ -135,6 +154,52 @@ export const BottleScene: React.FC<{variant: string}> = () => {
           光が<span style={{color: X.redOnDark}}>往復</span>し、ボトルが横切る
         </div>
         <div style={{fontSize: 24, color: 'rgba(255,255,255,0.65)', marginTop: 6}}>回帰反射型：戻ってくる光の変化でボトルを検出する</div>
+      </div>
+    </AbsoluteFill>
+  );
+};
+
+// センサと反射板の状態を確かめる（高さ・角度・汚れ・光が当たる位置）
+const ReflectorCheck: React.FC = () => {
+  const frame = useCurrentFrame();
+  const {fps} = useVideoConfig();
+  const items = ['センサの高さ（ボトルの下部に合っているか）', '反射板の角度（センサと正対しているか）', 'センサ・反射板の汚れ', '光が当たる位置（反射板の中心か）'];
+  const beamY = 640;
+  return (
+    <AbsoluteFill>
+      <svg width={1920} height={1080} style={{position: 'absolute', inset: 0}}>
+        {/* 床とコンベア（横から） */}
+        <rect x={120} y={beamY + 40} width={1000} height={26} fill="#1C1F24" stroke="rgba(255,255,255,0.45)" strokeWidth={2} />
+        {/* ボトル（下部を光が通る） */}
+        <g transform={`translate(620, ${beamY + 40}) scale(1.3)`}>
+          <path d={BOTTLE_PATH} fill="rgba(150,205,240,0.12)" stroke="rgba(255,255,255,0.85)" strokeWidth={2.4} />
+        </g>
+        {/* センサ（左） */}
+        <rect x={150} y={beamY - 40} width={110} height={80} rx={10} fill="#2C2F35" stroke="rgba(255,255,255,0.9)" strokeWidth={3} />
+        <circle cx={262} cy={beamY} r={10} fill={X.beam} />
+        <line x1={205} y1={beamY + 40} x2={205} y2={beamY + 260} stroke="rgba(255,255,255,0.4)" strokeWidth={8} />
+        {/* 反射板（右） */}
+        <rect x={1060} y={beamY - 50} width={26} height={100} fill="#33363C" stroke="rgba(255,255,255,0.8)" strokeWidth={2} />
+        <line x1={1073} y1={beamY + 50} x2={1073} y2={beamY + 260} stroke="rgba(255,255,255,0.4)" strokeWidth={8} />
+        <g opacity={progress(frame, 0.6 * fps, 14)}>
+          <line x1={272} y1={beamY - 6} x2={1058} y2={beamY - 6} stroke={X.beam} strokeWidth={4} strokeDasharray="14 10" strokeDashoffset={-frame * 4} />
+          <line x1={1058} y1={beamY + 6} x2={272} y2={beamY + 6} stroke={X.beam} strokeWidth={4} strokeDasharray="14 10" strokeDashoffset={-frame * 4} opacity={0.6} />
+        </g>
+        <text x={150} y={beamY - 60} fill="rgba(255,255,255,0.8)" fontSize={22} fontWeight={700}>センサ（光を出して、受ける）</text>
+        <text x={900} y={beamY - 70} fill="rgba(255,255,255,0.8)" fontSize={22} fontWeight={700}>反射板（光を戻すだけ）</text>
+        <text x={560} y={beamY + 110} fill="rgba(255,255,255,0.6)" fontSize={20}>検出位置：ボトルの下部</text>
+      </svg>
+      <div style={{position: 'absolute', right: 72, top: 170, width: 600, display: 'grid', gap: 12}}>
+        <div style={{color: X.white, fontSize: 30, fontWeight: 900}}>確認すること</div>
+        {items.map((it, i) => (
+          <div key={it} style={{display: 'flex', gap: 14, alignItems: 'center', background: 'rgba(16,17,19,0.88)', padding: '12px 16px', color: X.white, fontSize: 24, fontWeight: 700, ...appear(frame, (1.2 + i * 0.8) * fps, {dx: 20, dy: 0})}}>
+            <div style={{width: 30, height: 30, border: '3px solid rgba(255,255,255,0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FFB020', fontSize: 24}}>
+              {frame > (2.0 + i * 0.8) * fps ? '✓' : ''}
+            </div>
+            {it}
+          </div>
+        ))}
+        <div style={{fontSize: 17, color: 'rgba(255,255,255,0.6)'}}>※ 光の線は説明用の表現です</div>
       </div>
     </AbsoluteFill>
   );

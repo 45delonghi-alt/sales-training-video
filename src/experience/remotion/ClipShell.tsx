@@ -6,9 +6,10 @@ import type {AssetStatus} from '../types';
 import {lineSchedule} from '../data';
 import {FONT, X} from './theme';
 import {progress} from '../../consulting/components/anim';
-import {Bust, type Mood} from './Person';
+import {Bust, isPerson, type Mood} from './Person';
+import {characterById} from '../data';
 
-export type ClipLine = {speaker: string; text: string};
+export type ClipLine = import('../types').Line;
 
 export type ClipProps = {
   assetId: string;
@@ -23,7 +24,9 @@ export type ClipProps = {
   kind: string;
   simulation?: boolean;
   // お客様の反応（表情）。お客様が映っていないクリップで、話している間だけ小窓で見せる
-  customerMood?: Mood;
+  responderMood?: Mood;
+  // この映像に人物として映っている人（その人が話すときは小窓を出さない）
+  onScreen?: string[];
   // お客様の声・ナレーションの音声（配置されていれば dialogAt から再生）
   audioPath?: string;
 };
@@ -60,8 +63,13 @@ export const ClipShell: React.FC<ClipProps & {children: React.ReactNode}> = (p) 
       ) : null}
       {p.simulation ? <SimulationBadge /> : null}
       {p.showStatus ? <StatusTag status={p.status} kind={p.kind} dark={dark} /> : null}
-      {p.customerMood && current?.speaker === 'customer' && p.kind !== 'customer' ? (
-        <CustomerInset mood={p.customerMood} frame={frame} fromFrame={Math.round(current.from * fps)} />
+      {current && isPerson(current.speaker) && !(p.onScreen ?? []).includes(current.speaker) ? (
+        <CustomerInset
+          who={current.speaker}
+          mood={characterById.get(current.speaker as never)?.role === 'senior' ? 'positive' : p.responderMood ?? 'worried'}
+          frame={frame}
+          fromFrame={Math.round(current.from * fps)}
+        />
       ) : null}
       {p.audioPath ? (
         <Sequence from={Math.round(p.dialogAt * fps)} layout="none">
@@ -76,23 +84,31 @@ export const ClipShell: React.FC<ClipProps & {children: React.ReactNode}> = (p) 
 const fade = (frame: number, start: number) => ({opacity: progress(frame, start, 12)});
 
 // お客様の反応の小窓（右下）
-const CustomerInset: React.FC<{mood: Mood; frame: number; fromFrame: number}> = ({mood, frame, fromFrame}) => {
+const CustomerInset: React.FC<{who: string; mood: Mood; frame: number; fromFrame: number}> = ({who, mood, frame, fromFrame}) => {
   const p = interpolate(frame - fromFrame, [0, 8], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
   return (
     <div style={{position: 'absolute', right: 72, bottom: 190, width: 250, height: 250, borderRadius: 125, overflow: 'hidden', background: '#1A1C20', border: `4px solid ${X.red}`, opacity: p, transform: `scale(${0.9 + 0.1 * p})`, boxShadow: '0 12px 40px rgba(0,0,0,0.35)'}}>
       <svg width={250} height={250} viewBox="-260 -330 520 520">
-        <Bust mood={mood} blink={(frame / 30) % 3.2 > 3.05} />
+        <Bust who={who as never} mood={mood} blink={(frame / 30) % 3.2 > 3.05} />
       </svg>
-      <div style={{position: 'absolute', left: 0, right: 0, bottom: 14, textAlign: 'center', fontSize: 18, fontWeight: 700, color: X.white}}>お客様の反応</div>
+      <div style={{position: 'absolute', left: 0, right: 0, bottom: 14, textAlign: 'center', fontSize: 18, fontWeight: 700, color: X.white}}>{characterById.get(who as never)?.name ?? ''}</div>
     </div>
   );
 };
 
-const SPEAKER: Record<string, string> = {customer: 'お客様', sales: '営業', narration: ''};
+// 字幕の話者ラベル（例：佐藤さん（設備課）／あなた（営業））
+const speakerLabel = (speaker: string) => {
+  if (speaker === 'narration') return '';
+  if (speaker === 'sales') return 'あなた（営業）';
+  const c = characterById.get(speaker as never);
+  if (!c) return '';
+  const dept = c.title.replace(/（.*$/, '').replace(/^飲料工場 /, '');
+  return `${c.name}（${dept}）`;
+};
 
 const Subtitle: React.FC<{line: ClipLine; frame: number; fromFrame: number}> = ({line, frame, fromFrame}) => {
   const o = interpolate(frame - fromFrame, [0, 6], [0, 1], {extrapolateRight: 'clamp'});
-  const who = SPEAKER[line.speaker] ?? '';
+  const who = speakerLabel(line.speaker);
   return (
     <div style={{position: 'absolute', left: 0, right: 0, bottom: 64, display: 'flex', justifyContent: 'center', opacity: o}}>
       <div

@@ -16,10 +16,15 @@ const FLOWS: Record<string, Flow> = {
   // 1本目のあとに間を空け、見方を説明する時間をつくる
   normal: (t, i) => ({x: -200 + SPEED * t - i * SP - (i >= 1 ? 420 : 0), z: 86}),
   gap: (t, i) => ({x: 120 + SPEED * t - i * 96 - Math.floor(i / 3) * 260, z: 86}),
-  orientation: (t, i) => ({x: 120 + SPEED * t - i * SP, z: 86, turn: [-1, 0.2, 1, -0.4, 0.7][((i % 5) + 5) % 5]}),
+  wobble: (t, i) => ({x: 120 + SPEED * t - i * SP, z: 86 + Math.sin(t * 3 + i) * 10, tilt: Math.sin(t * 6 + i * 1.3) * 8}),
+  // 形の違うボトル：細い・太い・背が低い・くびれ
+  shape: (t, i) => {
+    const k = ((i % 4) + 4) % 4;
+    return {x: 120 + SPEED * t - i * SP, z: 86, sx: [1, 0.78, 1.25, 1.05][k], sy: [1, 1.08, 0.82, 0.92][k], turn: [-1, 0.2, 1, -0.4][k]};
+  },
 };
 
-const demoScene = (assetId: string) => scenes.find((s) => s.type === 'demo' && s.assetId === assetId);
+const demoScene = (assetId: string) => scenes.find((s) => s.type === 'demo' && s.videoAsset === assetId);
 
 export const DemoScene: React.FC<{variant: string}> = ({variant}) => {
   if (variant === 'offset') return <OffsetPlan />;
@@ -31,21 +36,24 @@ const Bench: React.FC<{variant: string}> = ({variant}) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
   const t = frame / fps;
-  const v: View = variant === 'bench' ? {ox: 110, oy: 790, s: 0.95} : {ox: 70, oy: 800, s: 0.82};
+  const still = variant === 'bench' || variant === 'setup';
+  const v: View = still ? {ox: 110, oy: 790, s: 0.95} : {ox: 70, oy: 800, s: 0.82};
   const flow = FLOWS[variant] ?? FLOWS.normal;
-  const range: [number, number] = variant === 'bench' ? [0, 0] : variant === 'normal' ? [0, 14] : [-1, 14];
-  const bottles = variant === 'bench' ? [{key: 0, x: 380, z: 86}, {key: 1, x: 900, z: 86}] : bottlesAt(flow, t, range, SENSOR_X);
-  const passes = variant === 'bench' ? [] : passTimes(flow, t, range, SENSOR_X, fps).filter((p) => p.t <= t);
+  const range: [number, number] = still ? [0, 0] : variant === 'normal' ? [0, 14] : [-1, 14];
+  const bottles = still ? [{key: 0, x: 380, z: 86}, {key: 1, x: variant === 'setup' ? 620 : 900, z: 86}] : bottlesAt(flow, t, range, SENSOR_X);
+  const passes = still ? [] : passTimes(flow, t, range, SENSOR_X, fps).filter((p) => p.t <= t);
   const hit = bottles.some((b) => 'state' in b && b.state === 'hit');
   const sim = variant === 'normal';
-  const scene = demoScene(`p5-demo-${variant}`);
+  const scene = demoScene(`p4-demo-${variant}`);
   return (
     <AbsoluteFill>
       <svg width={1920} height={1080} style={{position: 'absolute', inset: 0}}>
-        <FactoryLine v={v} length={variant === 'bench' ? 1150 : 1260} sensorX={SENSOR_X} bottles={bottles} frame={frame} speed={variant === 'bench' ? 0 : 5} beam={hit ? 'hit' : 'on'} labels sensorLabel="OPTEX-FA センサ（実機）" />
+        <g transform={variant === 'setup' ? setupCam(frame, fps, v) : undefined}>
+          <FactoryLine v={v} length={still ? 1150 : 1260} sensorX={SENSOR_X} bottles={bottles} frame={frame} speed={still ? 0 : 5} beam={hit ? 'hit' : 'on'} labels sensorLabel="OPTEX-FA センサ（実機・横向き）" beamLabels={variant === 'setup' && frame > 5 * fps} />
+        </g>
         {variant === 'bench' ? <BenchLabels v={v} frame={frame} /> : null}
       </svg>
-      {variant === 'bench' ? null : sim ? (
+      {still ? (variant === 'setup' ? <SetupNotes frame={frame} fps={fps} /> : null) : sim ? (
         <SimPanel passes={passes.length} t={t} passTimes={passes.map((p) => p.t)} frame={frame} hit={hit} />
       ) : (
         <ObservePanel condition={scene && scene.type === 'demo' ? scene.condition : ''} checks={scene && scene.type === 'demo' ? scene.checks : []} frame={frame} fps={fps} />
@@ -144,7 +152,7 @@ const OffsetPlan: React.FC = () => {
   const y1 = 700;
   const sx = 640;
   const zs = [0, -70, 60, -30, 80, -80, 20];
-  const scene = demoScene('p5-demo-offset');
+  const scene = demoScene('p4-demo-offset');
   return (
     <AbsoluteFill>
       <div style={{position: 'absolute', left: 72, top: 150, fontSize: 26, fontWeight: 700, color: 'rgba(255,255,255,0.75)'}}>真上から見た図</div>
@@ -175,16 +183,17 @@ const SetupConditions: React.FC = () => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
   const cards = [
-    {t: '位置ずれ', d: '手前・奥にずらして流す'},
-    {t: '間隔が詰まる', d: 'ボトルどうしを近づける'},
-    {t: '向きの違い', d: 'ラベル・凹凸の向きを変える'},
+    {t: 'ボトルの揺れ', d: '揺れながら流す'},
+    {t: '位置ずれ', d: 'センサ側・反射板側にずらす'},
+    {t: '間隔の変化', d: 'ボトルどうしを近づける'},
+    {t: '形状の違い', d: '形の違うボトルを流す'},
   ];
   return (
     <AbsoluteFill>
       <div style={{position: 'absolute', left: 120, top: 160, color: X.white, fontSize: 44, fontWeight: 900, ...appear(frame, 0)}}>
         問題が起きていた条件を<span style={{color: X.redOnDark}}>再現</span>する
       </div>
-      <div style={{position: 'absolute', left: 120, right: 120, top: 300, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 30}}>
+      <div style={{position: 'absolute', left: 120, right: 120, top: 300, display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 24}}>
         {cards.map((c, i) => (
           <div key={c.t} style={{border: '2px solid rgba(255,255,255,0.35)', background: 'rgba(16,17,19,0.8)', padding: '30px 30px 34px', color: X.white, ...appear(frame, (0.6 + i * 0.6) * fps)}}>
             <div style={{display: 'flex', alignItems: 'center', gap: 16}}>
@@ -197,5 +206,34 @@ const SetupConditions: React.FC = () => {
         ))}
       </div>
     </AbsoluteFill>
+  );
+};
+
+// 準備：検出位置（ボトルの下部）へ寄る
+const setupCam = (frame: number, fps: number, v: View) => {
+  const [sx, sy] = project(v, SENSOR_X, 36, 86);
+  const p = progress(frame, 3 * fps, 40);
+  const z = 1 + 0.55 * p;
+  const fx = 960 + (sx - 960) * p;
+  const fy = 540 + (sy - 30 - 540) * p;
+  return `translate(960 540) scale(${z}) translate(${-fx} ${-fy})`;
+};
+
+const SetupNotes: React.FC<{frame: number; fps: number}> = ({frame, fps}) => {
+  const notes = [
+    {at: 1.0, t: '実際の透明PETボトル'},
+    {at: 3.0, t: 'センサ：片側に横向きで取り付け'},
+    {at: 5.0, t: '反射板：反対側に、同じ高さで正対'},
+    {at: 7.0, t: '高さ：ボトルの下部（底から少し上）'},
+  ];
+  return (
+    <div style={{position: 'absolute', right: 72, top: 160, width: 540, display: 'grid', gap: 12}}>
+      {notes.map((n) => (
+        <div key={n.t} style={{background: 'rgba(16,17,19,0.88)', borderLeft: `6px solid ${X.red}`, padding: '12px 18px', color: X.white, fontSize: 26, fontWeight: 700, ...appear(frame, n.at * fps, {dx: 20, dy: 0})}}>
+          {n.t}
+        </div>
+      ))}
+      <div style={{fontSize: 17, color: 'rgba(255,255,255,0.6)', ...appear(frame, 8 * fps)}}>※ 光の線は説明用の表現です。実製品の光の色・見え方は公式仕様で確認</div>
+    </div>
   );
 };

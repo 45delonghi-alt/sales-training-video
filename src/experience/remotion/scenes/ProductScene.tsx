@@ -3,21 +3,19 @@
 import React from 'react';
 import {AbsoluteFill, Img, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {X} from '../theme';
-import {assetById, linesForAsset} from '../../data';
-import {lineSchedule} from '../ClipShell';
 import {appear, progress} from '../../../consulting/components/anim';
+import {Bust} from '../Person';
 
-export const ProductScene: React.FC<{variant: string; imagePath?: string}> = ({variant, imagePath}) => {
+export const ProductScene: React.FC<{variant: string; imagePath?: string; assetId: string}> = ({variant, imagePath, assetId}) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
-  const a = assetById.get(variant === 'intro' ? 'p4-product' : 'p4-q4-b');
-  const steps = lineSchedule(linesForAsset(a?.assetId ?? ''), a?.dialogAt ?? 0.8).map((l) => Math.round(l.from * fps));
+  void assetId;
   return (
     <AbsoluteFill>
       <div style={{position: 'absolute', left: 120, top: 190, width: 700, ...appear(frame, 0, {dx: -40, dy: 0, dur: 16})}}>
         <div style={{fontSize: 22, fontWeight: 700, color: X.red, letterSpacing: 2}}>OPTEX-FA</div>
         <div style={{fontSize: 46, fontWeight: 900, color: X.ink, marginTop: 4}}>透明体検出センサ</div>
-        <div style={{fontSize: 22, color: X.gray, marginTop: 6}}>回帰反射型 ／ 候補：KR-Qシリーズ ほか（型式は公式情報で確認中）</div>
+        <div style={{fontSize: 22, color: X.gray, marginTop: 6}}>透明体検出用・回帰反射型 ／ 候補：KR-Qシリーズ等（型式は公式情報で確認中）</div>
         <div style={{marginTop: 26, height: 470, background: X.white, border: imagePath ? `1px solid ${X.line}` : `3px dashed ${X.grayLight}`, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
           {imagePath ? (
             <Img src={staticFile(imagePath)} style={{maxWidth: '90%', maxHeight: '90%', objectFit: 'contain'}} />
@@ -35,7 +33,16 @@ export const ProductScene: React.FC<{variant: string; imagePath?: string}> = ({v
           )}
         </div>
       </div>
-      {variant === 'intro' ? <IntroFacts frame={frame} steps={steps} fps={fps} /> : <Proposal frame={frame} fps={fps} />}
+      {variant === 'intro-senior' ? (
+        <>
+          <IntroFacts frame={frame} steps={[Math.round(0.6 * fps), Math.round(1.6 * fps), Math.round(2.6 * fps)]} fps={fps} />
+          <SeniorCard frame={frame} fps={fps} />
+        </>
+      ) : variant === 'exterior' ? (
+        <Exterior frame={frame} fps={fps} hasImage={!!imagePath} />
+      ) : (
+        <Proposal frame={frame} fps={fps} />
+      )}
     </AbsoluteFill>
   );
 };
@@ -76,6 +83,29 @@ const Proposal: React.FC<{frame: number; fps: number}> = ({frame, fps}) => (
     </svg>
     <div style={{fontSize: 34, fontWeight: 900, color: X.ink, marginTop: 30, ...appear(frame, 4.4 * fps)}}>
       <span style={{color: X.red}}>実際のボトル</span>で確かめる
+    </div>
+  </div>
+);
+
+// 先輩社員（森さん）。来訪者として工場の作業服と衛生帽を着用
+const SeniorCard: React.FC<{frame: number; fps: number}> = ({frame, fps}) => (
+  <div style={{position: 'absolute', right: 72, bottom: 190, width: 300, height: 300, borderRadius: 150, overflow: 'hidden', background: X.dark, border: `4px solid ${X.red}`, ...appear(frame, 0.8 * fps)}}>
+    <svg width={300} height={300} viewBox="-260 -330 520 520">
+      <Bust who="mori" mood="positive" blink={(frame / fps) % 3.2 > 3.05} />
+    </svg>
+    <div style={{position: 'absolute', left: 0, right: 0, bottom: 16, textAlign: 'center', color: X.white, fontSize: 18, fontWeight: 700}}>森さん（OPTEX-FA 営業）</div>
+  </div>
+);
+
+// 製品の外観を眺める（公式画像の枠にズーム）
+const Exterior: React.FC<{frame: number; fps: number; hasImage: boolean}> = ({frame, fps, hasImage}) => (
+  <div style={{position: 'absolute', left: 900, top: 260, width: 880, ...appear(frame, 0.8 * fps, {dx: 30, dy: 0})}}>
+    <div style={{fontSize: 30, fontWeight: 700, color: X.gray}}>外観</div>
+    <div style={{fontSize: 44, fontWeight: 900, color: X.ink, marginTop: 10}}>{hasImage ? 'コンパクトな本体' : '（公式画像を配置後に表示）'}</div>
+    <div style={{fontSize: 28, color: X.ink, marginTop: 40, opacity: progress(frame, 3.0 * fps, 12)}}>
+      でも、お客様にとって大事なのは
+      <br />
+      <span style={{color: X.red, fontWeight: 900}}>正確に数えられるか</span>
     </div>
   </div>
 );

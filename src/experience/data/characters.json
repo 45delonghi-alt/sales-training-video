@@ -1,0 +1,8 @@
+[
+  {"id": "sales", "role": "sales", "name": "あなた", "title": "OPTEX-FA 新人営業（学生）", "gender": "any", "voice": "画面には映らない（一人称）。声を入れる場合は、明るく丁寧な20代の声"},
+  {"id": "sato", "role": "customer", "name": "佐藤さん", "title": "飲料工場 設備課（30代後半・男性）", "gender": "male", "voice": "落ち着いた30〜40代の男性。現場をよく知る実務担当。丁寧だが率直"},
+  {"id": "takahashi", "role": "customer", "name": "高橋さん", "title": "飲料工場 品質管理課（30代前半・女性）", "gender": "female", "voice": "はきはきした30代の女性。数字と品質に厳しい"},
+  {"id": "mori", "role": "senior", "name": "森さん", "title": "OPTEX-FA 営業（入社8年目・女性）", "gender": "female", "voice": "温かく頼れる30代の女性。学生の判断を奪わず、問いかける口調"},
+  {"id": "nakata", "role": "senior", "name": "中田さん", "title": "OPTEX-FA アプリケーションエンジニア（男性）", "gender": "male", "voice": "穏やかな40代の男性。技術を短く分かりやすく話す"},
+  {"id": "narration", "role": "narration", "name": "ナレーション", "title": "", "gender": "any", "voice": "既存の導入動画と同じナレーター（音読さん）"}
+]

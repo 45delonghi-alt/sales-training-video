@@ -1,65 +1,66 @@
-// お客様との対話（営業担当の一人称）。実写が届くまでは線画の仮素材。
+// お客様との対話（営業担当＝学生の一人称）。実写が届くまでは線画の仮素材。
+// variant：「人物-表情」（例：sato-uneasy）、2人の場面は pair-thinking（佐藤さん＋高橋さん）・together（前向きにうなずく2人）
 import React from 'react';
-import {AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig} from 'remotion';
+import {AbsoluteFill, useCurrentFrame, useVideoConfig} from 'remotion';
 import {X} from '../theme';
 import {Bust, type Mood} from '../Person';
 import {BOTTLE_PATH} from '../FactoryLine';
+import {characterById} from '../../data';
 import {appear, progress} from '../../../consulting/components/anim';
 
-const MOOD: Record<string, Mood> = {
-  thinking: 'thinking',
-  request: 'request',
-  uneasy: 'uneasy',
-  bottles: 'positive',
-  worried: 'worried',
-  cool: 'cool',
-  together: 'positive',
+type Who = 'sato' | 'takahashi';
+type Cast = {who: Who; mood: Mood; x: number; scale: number; delay?: number}[];
+
+const castOf = (variant: string): Cast => {
+  if (variant === 'pair-thinking')
+    return [
+      {who: 'sato', mood: 'thinking', x: 720, scale: 1.15},
+      {who: 'takahashi', mood: 'neutral', x: 1240, scale: 1.0, delay: 1.0},
+    ];
+  if (variant === 'together')
+    return [
+      {who: 'sato', mood: 'positive', x: 760, scale: 1.2},
+      {who: 'takahashi', mood: 'positive', x: 1290, scale: 1.0, delay: 1.6},
+    ];
+  const [who, pose] = variant.split('-') as [Who, string];
+  const mood: Mood = pose === 'frown' ? 'worried' : (pose as Mood);
+  return [{who, mood, x: 960, scale: 1.25}];
 };
+
+export const peopleIn = (variant: string) => castOf(variant).map((c) => c.who);
 
 export const CustomerScene: React.FC<{variant: string}> = ({variant}) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
   const t = frame / fps;
   const blink = t % 3.2 > 3.05;
-  const lean = variant === 'request' ? interpolate(frame, [0, 1.2 * fps], [1, 1.06], {extrapolateRight: 'clamp'}) : 1;
-  const tilt = variant === 'uneasy' ? -8 * progress(frame, 0.6 * fps, 18) : variant === 'thinking' ? 4 : 0;
-  const cx = variant === 'together' ? 760 : 960;
+  const cast = castOf(variant);
+  const pose = variant.split('-')[1];
   return (
     <AbsoluteFill>
       <BackgroundLine frame={frame} />
       <svg width={1920} height={1080} style={{position: 'absolute', inset: 0}}>
-        {/* 机（手前） */}
         <rect x={0} y={960} width={1920} height={120} fill="#1A1C20" />
         <line x1={0} y1={960} x2={1920} y2={960} stroke="rgba(255,255,255,0.35)" strokeWidth={2} />
-        <g transform={`translate(${cx}, 760) scale(${1.25 * lean})`}>
-          <Bust mood={MOOD[variant] ?? 'neutral'} blink={blink} tilt={tilt} />
-        </g>
-        {variant === 'together' ? (
-          <g transform="translate(1290, 800) scale(1.0)" opacity={progress(frame, 1.6 * fps, 16)}>
-            <Bust mood="positive" name="設備担当" color="rgba(255,255,255,0.85)" />
-          </g>
-        ) : null}
-        {variant === 'bottles' ? (
-          <g opacity={progress(frame, 0.8 * fps, 14)}>
-            {[860, 1060].map((x, i) => (
-              <g key={x} transform={`translate(${x}, ${interpolate(frame, [0.8 * fps, 1.8 * fps], [900, 990], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'})}) scale(1.1)`}>
-                <path d={BOTTLE_PATH} fill="rgba(150,205,240,0.18)" stroke="rgba(255,255,255,0.95)" strokeWidth={2.4} />
-                <rect x={-16} y={-250} width={32} height={24} rx={3} fill="none" stroke="rgba(255,255,255,0.95)" strokeWidth={2.4} />
-                {i === 0 ? null : <rect x={-30} y={-190} width={60} height={34} fill="rgba(255,255,255,0.14)" />}
-              </g>
-            ))}
-          </g>
-        ) : null}
-        {variant === 'worried' ? <ThoughtBubble frame={frame} fps={fps} /> : null}
+        {cast.map((c) => {
+          const tilt = c.mood === 'uneasy' ? -8 * progress(frame, 0.6 * fps, 18) : c.mood === 'thinking' ? 4 : pose === 'frown' ? -3 : 0;
+          const nod = c.mood === 'positive' && variant === 'together' ? Math.max(0, Math.sin((t - 1) * 4)) * 4 : 0;
+          return (
+            <g key={c.who} transform={`translate(${c.x}, ${760 + nod}) scale(${c.scale})`} opacity={progress(frame, (c.delay ?? 0) * fps, 14)}>
+              <Bust who={c.who} mood={c.mood} blink={blink} tilt={tilt} />
+            </g>
+          );
+        })}
+        {variant === 'sato-worried' ? <ThoughtBubble frame={frame} fps={fps} /> : null}
       </svg>
-      <div style={{position: 'absolute', left: 72, top: 150, color: 'rgba(255,255,255,0.7)', fontSize: 22, ...appear(frame, 4)}}>
-        お客様：飲料工場 設備課の担当者
+      <div style={{position: 'absolute', left: 72, top: 150, color: 'rgba(255,255,255,0.75)', fontSize: 22, ...appear(frame, 4)}}>
+        {cast.map((c) => `${characterById.get(c.who)?.name}（${characterById.get(c.who)?.title.replace(/^飲料工場 /, '')}）`).join('　')}
       </div>
     </AbsoluteFill>
   );
 };
 
-// ぼかした工場の背景（ラインのシルエット）
+// ぼかした工場の背景（清潔な飲料ラインのシルエット）
 const BackgroundLine: React.FC<{frame: number}> = ({frame}) => (
   <svg width={1920} height={1080} style={{position: 'absolute', inset: 0, filter: 'blur(5px)', opacity: 0.45}}>
     <rect x={0} y={600} width={1920} height={40} fill="#23262B" />
@@ -96,3 +97,4 @@ const ThoughtBubble: React.FC<{frame: number; fps: number}> = ({frame, fps}) => 
     </g>
   );
 };
+

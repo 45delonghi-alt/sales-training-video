@@ -6,7 +6,8 @@ import {X} from './theme';
 
 export const DEPTH = 170;
 export const BOTTLE_H = 228;
-export const SENSOR_Y = 120; // センサ・光の高さ（ボトルの胴）
+export const SENSOR_Y = 36; // センサ・光の高さ：ボトルの下部（底から少し上）を横から検出
+const RAIL_Y = 104; // ガイドレールはボトルの胴の高さ（光の高さとは重ならない）
 const KX = 0.55;
 const KY = 0.36;
 
@@ -31,6 +32,9 @@ export type BottleState = {
   state?: 'normal' | 'hit' | 'error';
   // ラベル・凹凸の向き（-1〜1）。向きの違いを見せるとき
   turn?: number;
+  // ボトルの形の違い（幅・高さの倍率）
+  sx?: number;
+  sy?: number;
 };
 
 export const Bottle: React.FC<{v: View; b: BottleState; dark: boolean}> = ({v, b, dark}) => {
@@ -39,7 +43,7 @@ export const Bottle: React.FC<{v: View; b: BottleState; dark: boolean}> = ({v, b
   const sw = (b.state && b.state !== 'normal' ? 3.6 : 2.4) / v.s;
   const turn = b.turn ?? 0;
   return (
-    <g transform={`translate(${px}, ${py}) scale(${v.s}) rotate(${b.tilt ?? 0})`}>
+    <g transform={`translate(${px}, ${py}) scale(${v.s * (b.sx ?? 1)}, ${v.s * (b.sy ?? 1)}) rotate(${b.tilt ?? 0})`}>
       <path d={BOTTLE_PATH} fill={dark ? 'rgba(160,210,240,0.10)' : 'rgba(120,180,220,0.14)'} />
       {/* 中身（飲料） */}
       <path d="M -42 -138 L 42 -138 L 42 -14 Q 42 0 28 0 L -28 0 Q -42 0 -42 -14 Z" fill={dark ? 'rgba(140,200,235,0.20)' : 'rgba(110,170,215,0.20)'} />
@@ -67,7 +71,8 @@ export const FactoryLine: React.FC<{
   showSensor?: boolean;
   labels?: boolean;
   sensorLabel?: string;
-}> = ({v, length, sensorX, bottles, frame, dark = true, speed = 6, beam = 'on', showSensor = true, labels = false, sensorLabel}) => {
+  beamLabels?: boolean; // 光の「行き」「戻り」を表示
+}> = ({v, length, sensorX, bottles, frame, dark = true, speed = 6, beam = 'on', showSensor = true, labels = false, sensorLabel, beamLabels = false}) => {
   const P = (x: number, y: number, z: number) => project(v, x, y, z);
   const line = dark ? 'rgba(255,255,255,0.45)' : 'rgba(20,21,23,0.45)';
   const faint = dark ? 'rgba(255,255,255,0.18)' : 'rgba(20,21,23,0.16)';
@@ -83,7 +88,7 @@ export const FactoryLine: React.FC<{
     seams.push(<line key={x} x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]} stroke={faint} strokeWidth={1.5} />);
   }
   const rail = (z: number) => {
-    const [a, b] = [P(0, 30, z), P(length, 30, z)];
+    const [a, b] = [P(0, RAIL_Y, z), P(length, RAIL_Y, z)];
     return <line x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]} stroke={line} strokeWidth={3} />;
   };
   // センサ（手前）・反射板（奥）
@@ -141,6 +146,12 @@ export const FactoryLine: React.FC<{
       {sorted.map((b) => (
         <Bottle key={b.key} v={v} b={b} dark={dark} />
       ))}
+      {showSensor && beamLabels ? (
+        <g fontSize={20} fontWeight={700} fill={X.beam}>
+          <text x={(b0[0] + b1[0]) / 2 + 26} y={(b0[1] + b1[1]) / 2 - 12}>行き：センサ → 反射板</text>
+          <text x={(b0[0] + b1[0]) / 2 + 26} y={(b0[1] + b1[1]) / 2 + 26} opacity={0.75}>戻り：反射板 → センサ</text>
+        </g>
+      ) : null}
       {rail(DEPTH + 4)}
       {/* センサ（手前） */}
       {showSensor ? (
@@ -153,8 +164,8 @@ export const FactoryLine: React.FC<{
       ) : null}
       {labels && showSensor ? (
         <g fontSize={22} fontWeight={700} fill={dark ? 'rgba(255,255,255,0.75)' : X.gray} letterSpacing={1}>
-          <text x={sNear[0] - 40} y={sNear[1] + 64 * v.s + 30}>{sensorLabel ?? '光電センサ（手前）'}</text>
-          <text x={rFar[0] - 30} y={rFar[1] - 44 * v.s}>反射板（奥）</text>
+          <text x={sNear[0] - 40} y={sNear[1] + 64 * v.s + 30}>{sensorLabel ?? 'センサ（光を出して、受ける）'}</text>
+          <text x={rFar[0] - 30} y={rFar[1] - 44 * v.s}>反射板（光を戻すだけ）</text>
         </g>
       ) : null}
     </g>

@@ -4,7 +4,7 @@ import {AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig} from 'remoti
 import {X} from '../theme';
 import {DEPTH, FactoryLine, bottlesAt, passTimes, project, type Flow, type View} from '../FactoryLine';
 import {Worker} from '../Person';
-import {progress} from '../../../consulting/components/anim';
+import {appear, progress} from '../../../consulting/components/anim';
 
 const BASE_COUNT = 1265;
 
@@ -116,6 +116,12 @@ const camera = (variant: string, t: number, sensor: [number, number]): Cam => {
 };
 
 export const FactoryScene: React.FC<{variant: string}> = ({variant}) => {
+  if (variant === 'split-compare') return <SplitCompare />;
+  if (variant === 'side-detect') return <SideDetect />;
+  return <LineShot variant={variant} />;
+};
+
+const LineShot: React.FC<{variant: string}> = ({variant}) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
   const t = frame / fps;
@@ -312,3 +318,84 @@ const StopLamp: React.FC<{frame: number}> = ({frame}) => (
     <div style={{color: 'rgba(255,255,255,0.7)', fontSize: 22}}>数量確認中</div>
   </div>
 );
+
+// 通常運転（左）と、流れが乱れた状態（右）を同じ画角で並べる
+const SplitCompare: React.FC = () => {
+  const frame = useCurrentFrame();
+  const {fps} = useVideoConfig();
+  const t = frame / fps;
+  const view: View = {ox: 40, oy: 700, s: 0.62};
+  const sensorX = 640;
+  const normal: Flow = (tt, i) => ({x: 120 + 200 * tt - i * 230, z: 86});
+  const messy: Flow = (tt, i) => {
+    const w = tt * 0.6; // 右はスロー
+    const bunch = i % 3 === 2 ? 110 : i % 3 === 1 ? 36 : 0;
+    return {x: 120 + 200 * w - i * 230 + bunch, z: 86 + (i % 2 ? 16 : -12), tilt: Math.sin(tt * 5 + i * 1.7) * 7};
+  };
+  const half = (flow: Flow, extra: number[], label: string, sub: string, x0: number) => {
+    const bottles = bottlesAt(flow, t, [-1, 12], sensorX);
+    const passes = passTimes(flow, t, [-1, 12], sensorX, fps).filter((p) => p.t <= t);
+    const errors = passes.filter((p) => extra.includes(p.i));
+    const hit = bottles.some((b) => b.state === 'hit');
+    return (
+      <div style={{position: 'absolute', left: x0, top: 0, width: 960, height: 1080, overflow: 'hidden', borderRight: x0 === 0 ? '3px solid rgba(255,255,255,0.4)' : undefined}}>
+        <svg width={960} height={1080} style={{position: 'absolute', inset: 0}}>
+          <FactoryLine v={view} length={1300} sensorX={sensorX} bottles={bottles} frame={frame} beam={hit ? 'hit' : 'on'} speed={x0 === 0 ? 4 : 2.4} />
+        </svg>
+        <div style={{position: 'absolute', left: 40, top: 150, color: X.white}}>
+          <div style={{fontSize: 34, fontWeight: 900, color: x0 === 0 ? X.white : X.redOnDark}}>{label}</div>
+          <div style={{fontSize: 20, color: 'rgba(255,255,255,0.65)', marginTop: 4}}>{sub}</div>
+        </div>
+        <div style={{position: 'absolute', right: 40, top: 150, background: 'rgba(16,17,19,0.85)', border: `2px solid ${errors.length ? X.redOnDark : 'rgba(255,255,255,0.3)'}`, padding: '12px 18px', color: X.white, fontVariantNumeric: 'tabular-nums', width: 300}}>
+          <div style={{display: 'flex', justifyContent: 'space-between', fontSize: 20}}><span>実際の本数</span><b style={{fontSize: 32}}>{passes.length}</b></div>
+          <div style={{display: 'flex', justifyContent: 'space-between', fontSize: 20, marginTop: 6}}><span>カウント</span><b style={{fontSize: 32, color: errors.length ? X.redOnDark : X.white}}>{passes.length + errors.length}</b></div>
+        </div>
+      </div>
+    );
+  };
+  return (
+    <AbsoluteFill>
+      {half(normal, [], '通常運転', '等間隔で流れる', 0)}
+      {half(messy, [3], '流れが乱れたとき', 'ボトルが寄り、揺れる（スロー）', 960)}
+    </AbsoluteFill>
+  );
+};
+
+// ボトルの下部を横から検出：センサと反射板の位置関係を寄りで見せる
+const SideDetect: React.FC = () => {
+  const frame = useCurrentFrame();
+  const {fps} = useVideoConfig();
+  const t = frame / fps;
+  const view: View = {ox: 150, oy: 780, s: 1};
+  const sensorX = 760;
+  const flow: Flow = (tt, i) => ({x: 200 + 120 * tt - i * 260, z: 86});
+  const bottles = bottlesAt(flow, t, [-1, 10], sensorX);
+  const hit = bottles.some((b) => b.state === 'hit');
+  const [sx, sy] = project(view, sensorX, 36, DEPTH / 2);
+  const zoom = lerp(t, [1.0, 4.5], [1, 1.75]);
+  const fx = lerp(t, [1.0, 4.5], [960, sx]);
+  const fy = lerp(t, [1.0, 4.5], [560, sy - 40]);
+  const labels = [
+    {at: 3.0, text: 'センサ（光を出して、受ける）', sub: '投光・受光が一体。片側に横向きで取り付け'},
+    {at: 5.5, text: '反射板（光を戻すだけ）', sub: '反対側に、同じ高さで正対。光は出さない'},
+    {at: 8.0, text: '検出位置：ボトルの下部', sub: '底から少し上を、横方向に検出'},
+  ];
+  return (
+    <AbsoluteFill>
+      <svg width={1920} height={1080} style={{position: 'absolute', inset: 0}}>
+        <g transform={`translate(960 540) scale(${zoom}) translate(${-fx} ${-fy})`}>
+          <FactoryLine v={view} length={1500} sensorX={sensorX} bottles={bottles} frame={frame} beam={hit ? 'hit' : 'on'} speed={2.5} beamLabels={t > 10} />
+        </g>
+      </svg>
+      <div style={{position: 'absolute', right: 72, top: 160, width: 560, display: 'grid', gap: 14}}>
+        {labels.map((l) => (
+          <div key={l.text} style={{background: 'rgba(16,17,19,0.88)', borderLeft: `6px solid ${X.red}`, padding: '12px 18px', color: X.white, ...appear(frame, l.at * fps, {dx: 20, dy: 0})}}>
+            <div style={{fontSize: 28, fontWeight: 900}}>{l.text}</div>
+            <div style={{fontSize: 19, color: 'rgba(255,255,255,0.7)', marginTop: 2}}>{l.sub}</div>
+          </div>
+        ))}
+        <div style={{fontSize: 17, color: 'rgba(255,255,255,0.6)', ...appear(frame, 10 * fps)}}>※ 光の線は説明用の表現です</div>
+      </div>
+    </AbsoluteFill>
+  );
+};

@@ -25,20 +25,6 @@ const DOCS: Record<string, Doc> = {
     ],
     highlight: 0,
   },
-  'production-log': {
-    title: '今週のカウント記録',
-    sub: 'LINE 03 ｜ 実際の本数とセンサのカウントの照合',
-    note: '教育用の架空データ',
-    head: ['曜日', '照合結果', '誤カウント'],
-    widths: [200, 560, 240],
-    rows: [
-      ['月', '一致', {mark: 'none'}],
-      ['火', 'センサのカウントが多い', {mark: 'error'}],
-      ['水', '一致', {mark: 'none'}],
-      ['木', 'センサのカウントが多い', {mark: 'error'}],
-      ['金', 'センサのカウントが多い', {mark: 'error'}],
-    ],
-  },
   budget: {
     title: '設備予算（今期）',
     note: '金額は表示していません',
@@ -89,6 +75,57 @@ const DOCS: Record<string, Doc> = {
       ['④ 位置ずれ・間隔・向きが変わっても', '①〜③を満たす（範囲は設備担当者と決める）'],
     ],
   },
+  'catalog-pages': {
+    title: '光電センサ 総合カタログ',
+    note: '数値は表示していません',
+    head: ['章', 'ページ'],
+    widths: [620, 380],
+    rows: [
+      ['光電センサ 総合', 'p.1〜120'],
+      ['透明体検出', 'p.121〜148'],
+      ['アクセサリ', 'p.149〜210'],
+      ['仕様一覧', 'p.211〜260'],
+    ],
+    stamp: 'ページ数では決められない',
+  },
+  'new-sensor-flyer': {
+    title: '新しい光電センサのご案内',
+    note: '一般的なチラシ（メーカー名・型式は表示していません）',
+    head: ['うたい文句', ''],
+    widths: [620, 380],
+    rows: [
+      ['最新モデル', 'NEW'],
+      ['高性能・高速', '★★★★★'],
+      ['いまなら入れ替えキャンペーン', M(4)],
+    ],
+    stamp: '欲しいのはセンサではない',
+  },
+  'price-compare': {
+    title: '価格の比較',
+    note: '金額は表示していません',
+    head: ['項目', '案1', '案2'],
+    widths: [440, 280, 280],
+    rows: [
+      ['センサ本体', M(4), M(4)],
+      ['反射板・金具', M(3), M(3)],
+      ['設置・調整', M(3), M(4)],
+      ['合計', M(5), M(5)],
+    ],
+    stamp: '使えるかが先',
+  },
+  'catalog-send': {
+    title: 'メール：カタログ送付のご案内',
+    note: '宛先・本文のみ',
+    head: ['', ''],
+    widths: [220, 780],
+    rows: [
+      ['宛先', '飲料工場 設備課 佐藤様'],
+      ['件名', '光電センサ カタログ送付の件'],
+      ['本文', 'カタログを添付いたします。ご検討ください。'],
+      ['添付', 'catalog.pdf'],
+    ],
+    stamp: '資料だけでは判断できない',
+  },
   'catalog-spec': {
     title: '仕様',
     note: '数値は表示していません',
@@ -116,7 +153,81 @@ const DOCS: Record<string, Doc> = {
   },
 };
 
+// 4週間のカウントデータ（研修用の架空データ）。通常は＋0.5〜0.8%、最大の週で＋3.0%。すべて過剰カウント
+const WEEKS = [
+  {w: '第1週', actual: 10000, count: 10060},
+  {w: '第2週', actual: 10000, count: 10300},
+  {w: '第3週', actual: 10000, count: 10050},
+  {w: '第4週', actual: 10000, count: 10080},
+];
+const pct = (r: {actual: number; count: number}) => ((r.count - r.actual) / r.actual) * 100;
+
+const WeeklyCounts: React.FC = () => {
+  const frame = useCurrentFrame();
+  const {fps} = useVideoConfig();
+  const hl = frame < 3.4 * fps ? -1 : frame < 6.4 * fps ? 0 : 1; // 第1週 → 最大の第2週
+  const fmt = (n: number) => n.toLocaleString('en-US');
+  const maxPct = 3.5;
+  return (
+    <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center'}}>
+      <div style={{width: 1560, marginTop: -60, background: X.white, border: `1px solid ${X.line}`, boxShadow: '0 30px 80px rgba(20,21,23,0.18)', padding: '34px 46px 40px', ...appear(frame, 0, {dy: 30})}}>
+        <div style={{display: 'flex', alignItems: 'baseline', gap: 20}}>
+          <div style={{fontSize: 40, fontWeight: 900, color: X.ink}}>生産数の管理画面　LINE 03</div>
+          <div style={{fontSize: 18, color: X.gray, border: `1px solid ${X.line}`, padding: '2px 10px'}}>研修用の架空データ</div>
+        </div>
+        <div style={{display: 'flex', gap: 40, marginTop: 22}}>
+          <div style={{flex: 1}}>
+            <div style={{display: 'flex', borderBottom: `3px solid ${X.ink}`, paddingBottom: 8, fontSize: 20, fontWeight: 700, color: X.gray}}>
+              <div style={{width: 130}}>週</div>
+              <div style={{width: 210}}>実際の本数</div>
+              <div style={{width: 210}}>カウント</div>
+              <div>差</div>
+            </div>
+            {WEEKS.map((r, i) => (
+              <div key={r.w} style={{display: 'flex', alignItems: 'center', minHeight: 64, borderBottom: `1px solid ${X.line}`, fontSize: 28, fontWeight: 700, fontVariantNumeric: 'tabular-nums', background: hl === i ? (i === 1 ? 'rgba(215,20,30,0.10)' : 'rgba(20,21,23,0.05)') : 'transparent', ...appear(frame, (0.6 + i * 0.35) * fps, {dy: 10, dur: 10})}}>
+                <div style={{width: 130}}>{r.w}</div>
+                <div style={{width: 210}}>{fmt(r.actual)}</div>
+                <div style={{width: 210, color: i === 1 && hl >= 1 ? X.red : X.ink}}>{fmt(r.count)}</div>
+                <div style={{color: i === 1 && hl >= 1 ? X.red : X.ink}}>＋{pct(r).toFixed(1)}%</div>
+              </div>
+            ))}
+            <div style={{fontSize: 20, color: X.gray, marginTop: 12}}>すべて「実際より多い」（過剰カウント）。通常は＋0.5〜0.8%、最大の週で＋3.0%</div>
+          </div>
+          <div style={{width: 520}}>
+            <div style={{fontSize: 20, fontWeight: 700, color: X.gray}}>実際の本数との差（%）</div>
+            <svg width={520} height={320} style={{marginTop: 10}}>
+              <line x1={40} y1={280} x2={510} y2={280} stroke={X.ink} strokeWidth={2} />
+              {[1, 2, 3].map((v) => (
+                <g key={v}>
+                  <line x1={40} y1={280 - (v / maxPct) * 260} x2={510} y2={280 - (v / maxPct) * 260} stroke={X.line} strokeWidth={1} />
+                  <text x={30} y={286 - (v / maxPct) * 260} fontSize={16} fill={X.gray} textAnchor="end">{v}%</text>
+                </g>
+              ))}
+              {WEEKS.map((r, i) => {
+                const h = (pct(r) / maxPct) * 260 * progress(frame, (1.2 + i * 0.3) * fps, 16);
+                const x = 70 + i * 115;
+                return (
+                  <g key={r.w}>
+                    <rect x={x} y={280 - h} width={70} height={h} fill={i === 1 ? X.red : '#8A8D93'} opacity={hl === -1 || hl === i ? 1 : 0.55} />
+                    <text x={x + 35} y={304} fontSize={16} fill={X.gray} textAnchor="middle">{r.w}</text>
+                    <text x={x + 35} y={272 - h} fontSize={18} fontWeight={700} fill={i === 1 ? X.red : X.ink} textAnchor="middle">{pct(r).toFixed(1)}</text>
+                  </g>
+                );
+              })}
+            </svg>
+          </div>
+        </div>
+      </div>
+    </AbsoluteFill>
+  );
+};
+
 export const DocumentScene: React.FC<{variant: string}> = ({variant}) => {
+  if (variant === 'weekly-counts') return <WeeklyCounts />;
+  return <DocumentCard variant={variant} />;
+};
+
+const DocumentCard: React.FC<{variant: string}> = ({variant}) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
   const d = DOCS[variant] ?? DOCS['test-plan'];

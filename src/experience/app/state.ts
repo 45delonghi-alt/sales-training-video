@@ -15,10 +15,10 @@ export type State = {
   stack: {sceneId: string; step: Step}[];
   answers: Record<string, Answer>;
   demo: Record<string, DemoResult>;
-  pitch: Record<string, string>;
+  hints: Record<string, boolean>; // 先輩社員のヒントを表示したか
   notes: Record<string, string>; // 振り返りのメモ
-  revealed: Record<string, boolean>; // 解説（推奨・学習ポイント）を表示したか
-  compare: boolean;
+  compare: boolean; // 他の選択肢の結果（進行役が表示）
+  vote: {sessionId: string; joinUrl: string; show: boolean} | null; // スマートフォン回答（配信サーバー使用時のみ）
   showSubtitles: boolean;
   showStatus: boolean;
   volume: number;
@@ -27,7 +27,7 @@ export type State = {
   playToken: number; // 再生し直しの合図
 };
 
-const KEY = 'optexfa-xp-session-v1';
+const KEY = 'optexfa-xp-session-v2';
 
 export const initialStep = (s: Scene | undefined): Step => (s?.type === 'question' ? 'think' : 'ready');
 
@@ -37,10 +37,10 @@ export const fresh = (): State => ({
   stack: [],
   answers: {},
   demo: {},
-  pitch: {},
+  hints: {},
   notes: {},
-  revealed: {},
   compare: false,
+  vote: null,
   showSubtitles: true,
   showStatus: true,
   volume: 0.8,
@@ -69,10 +69,10 @@ export type Action =
   | {type: 'step'; step: Step}
   | {type: 'choose'; choiceId: ChoiceId}
   | {type: 'reason'; text: string}
-  | {type: 'reveal'; on: boolean}
+  | {type: 'hint'; on: boolean}
+  | {type: 'vote'; vote: State['vote']}
   | {type: 'compare'; on: boolean}
   | {type: 'demo'; sceneId: string; result: Partial<DemoResult>}
-  | {type: 'pitch'; key: string; text: string}
   | {type: 'note'; sceneId: string; text: string}
   | {type: 'toggle'; key: 'showSubtitles' | 'showStatus'}
   | {type: 'volume'; value: number}
@@ -92,7 +92,7 @@ export const judge = (r?: DemoResult): boolean | null => {
 
 const DEMO_SCENES = scenes.filter((s) => s.type === 'demo').map((s) => s.sceneId);
 
-// この問いの前提となる実測（p5-s3 は通常条件、p5-s4 はそれまでの全条件）
+// この問いの前提となる実測（p4-q3 は通常条件、p4-q4 はそれまでの全条件）
 export const demoGate = (q: QuestionScene, demo: Record<string, DemoResult>) => {
   const idx = scenes.findIndex((s) => s.sceneId === q.sceneId);
   const needed = DEMO_SCENES.filter((id) => scenes.findIndex((s) => s.sceneId === id) < idx);
@@ -113,6 +113,7 @@ const enter = (s: State, sceneId: string, push = true): State => {
     step: initialStep(scene),
     stack: push ? [...s.stack, {sceneId: s.sceneId, step: s.step}] : s.stack,
     compare: false,
+    vote: s.vote ? {...s.vote, show: false} : null,
     phaseEnteredAt,
     startedAt: s.startedAt ?? now,
     playToken: s.playToken + 1,
@@ -156,16 +157,16 @@ export const reducer = (s: State, a: Action): State => {
       if (!prev) return s;
       return {...s, answers: {...s.answers, [s.sceneId]: {...prev, reason: a.text}}};
     }
-    case 'reveal':
-      return {...s, revealed: {...s.revealed, [s.sceneId]: a.on}};
+    case 'hint':
+      return {...s, hints: {...s.hints, [s.sceneId]: a.on}};
+    case 'vote':
+      return {...s, vote: a.vote};
     case 'compare':
       return {...s, compare: a.on};
     case 'demo': {
       const prev = s.demo[a.sceneId] ?? {passed: '', counted: '', chatter: '', note: '', source: 'simulation'};
       return {...s, demo: {...s.demo, [a.sceneId]: {...prev, ...a.result}}};
     }
-    case 'pitch':
-      return {...s, pitch: {...s.pitch, [a.key]: a.text}};
     case 'note':
       return {...s, notes: {...s.notes, [a.sceneId]: a.text}};
     case 'toggle':
@@ -177,7 +178,7 @@ export const reducer = (s: State, a: Action): State => {
     case 'replay':
       return {...s, step: 'playing', playToken: s.playToken + 1};
     case 'reset':
-      return fresh();
+      return {...fresh(), vote: s.vote ? {...s.vote, show: false} : null};
     default:
       return s;
   }
@@ -242,5 +243,5 @@ export const discoveries = (answers: Record<string, Answer>) =>
     .filter((s): s is QuestionScene => s.type === 'question' && !!answers[s.sceneId])
     .map((q) => {
       const c = q.choices.find((ch) => ch.choiceId === answers[q.sceneId].choiceId)!;
-      return {sceneId: q.sceneId, phaseId: q.phaseId, text: c.discovered};
+      return {sceneId: q.sceneId, phaseId: q.phaseId, text: c.gained, missing: c.missing};
     });

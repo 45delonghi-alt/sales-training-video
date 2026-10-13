@@ -92,33 +92,49 @@ export const ApplicationsScene: React.FC = () => {
   );
 };
 
+// 本編の扉：既存の導入動画（YOUR MISSION）から、学生が営業担当になる
+export const TitleScene: React.FC = () => {
+  const frame = useCurrentFrame();
+  const {fps} = useVideoConfig();
+  return (
+    <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center', color: X.white}}>
+      <div style={{textAlign: 'center', marginTop: -60}}>
+        <div style={{fontSize: 34, letterSpacing: 10, fontWeight: 700, color: 'rgba(255,255,255,0.7)', ...appear(frame, 0)}}>OPTEX-FA CONSULTING SALES EXPERIENCE</div>
+        <div style={{fontSize: 150, fontWeight: 900, letterSpacing: 12, color: X.redOnDark, marginTop: 20, ...appear(frame, 0.3 * fps, {dy: 30})}}>YOUR MISSION</div>
+        <div style={{fontSize: 64, fontWeight: 900, marginTop: 10, ...appear(frame, 0.9 * fps)}}>ペットボトルの誤カウントを解決せよ！</div>
+        <div style={{fontSize: 46, fontWeight: 700, marginTop: 60, ...appear(frame, 3.0 * fps)}}>
+          それでは、<span style={{color: X.redOnDark, display: 'inline-block', transform: `scale(${keyZoom(frame, 3.4 * fps)})`}}>あなたが営業担当</span>です。
+        </div>
+      </div>
+    </AbsoluteFill>
+  );
+};
+
 export const EndingScene: React.FC = () => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
   const f = (s: number) => Math.round(s * fps);
-  const words = ['聞く。', '考える。', '提案する。', 'そして、確かめる。'];
-  const phase = frame < f(3.2) ? 0 : frame < f(9.4) ? 1 : frame < f(13.4) ? 2 : 3;
+  const words = ['聞く。', '考える。', '課題を見つける。', '提案する。'];
+  const phase = frame < f(3.0) ? 0 : frame < f(12.6) ? 1 : 2;
   return (
     <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center', color: X.white}}>
-      {phase === 0 ? <div style={{fontSize: 96, fontWeight: 900, ...appear(frame, f(0.3))}}>売るだけでは、終わらない。</div> : null}
+      {phase === 0 ? <div style={{fontSize: 92, fontWeight: 900, ...appear(frame, f(0.3))}}>売るだけでは、終わらない。</div> : null}
       {phase === 1 ? (
-        <div style={{display: 'flex', gap: 46}}>
-          {words.map((w, i) => (
-            <div key={w} style={{fontSize: 80, fontWeight: 900, color: i === 3 ? X.redOnDark : X.white, ...appear(frame, f(3.4 + i * 1.3), {dy: 30})}}>
-              {w}
-            </div>
-          ))}
+        <div style={{textAlign: 'center'}}>
+          <div style={{display: 'flex', gap: 40, justifyContent: 'center'}}>
+            {words.map((w, i) => (
+              <div key={w} style={{fontSize: 72, fontWeight: 900, ...appear(frame, f(3.2 + i * 1.3), {dy: 30})}}>
+                {w}
+              </div>
+            ))}
+          </div>
+          <div style={{fontSize: 96, fontWeight: 900, color: X.redOnDark, marginTop: 50, ...appear(frame, f(8.6), {dy: 30})}}>
+            <span style={{display: 'inline-block', transform: `scale(${keyZoom(frame, f(8.8))})`}}>そして、確かめる。</span>
+          </div>
         </div>
       ) : null}
       {phase === 2 ? (
-        <div style={{fontSize: 84, fontWeight: 900, textAlign: 'center', lineHeight: 1.4, ...appear(frame, f(9.6))}}>
-          お客様と一緒に、
-          <br />
-          <span style={{color: X.redOnDark, display: 'inline-block', transform: `scale(${keyZoom(frame, f(10.4))})`}}>課題解決</span>を実現する。
-        </div>
-      ) : null}
-      {phase === 3 ? (
-        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 34, ...appear(frame, f(13.6))}}>
+        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 34, ...appear(frame, f(12.8))}}>
           <BrandMark size={110} color={X.white} />
           <div style={{fontSize: 34, letterSpacing: 12, fontWeight: 700, color: 'rgba(255,255,255,0.8)'}}>CONSULTING SALES EXPERIENCE</div>
         </div>

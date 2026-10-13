@@ -1,15 +1,25 @@
-// コンサルティング営業体験（60分）のシナリオデータの型。
-// データ本体は src/experience/data/*.json。アプリ（src/experience/app）と動画（src/experience/remotion）の両方が読む。
+// WEB参加型 コンサルティング営業体験（60分）のシナリオデータの型。
+// データ本体：src/experience/data/phases.json（場面・設問・選択肢）、assets.json（映像）、characters.json、glossary.json。
+// アプリ（src/experience/app）と動画（src/experience/remotion）の両方が読む。
 
-export type PhaseId = 'intro' | 'p1' | 'p2' | 'p3' | 'p4' | 'p5' | 'reflection';
+export type PhaseId = 'intro' | 'p1' | 'p2' | 'p3' | 'p4' | 'reflection';
 
 export type Phase = {
   phaseId: PhaseId;
-  title: string;
+  phaseTitle: string;
   short: string; // 上部バー用の短い名前
+  step: string; // 4ステップの番号（聞く=1 … 提案する=4）
   minutes: number;
   goal: string;
 };
+
+export type Speaker = 'sales' | 'sato' | 'takahashi' | 'mori' | 'nakata' | 'narration';
+
+export type Character = {id: Speaker; role: 'sales' | 'customer' | 'senior' | 'narration'; name: string; title: string; gender: string; voice: string};
+
+export type GlossaryItem = {key: string; term: string; short: string};
+
+export type Mood = 'neutral' | 'thinking' | 'uneasy' | 'worried' | 'cool' | 'positive' | 'request';
 
 // 制作状態（素材管理表・QAで使う）
 export type AssetStatus =
@@ -18,20 +28,10 @@ export type AssetStatus =
   | 'awaiting-footage' // 実写素材待ち
   | 'awaiting-license'; // 許諾確認待ち
 
-// 映像クリップ。Remotion のコンポジション（XP-<assetId>）として描画し、実写が届いたら videoPath に差し替える
+// 映像クリップ。Remotion のコンポジション（XP-<assetId>）として描画し、実写が届いたら差し替える
 export type Asset = {
   assetId: string;
-  kind:
-    | 'factory'
-    | 'sensor'
-    | 'bottle'
-    | 'customer'
-    | 'document'
-    | 'tech'
-    | 'product'
-    | 'demo'
-    | 'applications'
-    | 'ending';
+  kind: 'title' | 'factory' | 'sensor' | 'bottle' | 'customer' | 'document' | 'tech' | 'product' | 'demo' | 'applications' | 'ending';
   variant: string;
   seconds: number; // 映像だけの長さ（セリフが長ければ自動で延びる）
   dialogAt?: number; // セリフを出し始める秒
@@ -39,25 +39,28 @@ export type Asset = {
   cameraDirection: string;
   animationDirection: string;
   status: AssetStatus[];
-  // 実写・公式画像が届いたら差し替える先（public/ からの相対パス）。存在しなければ CG を使う
-  videoPath?: string;
-  imagePath?: string;
+  videoPath?: string; // 実写・実機の映像（public/ からの相対パス）。既定は experience/videos/<assetId>.mp4
+  imagePath?: string; // 正式な製品写真（許諾後に配置）
   needs?: string[]; // 不足している素材
-  // 素材の作り方（実写撮影／AI画像／CG／合成）と、生成用プロンプト
   production: {method: 'shoot' | 'ai-image' | 'cg' | 'composite'; prompt: string; negativePrompt: string; note: string};
 };
 
-export type Line = {speaker: 'customer' | 'narration' | 'sales'; text: string};
+export type Line = {speaker: Speaker; text: string};
 
 export type Choice = {
   choiceId: 'A' | 'B' | 'C';
-  choiceText: string;
-  assetId: string;
+  choiceText: string; // 画面に出す選択肢
+  salesLine?: string; // 営業（あなた）が実際に話す言葉。choiceText が「」付きのセリフなら省略可
+  videoAsset: string; // この選択肢専用の映像
+  imageAsset?: string;
+  responder: Speaker; // 答える人
+  mood: Mood; // 答えるときの表情
   customerResponse: string;
-  discovered: string; // この選択で新しく分かったこと
-  learningPoint: string;
-  customerMood: 'neutral' | 'thinking' | 'uneasy' | 'worried' | 'cool' | 'positive' | 'request'; // お客様の反応（表情）
-  technicalInsight?: string; // この選択で見えた技術的な発見
+  extraLines?: Line[]; // 回答のあとの短い解説（先輩社員など）
+  gained: string; // 得られる情報
+  missing: string; // まだ不足している情報
+  learningPoint: string; // 簡単な解説
+  technicalInsight?: string;
 };
 
 // 映像の途中で止めて考えさせるポイント
@@ -68,56 +71,43 @@ type Base = {
   phaseId: PhaseId;
   title: string;
   nextSceneId: string | null;
-  // 進行役だけに見せるメモ
-  facilitatorNote?: string;
+  facilitatorNote?: string; // 進行役だけに見せるメモ
+  glossary?: string[]; // この場面で表示する用語メモ（glossary.json の key）
 };
 
 export type VideoScene = Base & {type: 'video'; compositionId: string; description: string; pauses?: Pause[]};
 
-export type ClipScene = Base & {
-  type: 'clip';
-  assetId: string;
-  lines: Line[];
-  pauses?: Pause[];
-};
+export type ClipScene = Base & {type: 'clip'; videoAsset: string; lines: Line[]; pauses?: Pause[]};
 
 export type QuestionScene = Base & {
   type: 'question';
-  backdropAssetId: string;
+  questionId: string;
+  backdropAsset: string;
+  situation?: Line; // 問いの直前のお客様の言葉
   questionText: string;
-  // 実機デモの結果しだいで問いの前提が変わる場合（結果が基準を満たしたときだけこの問いを出す）
-  requiresDemoPass?: boolean;
-  fallbackSceneId?: string; // 結果が基準を満たさなかったときの行き先
-  situationLine?: string; // 問いの直前のお客様の言葉
   thinkSeconds: number;
+  hint?: Line; // 難しいときに出す、先輩社員のヒント
   choices: Choice[];
-  recommendedChoice: 'A' | 'B' | 'C';
+  recommendedChoice: 'A' | 'B' | 'C' | null; // null＝どれも必要な確認（推奨なし）
+  recommendReason: string; // 回答後に示す、推奨の理由
   learningPoint: string;
   technicalInsight?: string;
-};
-
-export type PitchScene = Base & {
-  type: 'pitch';
-  seconds: number;
-  parts: {label: string; hint: string}[];
-  example: string[];
+  requiresDemoPass?: boolean; // 実測が基準を満たしたときだけ出す
+  fallbackSceneId?: string; // 満たさない・未記録のときの行き先
 };
 
 export type DemoScene = Base & {
   type: 'demo';
-  assetId: string; // シミュレーション映像
+  videoAsset: string; // シミュレーション（見方の説明）
   condition: string;
   checks: string[];
-  // 実機で記録する項目
+  predictPrompt?: string; // 結果を見る前に予想させる問い
   record: boolean;
 };
 
-export type ReflectionScene = Base & {
-  type: 'reflection';
-  question: string;
-  minutes: number;
-  examples?: string[];
-  assetId?: string;
-};
+export type ReflectionScene = Base & {type: 'reflection'; question: string; minutes: number; videoAsset?: string};
 
-export type Scene = VideoScene | ClipScene | QuestionScene | PitchScene | DemoScene | ReflectionScene;
+export type Scene = VideoScene | ClipScene | QuestionScene | DemoScene | ReflectionScene;
+
+// phases.json の形（フェーズの中に場面を持つ）
+export type PhaseFile = (Phase & {scenes: Omit<Scene, 'phaseId'>[]})[];

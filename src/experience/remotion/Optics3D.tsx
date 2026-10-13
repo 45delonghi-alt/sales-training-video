@@ -7,7 +7,7 @@ import {BOTTLE_PATH} from './FactoryLine';
 
 const L = 900; // コンベアの長さ（x）
 const WD = 300; // コンベアの幅（y）
-const BEAM_Z = 92; // 光の高さ
+const BEAM_Z = 36; // 光の高さ：ボトルの下部（底から少し上）
 const SENSOR_Y = WD / 2 + 70;
 const REFL_Y = -(WD / 2 + 70);
 
@@ -83,14 +83,14 @@ export const Optics3D: React.FC<Optics3DProps> = ({frame, fps, mode, width, heig
           }}
         />
         {/* ガイドレール */}
-        <Box x={0} y={-WD / 2 + 8} z={0} w={L} d={6} h={34} color="#3A3F47" edge="rgba(255,255,255,0.35)" />
-        <Box x={0} y={WD / 2 - 8} z={0} w={L} d={6} h={34} color="#3A3F47" edge="rgba(255,255,255,0.35)" />
+        <Box x={0} y={-WD / 2 + 8} z={74} w={L} d={6} h={14} color="#3A3F47" edge="rgba(255,255,255,0.35)" />
+        <Box x={0} y={WD / 2 - 8} z={74} w={L} d={6} h={14} color="#3A3F47" edge="rgba(255,255,255,0.35)" />
         {/* 反射板（奥） */}
-        <Box x={0} y={REFL_Y} z={0} w={14} d={14} h={BEAM_Z - 40} color="#2A2D33" edge="rgba(255,255,255,0.3)" />
-        <Box x={0} y={REFL_Y} z={BEAM_Z - 46} w={96} d={10} h={92} color="#33363C" edge="rgba(255,255,255,0.7)" />
+        <Box x={0} y={REFL_Y} z={-60} w={14} d={14} h={BEAM_Z + 20} color="#2A2D33" edge="rgba(255,255,255,0.3)" />
+        <Box x={0} y={REFL_Y} z={BEAM_Z - 36} w={96} d={10} h={72} color="#33363C" edge="rgba(255,255,255,0.7)" />
         {/* センサ（手前） */}
-        <Box x={0} y={SENSOR_Y + 30} z={0} w={14} d={14} h={BEAM_Z - 30} color="#2A2D33" edge="rgba(255,255,255,0.3)" />
-        <Box x={0} y={SENSOR_Y} z={BEAM_Z - 34} w={70} d={56} h={64} color="#3B3F46" edge="rgba(255,255,255,0.9)" />
+        <Box x={0} y={SENSOR_Y + 30} z={-60} w={14} d={14} h={BEAM_Z + 30} color="#2A2D33" edge="rgba(255,255,255,0.3)" />
+        <Box x={0} y={SENSOR_Y} z={BEAM_Z - 30} w={70} d={56} h={60} color="#3B3F46" edge="rgba(255,255,255,0.9)" />
         {/* 光：行き（センサ → 反射板）と帰り（反射板 → センサ） */}
         {blocked ? (
           <Beam x={-9} a={SENSOR_Y - 28} b={46} opacity={0.95} frame={frame} dir={-1} />

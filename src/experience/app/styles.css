@@ -215,3 +215,74 @@ button.danger-ghost { color: var(--red); border-color: var(--red); background: t
 .tp-label { font-size: 14px; font-weight: 900; color: var(--red); letter-spacing: 2px; }
 .tp-prompt { font-size: clamp(22px, 2.4vw, 36px); font-weight: 900; line-height: 1.4; }
 .tp-hint { color: var(--gray); font-size: 18px; }
+
+/* ---- 4フェーズ版で追加：ヒント・用語・分かったこと／まだ分からないこと ---- */
+.q-id { display: inline-block; margin-left: 10px; font-size: 13px; color: var(--gray); font-weight: 700; letter-spacing: 1px; }
+.q-aids { margin-top: 18px; display: grid; gap: 10px; }
+button.ghost { justify-self: start; background: transparent; border: 1px dashed var(--gray); color: var(--ink2); }
+.hint { background: var(--paper); border-left: 6px solid var(--ink); padding: 12px 16px; font-size: 20px; font-weight: 700; line-height: 1.5; }
+.glossary { display: flex; flex-wrap: wrap; gap: 8px; }
+.glossary details { background: var(--white); border: 1px solid var(--line); padding: 6px 12px; font-size: 15px; max-width: 520px; }
+.glossary summary { cursor: pointer; font-weight: 700; color: var(--ink2); }
+.glossary details div { margin-top: 6px; line-height: 1.6; }
+.your-q { font-size: 22px; font-weight: 700; margin-top: 10px; }
+.found-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 18px; }
+.found-grid .found { margin-top: 0; }
+.found.missing { border-color: var(--gray); border-style: dashed; }
+.found.missing .found-label { color: var(--gray); }
+.reveal-choice { font-size: 18px; margin-top: 4px; color: rgba(255,255,255,0.85); }
+.reveal-sub { font-size: 17px; margin-top: 8px; color: rgba(255,255,255,0.85); }
+.reveal-note { font-size: 14px; margin-top: 10px; color: rgba(255,255,255,0.7); }
+.cmp-m { margin-top: 4px; color: var(--gray); font-size: 14px; }
+.disc-missing { border: 1px dashed var(--gray); padding: 10px 12px; font-weight: 700; color: var(--ink2); }
+.predict-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; background: rgba(20,21,23,0.55); }
+.predict { background: var(--white); padding: 20px 28px; border-top: 6px solid var(--red); max-width: 80%; }
+.predict-label { font-size: 14px; font-weight: 700; color: var(--red); }
+.predict-q { font-size: clamp(20px, 2.2vw, 32px); font-weight: 700; margin-top: 6px; }
+button.big { font-size: 22px; padding: 14px 28px; }
+.demo-sim-note { font-size: 13px; color: var(--gray); margin-top: 6px; }
+.fac-warn { font-size: 13px; color: var(--red); margin-top: 6px; font-weight: 700; }
+.fac-reasons { font-size: 13px; margin-top: 6px; }
+.fac-reasons ul { margin: 6px 0 0; padding-left: 1.2em; }
+
+/* ---- 終了画面 ---- */
+.end { flex: 1; background: var(--ink); color: var(--white); padding: 40px clamp(16px, 4vw, 60px); display: flex; flex-direction: column; align-items: center; gap: 20px; }
+.end-brand { letter-spacing: 6px; font-size: 14px; color: rgba(255,255,255,0.7); font-weight: 700; }
+.end h1 { margin: 0; font-size: clamp(28px, 3.4vw, 48px); }
+.end-steps { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; font-size: 22px; font-weight: 700; }
+.end-steps b { display: inline-flex; width: 30px; height: 30px; align-items: center; justify-content: center; background: var(--red); margin-right: 8px; }
+.end-last { color: #ff5a63; }
+.end-table { border-collapse: collapse; width: 100%; max-width: 1100px; background: var(--white); color: var(--ink); font-size: 15px; }
+.end-table th, .end-table td { border-bottom: 1px solid var(--line); padding: 8px 12px; text-align: left; }
+.end-table th { background: var(--paper); }
+
+/* ---- スマートフォン回答 ---- */
+.vote-overlay { position: absolute; right: 16px; top: 16px; background: rgba(255,255,255,0.97); border-top: 5px solid var(--red); padding: 12px 16px; max-width: 360px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 5; }
+.vote-overlay.big { left: 50%; top: 50%; right: auto; transform: translate(-50%, -50%); max-width: none; width: min(720px, 90%); padding: 24px 30px; }
+.vo-label, .vo-title { font-size: 13px; font-weight: 700; color: var(--red); }
+.vo-title { font-size: 22px; color: var(--ink); margin-bottom: 12px; }
+.vo-url { font-size: 15px; font-weight: 700; word-break: break-all; margin-top: 4px; }
+.vo-code { font-size: 16px; margin-top: 4px; }
+.vo-code b { font-size: 26px; letter-spacing: 3px; color: var(--red); }
+.vo-count { font-size: 14px; color: var(--gray); margin-top: 4px; }
+.vote-bars { display: grid; gap: 8px; margin-top: 8px; }
+.vb-row { display: flex; align-items: center; gap: 10px; }
+.vb-row .choice-id { width: 32px; height: 32px; font-size: 16px; }
+.vb-track { flex: 1; height: 22px; background: var(--paper); }
+.vb-bar { display: block; height: 100%; background: var(--ink); transition: width 0.4s; }
+.vb-bar.rec { background: var(--red); }
+.vb-n { width: 56px; text-align: right; font-weight: 700; }
+.vote-app { min-height: 100%; background: var(--paper); padding: 16px; max-width: 640px; margin: 0 auto; }
+.vote-app h1 { font-size: 22px; line-height: 1.5; margin: 8px 0 14px; }
+.vote-app form { display: grid; gap: 10px; }
+.vote-app input { font-size: 22px; letter-spacing: 3px; text-transform: uppercase; }
+.va-head { font-size: 13px; font-weight: 700; color: var(--gray); display: flex; justify-content: space-between; gap: 10px; }
+.va-qid { font-size: 13px; font-weight: 700; color: var(--red); margin-top: 14px; }
+.va-choices { display: grid; gap: 10px; }
+.va-choices .choice { font-size: 17px; width: 100%; }
+.va-choices .choice.on { background: var(--red-soft); border-color: var(--red); color: var(--ink); }
+.va-reason { display: grid; gap: 6px; margin-top: 14px; font-size: 14px; color: var(--ink2); }
+.va-done { font-weight: 700; color: var(--ok); }
+.va-err { font-weight: 700; color: var(--red); }
+.va-wait { font-size: 18px; font-weight: 700; color: var(--ink2); margin-top: 30px; }
+@media (max-width: 720px) { .found-grid { grid-template-columns: 1fr; } }

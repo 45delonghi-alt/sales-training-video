@@ -10,9 +10,11 @@ import {Optics3D, receivedLight} from '../Optics3D';
 const ASSET: Record<string, string> = {
   'transparent-light': 'p2-light',
   isolation: 'p2-isolation',
-  chain: 'p3-chain',
-  followup: 'p5-followup',
-  message: 'p5-message',
+  chain: 'p3-q2-b',
+  followup: 'p4-followup',
+  message: 'p4-message',
+  'signal-vs-plc': 'p2-q1-c',
+  'signal-log': 'p2-q2-b',
 };
 
 // 各文の開始フレーム
@@ -33,6 +35,10 @@ export const TechScene: React.FC<{variant: string}> = ({variant}) => {
       return <Chain />;
     case 'followup':
       return <Followup />;
+    case 'signal-vs-plc':
+      return <SignalVsPlc />;
+    case 'signal-log':
+      return <SignalLog />;
     case 'message':
     default:
       return <Message />;
@@ -105,27 +111,27 @@ const TransparentLight: React.FC = () => {
           ) : null}
           {/* 出力（ON/OFF） */}
           <text x={G.x} y={G.y + G.h + 74} fontSize={22} fontWeight={700} fill={X.ink}>センサの出力（ON / OFF）</text>
-          <polyline points={step >= 4 ? out(CLEAR, s[3], 50) : out(OPAQUE, s[0] + 30, 70)} fill="none" stroke={step >= 4 ? X.red : X.ink} strokeWidth={4} />
+          <polyline points={step >= 3 ? out(CLEAR, s[2], 50) : out(OPAQUE, s[0] + 30, 70)} fill="none" stroke={step >= 3 ? X.red : X.ink} strokeWidth={4} />
         </g>
       </svg>
       <OpticsPanel clear={isClear} />
-      {step >= 3 ? (
-        <div style={{position: 'absolute', left: G.x + 16, top: G.y + G.h * 0.62 + 16, fontSize: 24, fontWeight: 700, color: X.ink, background: 'rgba(255,255,255,0.9)', padding: '6px 12px', ...appear(frame, s[2] + 20)}}>
-          曲面で光が曲がり、受光量が上下する
+      {step >= 2 ? (
+        <div style={{position: 'absolute', left: G.x + 16, top: G.y + G.h * 0.62 + 16, fontSize: 24, fontWeight: 700, color: X.ink, background: 'rgba(255,255,255,0.9)', padding: '6px 12px', ...appear(frame, s[1] + 40)}}>
+          ボトルの形・水・表面で、光の通り方が変わる
         </div>
       ) : null}
-      {step >= 4 ? (
-        <div style={{position: 'absolute', left: G.x + 40, top: G.y + G.h + 160, ...appear(frame, s[3] + 50)}}>
+      {step >= 3 ? (
+        <div style={{position: 'absolute', left: G.x + 40, top: G.y + G.h + 160, ...appear(frame, s[2] + 50)}}>
           <span style={{fontSize: 34, fontWeight: 900, color: X.red}}>1本なのに、出力が2回 ON</span>
           <span style={{fontSize: 26, fontWeight: 700, color: X.ink, marginLeft: 14}}>→ 2回カウントの可能性</span>
         </div>
       ) : null}
-      {step >= 5 ? (
-        <div style={{position: 'absolute', left: G.x, top: 112, width: 820, background: X.paper, ...appear(frame, s[4])}}>
+      {step >= 4 ? (
+        <div style={{position: 'absolute', left: G.x, top: 112, width: 820, background: X.paper, ...appear(frame, s[3])}}>
           <div style={{fontSize: 34, fontWeight: 900, color: X.ink}}>
             透明だから<span style={{color: X.red}}>必ず</span>誤検出する、ではない
           </div>
-          <div style={{fontSize: 24, color: X.gray, marginTop: 6}}>方式・設定・設置の条件しだい</div>
+          <div style={{fontSize: 24, color: X.gray, marginTop: 6}}>数え方は設定しだい。原因はまだ確定していない</div>
         </div>
       ) : null}
       <div style={{position: 'absolute', right: 80, bottom: 200, fontSize: 18, color: X.gray}}>※ 模式図。実際の受光量の変化は、方式・設定・条件で異なります</div>
@@ -144,7 +150,7 @@ const OpticsPanel: React.FC<{clear: boolean}> = ({clear}) => {
     <div style={{position: 'absolute', left: 60, top: 150, width: 860, height: 640, background: '#14161A', border: `1px solid ${X.line}`}}>
       <Optics3D frame={frame} fps={fps} mode={mode} width={860} height={500} />
       <div style={{position: 'absolute', left: 0, top: 0, padding: '8px 16px', background: 'rgba(20,22,26,0.85)', color: 'rgba(255,255,255,0.85)', fontSize: 20, fontWeight: 700}}>
-        3D：回帰反射型（手前にセンサ、奥に反射板）
+        3D：回帰反射型（片側にセンサ、反対側に反射板。高さはボトルの下部）
       </div>
       <div style={{position: 'absolute', left: 24, right: 24, bottom: 22, display: 'flex', alignItems: 'center', gap: 22, color: X.white}}>
         <div style={{fontSize: 20, width: 120, color: 'rgba(255,255,255,0.75)'}}>受光量</div>
@@ -156,6 +162,11 @@ const OpticsPanel: React.FC<{clear: boolean}> = ({clear}) => {
           <div style={{width: 26, height: 26, borderRadius: 13, background: on ? '#FFB020' : 'rgba(255,255,255,0.18)', boxShadow: on ? '0 0 16px #FFB020' : 'none'}} />
           <span style={{fontSize: 22, fontWeight: 700}}>出力 {on ? 'ON' : 'OFF'}</span>
         </div>
+      </div>
+      <div style={{position: 'absolute', right: 24, top: 14, fontSize: 17, color: 'rgba(255,255,255,0.75)', textAlign: 'right', lineHeight: 1.6}}>
+        <div><span style={{color: X.beam, fontWeight: 900}}>━</span> 行き：センサ → 反射板</div>
+        <div><span style={{color: X.beam, opacity: 0.6, fontWeight: 900}}>━</span> 戻り：反射板 → 同じセンサ</div>
+        <div style={{opacity: 0.7}}>※ 光の線は説明用の表現です</div>
       </div>
       <div style={{position: 'absolute', left: 24, bottom: 62, fontSize: 18, color: 'rgba(255,255,255,0.6)'}}>
         {clear ? '透明なボトル：光の大部分が通り抜ける（白線＝判定の基準）' : '不透明なモノ：光が遮られる（白線＝判定の基準）'}
@@ -231,9 +242,9 @@ const Isolation: React.FC = () => {
           </div>
         </div>
       ))}
-      <div style={{position: 'absolute', left: 0, right: 0, top: 170, textAlign: 'center', ...appear(frame, s[2] ?? 999)}}>
+      <div style={{position: 'absolute', left: 0, right: 0, top: 170, textAlign: 'center', ...appear(frame, (s[1] ?? 999) + 60)}}>
         <span style={{fontSize: 54, fontWeight: 900, color: X.ink}}>どこで数が増えているかを</span>
-        <span style={{fontSize: 54, fontWeight: 900, color: X.red, display: 'inline-block', transform: `scale(${keyZoom(frame, s[2] ?? 999)})`}}>切り分ける</span>
+        <span style={{fontSize: 54, fontWeight: 900, color: X.red, display: 'inline-block', transform: `scale(${keyZoom(frame, (s[1] ?? 999) + 60)})`}}>切り分ける</span>
       </div>
     </AbsoluteFill>
   );
@@ -245,7 +256,7 @@ const Chain: React.FC = () => {
   const {fps} = useVideoConfig();
   const s = useSteps('chain');
   const items = ['誤カウント', '数量が合わない', '確認作業が増える', '現場の作業負担', '生産効率への影響'];
-  const at = [s[0], s[0] + 0.9 * fps, s[0] + 1.8 * fps, s[0] + 2.7 * fps, s[1]];
+  const at = [0.4, 1.3, 2.2, 3.1, 4.0].map((x) => x * fps);
   return (
     <AbsoluteFill>
       <div style={{position: 'absolute', left: 160, top: 170, width: 620}}>
@@ -270,7 +281,7 @@ const Chain: React.FC = () => {
           </div>
         ))}
       </div>
-      <div style={{position: 'absolute', left: 920, top: 330, width: 860, ...appear(frame, s[2] ?? 999, {dx: 30, dy: 0})}}>
+      <div style={{position: 'absolute', left: 920, top: 330, width: 860, ...appear(frame, (s[1] ?? 999) - 10, {dx: 30, dy: 0})}}>
         <div style={{fontSize: 32, fontWeight: 700, color: X.gray}}>お客様が欲しいのは</div>
         <div style={{fontSize: 44, fontWeight: 900, color: X.grayLight, marginTop: 14, textDecoration: 'line-through', textDecorationColor: X.red, textDecorationThickness: 5}}>新しいセンサそのもの</div>
         <div style={{fontSize: 32, fontWeight: 700, color: X.gray, marginTop: 14}}>ではなく</div>
@@ -332,6 +343,106 @@ const Message: React.FC = () => {
           お客様と<span style={{color: X.redOnDark}}>一緒に確かめる</span>
         </div>
         <div style={{fontSize: 34, color: 'rgba(255,255,255,0.7)', marginTop: 36, ...appear(frame, s[2] ?? 999)}}>結果が不十分なら → 追加の調査・別の方式の検討へ</div>
+      </div>
+    </AbsoluteFill>
+  );
+};
+
+// ---- センサの信号と PLC のカウント（どこで数が増えるか）
+const Wave: React.FC<{pulses: number[]; width: number; height: number; frame: number; start: number; color: string}> = ({pulses, width, height, frame, start, color}) => {
+  const p = progress(frame, start, 60);
+  const pts: string[] = [];
+  const N = 200;
+  for (let k = 0; k <= N * p; k++) {
+    const u = k / N;
+    const on = pulses.some((c) => Math.abs(u - c) < 0.035);
+    pts.push(`${u * width},${on ? 8 : height - 8}`);
+  }
+  return <polyline points={pts.join(' ')} fill="none" stroke={color} strokeWidth={4} />;
+};
+
+const SignalVsPlc: React.FC = () => {
+  const frame = useCurrentFrame();
+  const {fps} = useVideoConfig();
+  const t = frame / fps;
+  const plcA = Math.min(1, Math.floor(Math.max(0, t - 1.6) / 0.5) >= 0 && t > 1.8 ? 1 : 0);
+  const showB = t > 7.5;
+  return (
+    <AbsoluteFill>
+      <div style={{position: 'absolute', left: 120, top: 160, fontSize: 40, fontWeight: 900, color: X.ink}}>センサの信号と、PLC のカウント</div>
+      {[0, 1].map((row) => {
+        const y = 290 + row * 300;
+        const isB = row === 1;
+        const o = isB ? progress(frame, 7.5 * fps, 14) : progress(frame, 0.4 * fps, 14);
+        return (
+          <div key={row} style={{position: 'absolute', left: 120, right: 120, top: y, height: 240, display: 'flex', gap: 30, opacity: o}}>
+            <div style={{width: 260, background: X.white, border: `2px solid ${X.line}`, padding: '18px 20px'}}>
+              <div style={{fontSize: 20, color: X.gray, fontWeight: 700}}>{isB ? '例：もしこうなっていたら' : 'ふつうの動き'}</div>
+              <div style={{fontSize: 30, fontWeight: 900, marginTop: 10, color: isB ? X.red : X.ink}}>{isB ? 'PLC側で余分に数える' : '1本 → 信号1回 → +1'}</div>
+            </div>
+            <div style={{flex: 1, background: X.white, border: `2px solid ${X.line}`, padding: '14px 20px'}}>
+              <div style={{fontSize: 20, color: X.gray, fontWeight: 700}}>センサの信号（ON / OFF）</div>
+              <svg width={760} height={120} style={{marginTop: 10}}>
+                <Wave pulses={[0.5]} width={760} height={120} frame={frame} start={(isB ? 7.6 : 0.6) * fps} color="#C98500" />
+              </svg>
+              <div style={{fontSize: 20, color: X.gray}}>ボトル1本 → 信号は1回</div>
+            </div>
+            <div style={{width: 300, background: X.dark, color: X.white, padding: '18px 22px', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+              <div style={{fontSize: 20, color: 'rgba(255,255,255,0.7)'}}>PLC のカウント</div>
+              <div style={{fontSize: 80, fontWeight: 900, color: isB && t > 9 ? X.redOnDark : X.white, fontVariantNumeric: 'tabular-nums'}}>
+                {isB ? (t > 9 ? '+2' : t > 8.6 ? '+1' : '0') : plcA ? '+1' : '0'}
+              </div>
+            </div>
+          </div>
+        );
+      })}
+      {showB ? (
+        <div style={{position: 'absolute', left: 120, top: 880 - 40, fontSize: 22, color: X.gray, opacity: progress(frame, 8 * fps, 12)}}>
+          ※ 仮定の例です。実際にどこで数が増えているかは、記録して確かめます
+        </div>
+      ) : null}
+    </AbsoluteFill>
+  );
+};
+
+// ---- 記録で切り分ける（例示）
+const SignalLog: React.FC = () => {
+  const frame = useCurrentFrame();
+  const {fps} = useVideoConfig();
+  const rows = [
+    {n: 1, sig: 1, plc: 1},
+    {n: 2, sig: 1, plc: 1},
+    {n: 3, sig: 2, plc: 2, note: 'センサ側？'},
+    {n: 4, sig: 1, plc: 1},
+    {n: 5, sig: 1, plc: 2, note: 'PLC側？'},
+  ];
+  return (
+    <AbsoluteFill>
+      <div style={{position: 'absolute', left: 120, top: 150, fontSize: 40, fontWeight: 900, color: X.ink}}>
+        センサ信号と PLC カウントを、同時に記録する
+      </div>
+      <div style={{position: 'absolute', left: 120, top: 214, fontSize: 22, color: X.gray}}>例：ボトル1本ごとの記録（実測ではありません）</div>
+      <div style={{position: 'absolute', left: 120, top: 270, width: 1100, background: X.white, border: `1px solid ${X.line}`, boxShadow: '0 20px 60px rgba(20,21,23,0.12)'}}>
+        <div style={{display: 'flex', padding: '14px 24px', borderBottom: `3px solid ${X.ink}`, fontSize: 22, fontWeight: 700, color: X.gray}}>
+          <div style={{width: 200}}>ボトル</div>
+          <div style={{width: 360}}>センサ信号の変化回数</div>
+          <div style={{width: 300}}>PLC のカウント</div>
+          <div>読み取れること</div>
+        </div>
+        {rows.map((r, i) => (
+          <div key={r.n} style={{display: 'flex', alignItems: 'center', padding: '14px 24px', borderBottom: `1px solid ${X.line}`, fontSize: 30, fontWeight: 700, background: r.note ? 'rgba(215,20,30,0.06)' : 'transparent', ...appear(frame, (0.6 + i * 0.5) * fps, {dy: 10, dur: 10})}}>
+            <div style={{width: 200}}>{r.n}本目</div>
+            <div style={{width: 360, color: r.sig > 1 ? X.red : X.ink}}>{r.sig}回</div>
+            <div style={{width: 300, color: r.plc > 1 ? X.red : X.ink}}>{r.plc}</div>
+            <div style={{fontSize: 24, color: X.red}}>{r.note ?? ''}</div>
+          </div>
+        ))}
+      </div>
+      <div style={{position: 'absolute', left: 1270, top: 300, width: 540, fontSize: 26, lineHeight: 1.6, color: X.ink, ...appear(frame, 3.6 * fps, {dx: 20, dy: 0})}}>
+        <div style={{fontWeight: 900}}>信号が2回 → カウント2</div>
+        <div style={{color: X.gray}}>センサ側で信号が複数回出ている可能性</div>
+        <div style={{fontWeight: 900, marginTop: 20}}>信号は1回 → カウント2</div>
+        <div style={{color: X.gray}}>PLC 側の設定・処理の可能性</div>
       </div>
     </AbsoluteFill>
   );
