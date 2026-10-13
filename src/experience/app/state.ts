@@ -7,7 +7,7 @@ export type ChoiceId = 'A' | 'B' | 'C';
 export type Step = 'ready' | 'playing' | 'done' | 'think' | 'choose' | 'result';
 
 export type Answer = {choiceId: ChoiceId; reason: string; at: number; tries: ChoiceId[]};
-export type DemoResult = {passed: string; counted: string; chatter: '' | 'yes' | 'no'; note: string; source: 'live' | 'video' | 'simulation'};
+export type DemoResult = {passed: string; outputs: string; counted: string; chatter: '' | 'yes' | 'no'; note: string; source: 'live' | 'video' | 'simulation'};
 
 export type State = {
   sceneId: string;
@@ -83,11 +83,13 @@ export type Action =
 
 // 実機デモの判定（記録がなければ null）
 export const judge = (r?: DemoResult): boolean | null => {
-  if (!r || r.passed === '' || r.counted === '' || r.chatter === '') return null;
+  // センサの出力回数（表示灯・出力の記録）と PLC のカウント値を分けて記録し、両方が実際の本数と一致したときだけ基準を満たす
+  if (!r || !r.passed || !r.outputs || !r.counted || r.chatter === '') return null;
   const p = Number(r.passed);
+  const o = Number(r.outputs);
   const c = Number(r.counted);
-  if (!Number.isFinite(p) || !Number.isFinite(c) || p <= 0) return null;
-  return p === c && r.chatter === 'no';
+  if (!Number.isFinite(p) || !Number.isFinite(o) || !Number.isFinite(c) || p <= 0) return null;
+  return p === o && p === c && r.chatter === 'no';
 };
 
 const DEMO_SCENES = scenes.filter((s) => s.type === 'demo').map((s) => s.sceneId);
@@ -164,7 +166,7 @@ export const reducer = (s: State, a: Action): State => {
     case 'compare':
       return {...s, compare: a.on};
     case 'demo': {
-      const prev = s.demo[a.sceneId] ?? {passed: '', counted: '', chatter: '', note: '', source: 'simulation'};
+      const prev = s.demo[a.sceneId] ?? {passed: '', outputs: '', counted: '', chatter: '', note: '', source: 'simulation'};
       return {...s, demo: {...s.demo, [a.sceneId]: {...prev, ...a.result}}};
     }
     case 'note':

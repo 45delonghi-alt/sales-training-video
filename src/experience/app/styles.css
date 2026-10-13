@@ -147,7 +147,7 @@ textarea, input, select { font: inherit; border: 1px solid var(--line); padding:
 .demo-checks { margin: 6px 0 0; padding-left: 1.2em; }
 .record { margin-top: 16px; border-top: 1px solid var(--line); padding-top: 12px; display: grid; gap: 10px; }
 .record-title { font-weight: 900; }
-.record-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.record-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
 .record-grid label, .record-note, .file { display: grid; gap: 4px; font-size: 13px; color: var(--gray); }
 .record-grid input { font-size: 24px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .record-q { font-size: 14px; font-weight: 700; }

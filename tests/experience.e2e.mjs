@@ -108,6 +108,7 @@ for (const s of order.slice(1)) {
     // 実測の記録：通過10本・カウント10・切り替わりなし → 基準OK（テスト用の入力。実測値ではない）
     await page.locator('.record-grid input').nth(0).fill('10');
     await page.locator('.record-grid input').nth(1).fill('10');
+    await page.locator('.record-grid input').nth(2).fill('10');
     await page.getByRole('button', {name: 'なかった'}).click();
     ok(`${s.sceneId}：記録すると判定が出る`, (await page.locator('.verdict').innerText()).includes('基準を満たした'));
     if (s.sceneId === 'p4-demo-normal') await shot('03-demo');

@@ -169,7 +169,7 @@
         "title": "透明なボトルを、反射型センサで数えている",
         "videoAsset": "p2-open",
         "lines": [
-          {"speaker": "sato", "text": "透明なPETボトルを、反射型のセンサで数えています。"},
+          {"speaker": "sato", "text": "透明なPETボトルを、回帰反射型のセンサで数えています。"},
           {"speaker": "narration", "text": "センサから出した光を、反対側の反射板で戻します。"},
           {"speaker": "narration", "text": "その光の変化を使って、ボトルが通ったことを調べます。"}
         ],

@@ -55,7 +55,7 @@ const Fact: React.FC<{label: string; text: string; frame: number; at: number; ac
 );
 
 const IntroFacts: React.FC<{frame: number; steps: number[]; fps: number}> = ({frame, steps, fps}) => (
-  <div style={{position: 'absolute', left: 900, top: 230, width: 900}}>
+  <div style={{position: 'absolute', left: 900, top: 230, width: 700}}>
     <Fact label="用途" text="PETボトルなど、透明なモノの検出" frame={frame} at={steps[0]} />
     <Fact label="方式" text="回帰反射型（センサと反射板）" frame={frame} at={steps[0] + 0.8 * fps} />
     <Fact label="考え方" text="通過したときの、わずかな光の変化をとらえる" frame={frame} at={steps[1]} />
@@ -89,11 +89,11 @@ const Proposal: React.FC<{frame: number; fps: number}> = ({frame, fps}) => (
 
 // 先輩社員（森さん）。来訪者として工場の作業服と衛生帽を着用
 const SeniorCard: React.FC<{frame: number; fps: number}> = ({frame, fps}) => (
-  <div style={{position: 'absolute', right: 72, bottom: 190, width: 300, height: 300, borderRadius: 150, overflow: 'hidden', background: X.dark, border: `4px solid ${X.red}`, ...appear(frame, 0.8 * fps)}}>
-    <svg width={300} height={300} viewBox="-260 -330 520 520">
+  <div style={{position: 'absolute', right: 50, bottom: 200, width: 220, height: 220, borderRadius: 110, overflow: 'hidden', background: X.dark, border: `4px solid ${X.red}`, ...appear(frame, 0.8 * fps)}}>
+    <svg width={220} height={220} viewBox="-260 -330 520 520">
       <Bust who="mori" mood="positive" blink={(frame / fps) % 3.2 > 3.05} />
     </svg>
-    <div style={{position: 'absolute', left: 0, right: 0, bottom: 16, textAlign: 'center', color: X.white, fontSize: 18, fontWeight: 700}}>森さん（OPTEX-FA 営業）</div>
+    <div style={{position: 'absolute', left: 0, right: 0, bottom: 12, textAlign: 'center', color: X.white, fontSize: 15, fontWeight: 700}}>森さん（OPTEX-FA 営業）</div>
   </div>
 );
 

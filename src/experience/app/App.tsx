@@ -567,7 +567,11 @@ const DemoView: React.FC<{d: DemoScene; ctx: Ctx}> = ({d, ctx}) => {
                 <b>{r?.passed || '—'}</b>
               </div>
               <div>
-                <span>カウント値</span>
+                <span>センサの出力回数</span>
+                <b>{r?.outputs || '—'}</b>
+              </div>
+              <div>
+                <span>カウント値（PLC）</span>
                 <b>{r?.counted || '—'}</b>
               </div>
               <div>
@@ -652,7 +656,11 @@ const DemoRecord: React.FC<{d: DemoScene; ctx: Ctx}> = ({d, ctx}) => {
           <input inputMode="numeric" value={r?.passed ?? ''} onChange={(e) => set({passed: e.target.value.replace(/[^0-9]/g, '')})} />
         </label>
         <label>
-          カウント値
+          センサの出力回数
+          <input inputMode="numeric" value={r?.outputs ?? ''} onChange={(e) => set({outputs: e.target.value.replace(/[^0-9]/g, '')})} />
+        </label>
+        <label>
+          カウント値（PLC）
           <input inputMode="numeric" value={r?.counted ?? ''} onChange={(e) => set({counted: e.target.value.replace(/[^0-9]/g, '')})} />
         </label>
       </div>
@@ -666,7 +674,7 @@ const DemoRecord: React.FC<{d: DemoScene; ctx: Ctx}> = ({d, ctx}) => {
         <textarea rows={2} value={r?.note ?? ''} onChange={(e) => set({note: e.target.value})} />
       </label>
       <div className={`verdict ${ok === true ? 'ok' : ok === false ? 'ng' : ''}`}>
-        判定：{ok === null ? '未記録（本数・カウント値・出力の切り替わりを入力）' : ok ? '基準を満たした' : '基準を満たさない → 追加調査へ'}
+        判定：{ok === null ? '未記録（本数・出力回数・カウント値・出力の切り替わりを入力）' : ok ? '基準を満たした' : '基準を満たさない → 追加調査へ'}
       </div>
     </div>
   );

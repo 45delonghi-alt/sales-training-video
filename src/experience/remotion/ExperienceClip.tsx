@@ -52,7 +52,7 @@ export const ExperienceClip: React.FC<ExperienceClipProps> = ({assetId, showSubt
       label={phaseLabelFor(assetId)}
       lines={lines}
       dialogAt={a.dialogAt ?? 0.8}
-      showSubtitles={showSubtitles}
+      showSubtitles={showSubtitles && a.kind !== 'title'} // 扉は画面の文字がそのままセリフ
       showStatus={showStatus}
       status={hasImage ? status.filter((s) => s !== 'awaiting-license') : status}
       kind={a.kind}

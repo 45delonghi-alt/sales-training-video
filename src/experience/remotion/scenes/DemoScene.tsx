@@ -227,9 +227,9 @@ const SetupNotes: React.FC<{frame: number; fps: number}> = ({frame, fps}) => {
     {at: 7.0, t: '高さ：ボトルの下部（底から少し上）'},
   ];
   return (
-    <div style={{position: 'absolute', right: 72, top: 160, width: 540, display: 'grid', gap: 12}}>
+    <div style={{position: 'absolute', left: 72, top: 150, width: 520, display: 'grid', gap: 12}}>
       {notes.map((n) => (
-        <div key={n.t} style={{background: 'rgba(16,17,19,0.88)', borderLeft: `6px solid ${X.red}`, padding: '12px 18px', color: X.white, fontSize: 26, fontWeight: 700, ...appear(frame, n.at * fps, {dx: 20, dy: 0})}}>
+        <div key={n.t} style={{background: 'rgba(16,17,19,0.88)', borderLeft: `6px solid ${X.red}`, padding: '12px 18px', color: X.white, fontSize: 26, fontWeight: 700, ...appear(frame, n.at * fps, {dx: -20, dy: 0})}}>
           {n.t}
         </div>
       ))}

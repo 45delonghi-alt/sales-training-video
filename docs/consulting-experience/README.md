@@ -1,99 +1,107 @@
-# OPTEX-FA 28卒向け コンサルティング営業体験（60分）
+# YOUR MISSION ペットボトルの誤カウントを解決せよ！
 
-「聞く。考える。提案する。そして、確かめる。」
-学生が OPTEX-FA の営業担当になり、飲料工場の誤カウントの相談に向き合います。質問 → 発見 → 提案 → 実機での検証までを体験する、インタラクティブなコンテンツです。
+OPTEX-FA CONSULTING SALES EXPERIENCE — 28卒向け WEB参加型 コンサルティング営業体験（60分）
+
+学生が OPTEX-FA の営業担当になり、飲料工場の「PETボトルの誤カウント」の相談に向き合います。**聞く → 考える → 課題を見つける → 提案する**、そして実機で**確かめる**までを、10の問い（30の選択肢）で体験します。
 
 ## まず動かす
 
 ```bash
-npm run experience:validate   # 分岐・素材の対応を検査
+npm run experience:validate   # 分岐・素材・技術表現・時間配分を検査
 npm run experience:build      # 体験アプリを dist/experience/ に書き出す
-npm run experience:serve      # http://localhost:4173/ で配信（会場PC）
+npm run experience:serve      # http://localhost:4173/ で配信（会場PC）。スマートフォン回答のAPIも起動
 ```
 
 - 進行役：`http://localhost:4173/` を開き、右上で「進行役モード」に切り替える。
-- 投影用：進行役パネルの「投影用ウィンドウを開く」（または `?view=projector`）。
-- 操作の詳細：[facilitator-guide.md](facilitator-guide.md)
+- 投影用：進行役パネルの「投影用ウィンドウを開く」（`?view=projector`）。
+- スマートフォン回答：進行役パネルの「回答の受付を始める」→ 投影画面のURLとコード（`?view=vote&session=コード`）。
+- 操作は [app-manual.md](app-manual.md)、進め方は [facilitator-guide.md](facilitator-guide.md)。
 
-## 納品物と状態（2026-10-08 時点）
+## 納品物（14点）と状態（2026-10-13 時点）
 
-状態の区分：実装済み／テスト済み／仮素材使用中／実写素材待ち／許諾確認待ち／未完成
+状態の区分：実装済み／テスト済み／仮素材使用中／実写素材待ち／許諾確認待ち
 
 | # | 納品物 | 場所 | 状態 |
 |---|---|---|---|
-| 01 | 制作方針・全体構成・60分タイムテーブル・既存台本との差分 | [concept.md](concept.md)、[schedule.md](schedule.md) | 実装済み |
-| 02 | 全体台本・セリフ・質問と選択肢・顧客回答・解説・実機デモ台本 | [script.md](script.md)（データから自動生成） | 実装済み |
-| 03 | ストーリーボード（映像設計・カメラ・表示テキスト・タイミング） | [storyboard.md](storyboard.md)（自動生成）、[setting.md](setting.md) | 実装済み |
-| 04 | 使用製品一覧・画像の置き場所・撮影素材一覧・CG制作指示・素材の取得状況 | [asset-license-check.md](asset-license-check.md)、[asset-manifest.csv](asset-manifest.csv) | 実装済み（素材は**実写素材待ち・許諾確認待ち**） |
-| 05 | 体験アプリ（React/TypeScript）・進行役モード・分岐データ・実機動画の差し替え | `src/experience/app/`、`src/experience/data/` | **テスト済み**（全分岐 79項目合格） |
-| 05 | Remotion（分岐クリップ39本） | `src/experience/remotion/` | 実装済み（**仮素材使用中**：線画CG） |
-| 06 | 導入動画 | `out/consulting-sales.mp4`（既存） | 実装済み（既存のまま） |
-| 06 | フェーズ別・選択肢別・実機デモ・エンディングの映像 | `out/experience/videos/*.mp4`（`npm run experience:render`） | 実装済み（CG版）／**実写素材待ち** |
-| 07 | 進行役マニュアル・学生用ワークシート・実機デモ準備チェックリスト・検証結果記録シート | [facilitator-guide.md](facilitator-guide.md)、[worksheet.md](worksheet.md)、[demo-checklist.md](demo-checklist.md)、[demo-record-sheet.md](demo-record-sheet.md) | 実装済み |
-| 07 | 再レンダリング手順・素材差し替え手順 | 下記 | 実装済み |
-| 08 | 全分岐動作テスト・技術表現の確認・未取得素材と未解決事項 | [qa-report.md](qa-report.md)、[technical-review.md](technical-review.md) | テスト済み（技術表現は**公式ページとの直接照合が未了**） |
+| 1 | 全体ストーリー | [complete-story.md](complete-story.md)・[concept.md](concept.md)・[schedule.md](schedule.md) | 実装済み |
+| 2 | 会話台本 | [dialogue-script.md](dialogue-script.md) | 実装済み |
+| 3 | 問い一覧 | [question-list.md](question-list.md) | 実装済み |
+| 4 | 選択肢別分岐表 | `src/experience/data/visual-branches.json`（30分岐）・[question-list.md](question-list.md) | 実装済み・検証済み |
+| 5 | ストーリーボード | [storyboard.md](storyboard.md)・[setting.md](setting.md) | 実装済み |
+| 6 | 素材リスト | [asset-list.md](asset-list.md)・[asset-manifest.csv](asset-manifest.csv)・[recording-guide.md](recording-guide.md) | 実装済み（素材は**実写素材待ち**） |
+| 7 | 音声原稿 | [voice-script.md](voice-script.md)・`out/experience/ondoku/*.tsv` | 実装済み（**音声は未収録**） |
+| 8 | 実機デモ台本 | [demo-script.md](demo-script.md)・[demo-checklist.md](demo-checklist.md)・[demo-record-sheet.md](demo-record-sheet.md) | 実装済み |
+| 9 | Reactアプリ | `src/experience/app/` | **テスト済み** |
+| 10 | Remotionプロジェクト | `src/experience/remotion/`（48本）・導入動画 `src/consulting/` | 実装済み（**仮素材使用中**：線画CG） |
+| 11 | アプリ操作マニュアル | [app-manual.md](app-manual.md) | 実装済み |
+| 12 | 進行役マニュアル | [facilitator-guide.md](facilitator-guide.md)・[worksheet.md](worksheet.md) | 実装済み |
+| 13 | テスト結果 | [qa-report.md](qa-report.md)・[qa-checklist.md](qa-checklist.md) | テスト済み |
+| 14 | ライセンス表 | [asset-license-check.md](asset-license-check.md) | 作成済み（**許諾確認待ち**） |
 
-## ビジュアル演出強化の最終成果物（7点）
+関連資料：[technical-rules.md](technical-rules.md)（技術表現のルール）、[technical-review.md](technical-review.md)（表現ごとの確認状況）、[generation-prompts.md](generation-prompts.md)（素材生成用プロンプト）。
 
-| # | 成果物 | 場所 | 状態 |
+## ご判断が必要な事項
+
+勝手に決めずに止めている項目です。決まり次第、置くだけ・設定するだけで反映できます。
+
+| # | 事項 | 選択肢 | 影響 |
 |---|---|---|---|
-| 1 | シーン別映像台本（Scene 1〜8） | [scene-script.md](scene-script.md)（自動生成） | 実装済み |
-| 2 | 選択肢別の映像素材一覧（phaseId・choiceId・visualSubject・cameraDirection・animationDirection・customerResponse・technicalInsight・assetPath・fallbackVisual） | [choice-visuals.md](choice-visuals.md)、`src/experience/data/visual-branches.json` | 実装済み・検証済み |
-| 3 | 素材生成用プロンプト一覧 | [generation-prompts.md](generation-prompts.md)（自動生成） | 実装済み（**生成は未実行**：費用の承認待ち） |
-| 4 | インタラクティブReact画面 | `src/experience/app/` | テスト済み（81項目） |
-| 5 | Remotion動画コンポーネント | `src/experience/remotion/` | 実装済み（**CG・仮素材**） |
-| 6 | 実機デモ映像の差し替え機能 | アプリの「実機の動画」／`public/experience/videos/<素材ID>.mp4` | テスト済み |
-| 7 | フルHD動画と操作マニュアル | `out/experience/videos/*.mp4`（1920×1080・39本）、[facilitator-guide.md](facilitator-guide.md) | 実装済み（CG版） |
-
-### 演出の強化点
-- **カメラワーク**：誤カウントの瞬間にセンサへズームイン、流れの乱れはスローモーションで寄る、全景はクレーンで引く、作業者へパン、資料は手に取るように起こして寄る。
-- **光の仕組みの3D CG**：手前にセンサ・奥に反射板の3D空間を、カメラが回り込みながら見せる。不透明なモノは光を遮り、透明ボトルは通す。その場の受光量と出力ON/OFFが連動する。
-- **お客様の反応**：資料やラインの映像でお客様が話すときは、右下の小窓に表情（考え込む・不安・前向きなど、選択肢ごとに設定）を出す。音声ファイルを置けば声も流れる。
-- **考える時間**：導入動画（3か所）と光の解説（1か所）で自動的に止まり、問いを出す。学生が見ているだけの時間は、最長でも約1分30秒。
-- **実機デモのネタバレ防止**：シミュレーションは1本目だけで「見方」を説明し、2本目以降の結果は見せない（「この先は実機で確かめる」）。
+| 1 | 音声（声） | 音読さん／ElevenLabs などの TTS（有料・クレジット消費）／社員による収録／字幕のみ | 決まるまでは字幕で進行できる |
+| 2 | AI 画像の生成 | 生成する（ElevenLabs の場合、画像4枚で約3,300クレジット≒0.33ドルの見積り）／しない | 生成しない場合も CG で進行できる。動画生成は現在の契約では使えない |
+| 3 | OPTEX-FA 製品画像 | 社内から公式画像を入手（許諾） | 届くまでは「公式製品画像」の枠を表示 |
+| 4 | 提案する製品 | KR-Q シリーズが現行品か確認／代替（DR-Q・ZR-QX など）を選ぶ | 画面の表記は「候補：KR-Qシリーズ等（確認中）」 |
+| 5 | 既設センサの画像 | OMRON または KEYENCE の公式画像（型式確認・許諾）／実機を撮影／使わない | 届くまでは型式を読めない仮表示 |
+| 6 | Remotion の会社ライセンス | 利用条件を確認し、必要なら購入 | 動画の書き出し・アプリでの再生に使用中 |
 
 ## 仕組み
 
 ```
 src/experience/
-  data/        phases.json・scenes.json（場面・問い・選択肢・回答）・assets.json（映像素材）・branches.json（自動生成）
-  remotion/    映像の部品（工場ライン・お客様・資料・技術解説・製品・実機デモ・エンディング）
-  app/         体験アプリ（進行・分岐・記録・投影同期）
+  data/        phases.json（フェーズ→場面→問い→選択肢。台本の唯一の元データ）
+               assets.json（映像48本）・characters.json（登場人物）・glossary.json（用語メモ）
+               visual-branches.json（分岐表。自動生成）
+  remotion/    映像の部品（工場ライン・人物・資料・技術解説・製品・実機デモ・扉・エンディング）
+  app/         体験アプリ（進行・分岐・記録・投影同期・スマートフォン回答）
+src/consulting/  既存の導入動画（Scene03・04 のセンサ表現のみ修正）
 scripts/
-  experience.ts          検証・書き出し（台本・ストーリーボード・素材管理表・音読さん用セリフ）
-  experience-app.ts      アプリのビルド・配信
+  experience.ts          検証・書き出し（台本・問い一覧・ストーリーボード・素材リスト・音声原稿・デモ台本）
+  experience-app.ts      アプリのビルド・配信・回答API
   experience-render.ts   クリップの静止画・MP4 の書き出し
 tests/experience.e2e.mjs 全分岐の自動テスト（Playwright）
 ```
 
-- **選択肢と映像の対応**は `scenes.json` の `choices[].assetId` だけで決まる。`npm run experience:validate` が、映像の使い回し・存在しない素材・行き止まりの場面・時間配分（60分／45分）を検査する。
+- セリフ・選択肢を変えるときは `phases.json` を直し、`npm run experience:export` で資料を作り直す。
 - アプリは Remotion のクリップをその場で描画する（`@remotion/player`）。書き出した MP4 がなくても動く。
+- ビルドには esbuild を使っている（Vite は未導入。新しいパッケージを追加せずに済むため）。
 
 ## 素材の差し替え
 
 | 届いたもの | 置き場所 | 設定 |
 |---|---|---|
-| お客様の声・ナレーション | `public/experience/audio/<素材ID>.mp3` | 置くだけで再生（セリフの開始時刻から）。セリフは `out/experience/ondoku/` |
-| 実写・実機の映像 | `public/experience/videos/<素材ID>.mp4` | 置くだけで切り替わる（別の名前にしたいときは `assets.json` の `videoPath` で指定） |
-| OPTEX-FA 公式製品画像 | `public/experience/products/optex-fa/transparent-sensor.png` | 設定済み（置くだけで表示が切り替わる） |
-| セリフ・選択肢の変更 | `src/experience/data/scenes.json` | 変更後に `npm run experience:export`（台本・ストーリーボードを更新） |
-| 当日の実機デモ動画 | アプリの実機デモ画面 →「実機の動画」→ ファイルを選ぶ | 保存不要（その場で再生） |
+| 声（セリフ） | `public/experience/audio/<素材ID>.mp3` | 置くだけで再生（セリフの開始時刻から） |
+| 実写・実機の映像 | `public/experience/videos/<素材ID>.mp4` | 置くだけで切り替わる |
+| OPTEX-FA 公式製品画像 | `public/experience/products/optex-fa/transparent-sensor.png` | 置くだけで表示 |
+| 既設センサの画像 | `public/experience/products/existing/existing-sensor.png` | 置くだけで表示 |
+| 当日の実機デモ動画 | 実機デモ画面 →「実機の動画」→ ファイルを選ぶ | 保存不要 |
 
-差し替えたら `npm run experience:validate` → `npm run experience:build` を実行する。配置されていない素材は CG のまま表示され、存在しないファイルを読みにいくことはない。
+差し替えたら `npm run experience:validate` → `npm run experience:build`。詳しくは [recording-guide.md](recording-guide.md)。
 
 ## 再レンダリング
 
 ```bash
-npm run experience:stills                      # 各クリップの静止画（確認用）→ out/experience/stills/
+npm run experience:stills                      # 各クリップの静止画 → out/experience/stills/
 npm run experience:render                      # 全クリップの MP4 → out/experience/videos/
 npx tsx scripts/experience-render.ts videos out/experience/videos p1-q1-b   # 1本だけ
+npm run render:consulting                      # 導入動画 → out/consulting-sales.mp4
 ```
 
-Chrome を自動でダウンロードできない環境では、`REMOTION_BROWSER=<Chrome（headless shell）のパス>` を付けて実行する。
+Chrome を自動でダウンロードできない環境では、`REMOTION_BROWSER=<Chrome（headless shell）のパス>`（導入動画は `--browser-executable=<パス>`）を付ける。
 
 ## テスト
 
 ```bash
+npm run typecheck
+npm run experience:validate
 npm run experience:build && npm run experience:serve   # 別のターミナルで
-node tests/experience.e2e.mjs                          # 全分岐の自動テスト
+node tests/experience.e2e.mjs                          # 全分岐・スマートフォン回答の自動テスト
 ```
