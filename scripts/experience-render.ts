@@ -28,7 +28,7 @@ const main = async () => {
       const frame = Math.min(composition.durationInFrames - 1, Math.round(composition.durationInFrames * at));
       await renderStill({serveUrl, composition, frame, output: join(out, picks.length ? `${id}@${at}.png` : `${id}.png`), inputProps, browserExecutable, scale: 0.5, logLevel: 'error'});
     } else {
-      await renderMedia({serveUrl, composition, codec: 'h264', crf: 23, outputLocation: join(out, `${id}.mp4`), inputProps, browserExecutable, concurrency: 4, logLevel: 'error'});
+      await renderMedia({serveUrl, composition, codec: 'h264', crf: 23, outputLocation: join(out, `${id}.mp4`), inputProps, browserExecutable, concurrency: Number(process.env.RENDER_CONCURRENCY || 4), logLevel: 'error'});
     }
     console.log(`${id}：${(composition.durationInFrames / composition.fps).toFixed(1)}秒`);
   }
