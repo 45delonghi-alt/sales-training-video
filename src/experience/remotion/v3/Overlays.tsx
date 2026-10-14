@@ -414,10 +414,10 @@ const Setup: React.FC = () => {
   );
   return (
     <>
-      <Card style={{left: 56, top: 150, width: 640, ...ap(frame, 0.4 * fps)}}>
+      <Card scale={1.28} style={{left: 56, top: 140, width: 640, ...ap(frame, 0.4 * fps)}}>
         <LayoutCard frame={frame} compact />
       </Card>
-      <Card accent style={{right: 56, top: 150, width: 640}}>
+      <Card accent scale={1.22} origin="top right" style={{right: 56, top: 140, width: 640}}>
         <Big size={32}>既設センサ と KR-Qシリーズ を、同じ条件で比べる</Big>
         {list('同じにする', ['ボトル', '搬送速度', '設置の高さ（ボトル下部）'], 1.2)}
         {list('それぞれに合わせる', ['反射板', '設定（各メーカーの使用条件）'], 2.2)}
@@ -463,9 +463,9 @@ const Demo: React.FC<{variant: string}> = ({variant}) => {
   );
   return (
     <>
-      <Card style={{left: 56, top: 150, width: 640, ...ap(frame, 0.3 * fps)}}>
+      <Card scale={1.3} style={{left: 56, top: 140, width: 640, ...ap(frame, 0.3 * fps)}}>
         <div style={{display: 'flex', alignItems: 'center', gap: 12}}>
-          <span style={{background: X.red, color: X.white, fontWeight: 900, fontSize: 20, padding: '3px 12px', borderRadius: 4}}>シミュレーション</span>
+          <span style={{background: X.red, color: X.white, fontWeight: 900, fontSize: 20, padding: '3px 12px', borderRadius: 4, whiteSpace: 'nowrap'}}>シミュレーション</span>
           <span style={{fontSize: 20, color: X.gray, fontWeight: 700}}>見方の説明です（実測結果ではありません）</span>
         </div>
         <div style={{fontSize: 34, fontWeight: 900, marginTop: 10}}>条件：{d.title}</div>
@@ -482,7 +482,7 @@ const Demo: React.FC<{variant: string}> = ({variant}) => {
           <TopView w={w} h={220} frame={frame} bottlesX={xs} tilt={tilt} />
         )}
       </Card>
-      <Card accent style={{right: 56, top: 150, width: 640, ...ap(frame, 1.2 * fps)}}>
+      <Card accent scale={1.25} origin="top right" style={{right: 56, top: 140, width: 640, ...ap(frame, 1.2 * fps)}}>
         <Big size={30}>同じ条件で、2つのセンサを記録する</Big>
         <div style={{display: 'flex', gap: 14, marginTop: 14}}>
           {box('既設センサ（他社製）')}
@@ -581,7 +581,7 @@ const Grid4: React.FC<{items: [string, string][]}> = ({items}) => {
 const Center: React.FC<{lines: React.ReactNode[]; at?: number[]}> = ({lines, at = []}) => {
   const {frame, fps} = useSec();
   return (
-    <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center', textAlign: 'center', color: X.white, paddingBottom: 120}}>
+    <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center', textAlign: 'center', color: X.white, paddingBottom: 120, textShadow: '0 2px 14px rgba(0,0,0,0.75)'}}>
       {lines.map((l, i) => (
         <div key={i} style={{...ap(frame, (at[i] ?? i * 1.2) * fps), marginTop: i ? 18 : 0}}>
           {l}
@@ -630,7 +630,7 @@ const Ending: React.FC = () => {
 };
 
 // 暗くするショット（文字を読みやすく）
-export const DIM: Record<string, number> = {title: 0.55, isolation: 0.35, issues3: 0.4, result: 0.35, followup: 0.35, message: 0.45, closing: 0.5, ending: 0.6};
+export const DIM: Record<string, number> = {title: 0.55, isolation: 0.35, issues3: 0.4, result: 0.35, followup: 0.35, message: 0.62, closing: 0.5, ending: 0.6};
 
 export const Overlay: React.FC<{overlay: string; card?: string; imagePath?: string}> = ({overlay, card, imagePath}) => {
   const {frame, fps} = useSec();

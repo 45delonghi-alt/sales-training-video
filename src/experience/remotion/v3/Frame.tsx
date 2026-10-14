@@ -150,7 +150,7 @@ export const Tags: React.FC<{tags: string[]}> = ({tags}) =>
   ) : null;
 
 // 白い説明カード
-export const Card: React.FC<{style?: React.CSSProperties; children: React.ReactNode; accent?: boolean}> = ({style, children, accent}) => (
+export const Card: React.FC<{style?: React.CSSProperties; children: React.ReactNode; accent?: boolean; scale?: number; origin?: string}> = ({style, children, accent, scale, origin}) => (
   <div
     style={{
       position: 'absolute',
@@ -162,6 +162,7 @@ export const Card: React.FC<{style?: React.CSSProperties; children: React.ReactN
       color: X.ink,
       borderTop: accent ? `8px solid ${X.red}` : undefined,
       ...style,
+      ...(scale ? {transform: `${style?.transform ?? ''} scale(${scale})`, transformOrigin: origin ?? 'top left'} : {}),
     }}
   >
     {children}
