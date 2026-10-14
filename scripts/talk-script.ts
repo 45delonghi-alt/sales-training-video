@@ -14,9 +14,9 @@ const ONDOKU = join(DOCS, 'ondoku');
 const IMPORT_DIR = join(ROOT, 'audio_import', 'experience');
 const AUDIO_DIR = join(ROOT, 'public', 'experience', 'audio');
 const TIMING = join(ROOT, 'src', 'experience', 'data', 'audioTiming.json');
-// 読み上げ速度：ナレーションは導入動画と同じ 0.85 倍（同じ声・同じ速さでつながるように）。ほかの話者は音読さんの設定のまま
+// 読み上げ速度：音読さんで決めた速さのまま取り込む（ナレーションは導入動画と同じ設定で作るので、取り込み時には変えない）
 const SPEED = Number(process.env.SPEED || 1);
-const speedOf = (sp: Speaker) => (sp === 'narration' ? Number(process.env.NARRATION_SPEED || 0.85) : SPEED);
+const speedOf = (sp: Speaker) => (sp === 'narration' ? Number(process.env.NARRATION_SPEED || 1) : SPEED);
 
 export type TalkLine = Line & {lineId: string; where: string; sceneId: string; phaseId: string};
 
@@ -91,9 +91,9 @@ export const writeTalk = () => {
     '|---|---|---|---|---|',
   ];
   const SETTING: Record<string, string> = {
-    narration: '導入動画と同じ声・同じ設定で生成（速度1.0。取り込み時に導入動画と同じ0.85倍にそろえる）',
+    narration: '導入動画と同じ：音読さん Beta「Yann（ヤン）」／速度1.2x／ピッチ0／ビジネス（プロフェッショナルでビジネスライクに読み上げてください）／高速',
     sales: '1.0／やや高い（+0.5）／ビジネス（明るく丁寧に）',
-    sato: '0.95／やや低い（-0.5）／ビジネス（現場の担当者らしく、率直に）',
+    sato: '音読さん Beta「Misa（ミサ）」／声色値 264584882／速度1.0x／ピッチ やや高い（0.5）／ビジネス（プロフェッショナルでビジネスライクに読み上げてください）／高速',
     takahashi: '1.0／0／ビジネス（はきはきと）',
     mori: '0.95／0／やさしく（問いかける口調で）',
     nakata: '0.95／低い（-1.0）／落ち着いて（短く分かりやすく）',
