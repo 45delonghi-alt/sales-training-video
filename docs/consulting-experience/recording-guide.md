@@ -5,8 +5,8 @@
 手順と全セリフは [talk-script.md](talk-script.md)。
 
 1. 話者ごとに音読さんの声を決める（同じ話者は最後まで同じ声。お客様と営業は必ず別の声）。
-2. `ondoku/` の原稿を貼って読み上げる。話者ごと（`all_sato.txt` など6ファイル）か、フェーズ×話者（`02_p1_sato.txt` など22ファイル）の、どちらで録ってもよい。
-3. 音声を同じ名前で `audio_import/experience/` に置く（mp3／wav／m4a）。1文だけ録り直すときは、セリフIDの名前（例：`p1-q1-b_02.mp3`）で置く。
+2. `ondoku/` の原稿（話者ごと・1回で貼れる450文字以内に区切った11ファイル。例：`sato_01.txt`）を貼って読み上げる。
+3. 音声を同じ名前（例：`sato_01.mp3`）で `audio_import/experience/` に置く（mp3／wav／m4a）。1文だけ録り直すときは、セリフIDの名前（例：`p1-q1-b_02.mp3`）で置く。
 4. `npm run experience:import-audio` → 無音で文ごとに分け、`public/experience/audio/<セリフID>.mp3` に保存。`src/experience/data/audioTiming.json` に各文の長さが入り、**映像の長さ・字幕・ショットの切り替えが音声に合わせて自動で調整**される。
    - 速さを変えるときは `SPEED=0.9 npm run experience:import-audio` のように指定する（導入動画は 0.85 倍）。
    - 分け方がずれた文は、その文だけ単独の音声で置き直す。

@@ -38,8 +38,27 @@ export const talkLines = (): TalkLine[] => {
 
 const SPEAKER_ORDER: Speaker[] = ['narration', 'sales', 'sato', 'takahashi', 'mori', 'nakata'];
 const nameOf = (sp: Speaker) => characterById.get(sp)?.name ?? sp;
-// 音読さんの原稿ファイル名：<2桁のフェーズ番号>_<フェーズ>_<話者>
-const groupFile = (phaseId: string, sp: Speaker) => `${String(phases.findIndex((p) => p.phaseId === phaseId) + 1).padStart(2, '0')}_${phaseId}_${sp}`;
+// 音読さんに1回で貼れる文字数（無料プランの上限に合わせて小さめ。ONDOKU_LIMIT で変更できる）
+const LIMIT = Number(process.env.ONDOKU_LIMIT || 450);
+// 音読さんの原稿：話者ごとに、再生順のまま LIMIT 文字以内で区切る。ファイル名は <話者>_<2桁の連番>
+const chunkGroups = (lines: TalkLine[]) => {
+  const groups = new Map<string, TalkLine[]>();
+  for (const sp of SPEAKER_ORDER) {
+    let k = 0;
+    let size = Infinity;
+    for (const l of lines.filter((x) => x.speaker === sp)) {
+      const n = [...speechOf(l.text)].length + 2;
+      if (size + n > LIMIT) {
+        k++;
+        size = 0;
+        groups.set(`${sp}_${String(k).padStart(2, '0')}`, []);
+      }
+      groups.get(`${sp}_${String(k).padStart(2, '0')}`)!.push(l);
+      size += n;
+    }
+  }
+  return groups;
+};
 
 export const writeTalk = () => {
   const lines = talkLines();
@@ -55,9 +74,8 @@ export const writeTalk = () => {
     '## 収録の手順',
     '',
     '1. 下の「話者と声」で、話者ごとに音読さんの声を1つ決める（同じ話者は最後まで同じ声）。',
-    '2. `ondoku/` のテキストを、ファイルごとに音読さんへ貼り付けて読み上げる（1行＝1文。文と文のあいだの空行で、自然に間が空く）。',
-    '   - フェーズごとの原稿（`02_p1_sato.txt` など22ファイル）と、話者ごとに全編をまとめた原稿（`all_sato.txt` など6ファイル）の、どちらで録ってもよい。',
-    '3. できた音声を、テキストと同じ名前で `audio_import/experience/` に置く（例：`02_p1_sato.mp3`、`all_sato.mp3`）。',
+    `2. \`ondoku/\` のテキストを、ファイルごとに音読さんへ貼り付けて読み上げる（1ファイル＝1回の生成。${LIMIT}文字以内に区切ってある。1行＝1文で、文と文のあいだの空行で自然に間が空く）。`,
+    '3. できた音声（mp3）を、テキストと同じ名前で `audio_import/experience/` に置く（例：`sato_01.txt` → `sato_01.mp3`）。',
     '   - 1文だけ録り直すときは、セリフIDの名前で置く（例：`p1-q1-b_02.mp3`）。まとめた音声より優先される。',
     '4. `npm run experience:import-audio` を実行する → 文ごとに分けて `public/experience/audio/` に保存し、映像の長さと字幕のタイミングが音声に合わせて自動で調整される。',
     '5. `npm run experience:render` で動画を書き出す（アプリはそのまま再生できる）。',
@@ -66,22 +84,28 @@ export const writeTalk = () => {
     '',
     '## 話者と声',
     '',
-    '| 話者 | 役割 | 声のイメージ | 音読さんの声（記入） |',
-    '|---|---|---|---|',
+    '音読さんでは、日本語の声を選び、下の「設定のめやす」から始めて耳で調整してください（声の名前は音読さんの一覧から選んで、右の欄に記入）。',
+    '',
+    '| 話者 | 役割 | 声のイメージ | 設定のめやす（速度／ピッチ／読み上げスタイル） | 音読さんの声（記入） |',
+    '|---|---|---|---|---|',
   ];
+  const SETTING: Record<string, string> = {
+    narration: '1.0／0／ナレーション（落ち着いて、はっきり）',
+    sales: '1.0／やや高い（+0.5）／ビジネス（明るく丁寧に）',
+    sato: '0.95／やや低い（-0.5）／ビジネス（現場の担当者らしく、率直に）',
+    takahashi: '1.0／0／ビジネス（はきはきと）',
+    mori: '0.95／0／やさしく（問いかける口調で）',
+    nakata: '0.95／低い（-1.0）／落ち着いて（短く分かりやすく）',
+  };
   for (const sp of SPEAKER_ORDER) {
     const c = characterById.get(sp);
     const n = lines.filter((l) => l.speaker === sp).length;
-    if (c && n) md.push(`| ${c.name} | ${c.title || '—'} | ${c.voice}（${n}文） | |`);
+    if (c && n) md.push(`| ${c.name} | ${c.title || '—'} | ${c.voice}（${n}文） | ${SETTING[sp] ?? ''} | |`);
   }
-  md.push('', '## 原稿ファイル（音読さんに貼るもの）', '', '話者ごとにまとめた原稿：' + SPEAKER_ORDER.filter((sp) => lines.some((l) => l.speaker === sp)).map((sp) => `[all_${sp}.txt](ondoku/all_${sp}.txt)（${nameOf(sp)}）`).join('・'), '', 'フェーズごとの原稿：', '', '| ファイル | 話者 | 文の数 |', '|---|---|---|');
-  const groups = new Map<string, TalkLine[]>();
-  for (const l of lines) {
-    const g = groupFile(l.phaseId, l.speaker);
-    if (!groups.has(g)) groups.set(g, []);
-    groups.get(g)!.push(l);
-  }
-  for (const [g, ls] of [...groups].sort()) md.push(`| [ondoku/${g}.txt](ondoku/${g}.txt) | ${nameOf(ls[0].speaker)} | ${ls.length} |`);
+  md.push('', '- 男性：佐藤さん・中田さん。女性：高橋さん・森さん。お客様（佐藤さん・高橋さん）と営業（あなた）は、必ず別の声にする。', '- 「…」で終わる文は、少し間をとって言いよどむ感じに。');
+  md.push('', '## 原稿ファイル（音読さんに貼るもの）', '', '| ファイル | 話者 | 文の数 | 文字数 | 最初のセリフID |', '|---|---|---|---|---|');
+  const groups = chunkGroups(lines);
+  for (const [g, ls] of groups) md.push(`| [ondoku/${g}.txt](ondoku/${g}.txt) | ${nameOf(ls[0].speaker)} | ${ls.length} | ${ls.reduce((n, l) => n + [...speechOf(l.text)].length, 0)} | \`${ls[0].lineId}\` |`);
 
   md.push('', '## 全編のセリフ（再生順）', '');
   let phase = '';
@@ -100,16 +124,11 @@ export const writeTalk = () => {
   }
   writeFileSync(join(DOCS, 'talk-script.md'), md.join('\n') + '\n');
 
-  // 2) 音読さんに貼る原稿（フェーズ×話者）と、取り込み用の対応表
+  // 2) 音読さんに貼る原稿（話者ごと・文字数で区切り）と、取り込み用の対応表
   const index: string[] = ['file\torder\tlineId\tspeaker\ttext\tspeech'];
   for (const [g, ls] of groups) {
     writeFileSync(join(ONDOKU, `${g}.txt`), ls.map((l) => speechOf(l.text)).join('\n\n') + '\n');
     ls.forEach((l, i) => index.push([g, i + 1, l.lineId, l.speaker, l.text, speechOf(l.text)].join('\t')));
-  }
-  // 話者ごとに全編を1つにまとめた原稿（こちらで録ってもよい。ファイル名は all_<話者>）
-  for (const sp of SPEAKER_ORDER) {
-    const ls = lines.filter((l) => l.speaker === sp);
-    if (ls.length) writeFileSync(join(ONDOKU, `all_${sp}.txt`), ls.map((l) => speechOf(l.text)).join('\n\n') + '\n');
   }
   writeFileSync(join(ONDOKU, 'index.tsv'), index.join('\n') + '\n');
   console.log(`書き出し：talk-script.md・ondoku/（${groups.size}ファイル・${lines.length}文）`);
@@ -213,21 +232,7 @@ const importAudio = () => {
   mkdirSync(AUDIO_DIR, {recursive: true});
   const timing: Record<string, number> = {};
   const lines = talkLines();
-  const groups = new Map<string, TalkLine[]>();
-  for (const l of lines) {
-    const g = groupFile(l.phaseId, l.speaker);
-    if (!groups.has(g)) groups.set(g, []);
-    groups.get(g)!.push(l);
-  }
-  // 話者ごとのまとめ音声（all_<話者>）があれば、先に全編を分けておく
-  const fromAll = new Map<string, {file: string; start: number; end: number}>();
-  for (const sp of SPEAKER_ORDER) {
-    const f = findInput(`all_${sp}`);
-    if (!f) continue;
-    const ls = lines.filter((l) => l.speaker === sp);
-    split(f, ls.map((l) => speechOf(l.text))).forEach((r, k) => fromAll.set(ls[k].lineId, {file: f, ...r}));
-    console.log(`all_${sp}：${ls.length}文に分けました`);
-  }
+  const groups = chunkGroups(lines);
   for (const [g, ls] of groups) {
     const whole = findInput(g);
     const ranges = whole ? split(whole, ls.map((l) => speechOf(l.text))) : [];
@@ -238,9 +243,6 @@ const importAudio = () => {
         timing[l.lineId] = writeLine(single, l.lineId, r.start, r.end);
       } else if (whole) {
         timing[l.lineId] = writeLine(whole, l.lineId, ranges[k].start, ranges[k].end);
-      } else if (fromAll.has(l.lineId)) {
-        const r = fromAll.get(l.lineId)!;
-        timing[l.lineId] = writeLine(r.file, l.lineId, r.start, r.end);
       }
     });
     const got = ls.filter((l) => timing[l.lineId] !== undefined).length;

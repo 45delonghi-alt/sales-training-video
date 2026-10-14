@@ -5,9 +5,8 @@
 ## 収録の手順
 
 1. 下の「話者と声」で、話者ごとに音読さんの声を1つ決める（同じ話者は最後まで同じ声）。
-2. `ondoku/` のテキストを、ファイルごとに音読さんへ貼り付けて読み上げる（1行＝1文。文と文のあいだの空行で、自然に間が空く）。
-   - フェーズごとの原稿（`02_p1_sato.txt` など22ファイル）と、話者ごとに全編をまとめた原稿（`all_sato.txt` など6ファイル）の、どちらで録ってもよい。
-3. できた音声を、テキストと同じ名前で `audio_import/experience/` に置く（例：`02_p1_sato.mp3`、`all_sato.mp3`）。
+2. `ondoku/` のテキストを、ファイルごとに音読さんへ貼り付けて読み上げる（1ファイル＝1回の生成。450文字以内に区切ってある。1行＝1文で、文と文のあいだの空行で自然に間が空く）。
+3. できた音声（mp3）を、テキストと同じ名前で `audio_import/experience/` に置く（例：`sato_01.txt` → `sato_01.mp3`）。
    - 1文だけ録り直すときは、セリフIDの名前で置く（例：`p1-q1-b_02.mp3`）。まとめた音声より優先される。
 4. `npm run experience:import-audio` を実行する → 文ごとに分けて `public/experience/audio/` に保存し、映像の長さと字幕のタイミングが音声に合わせて自動で調整される。
 5. `npm run experience:render` で動画を書き出す（アプリはそのまま再生できる）。
@@ -16,45 +15,35 @@
 
 ## 話者と声
 
-| 話者 | 役割 | 声のイメージ | 音読さんの声（記入） |
-|---|---|---|---|
-| ナレーション | — | 既存の導入動画と同じナレーター（音読さん）（37文） | |
-| あなた | OPTEX-FA 新人営業（学生） | 明るく丁寧な20代の声（新人営業。学生が自分を重ねられる、素直で落ち着いた話し方）（29文） | |
-| 佐藤さん | 飲料工場 設備課（30代後半・男性） | 落ち着いた30代後半の男性。現場をよく知る実務担当。丁寧だが率直（29文） | |
-| 高橋さん | 飲料工場 品質管理課（30代前半・女性） | はきはきした30代前半の女性。数字と品質に厳しい（12文） | |
-| 森さん | OPTEX-FA 営業（先輩社員・女性） | 温かく頼れる30代の女性。学生の判断を奪わず、問いかける口調（9文） | |
-| 中田さん | OPTEX-FA アプリケーションエンジニア（男性） | 穏やかな40代の男性。技術を短く分かりやすく話す（18文） | |
+音読さんでは、日本語の声を選び、下の「設定のめやす」から始めて耳で調整してください（声の名前は音読さんの一覧から選んで、右の欄に記入）。
+
+| 話者 | 役割 | 声のイメージ | 設定のめやす（速度／ピッチ／読み上げスタイル） | 音読さんの声（記入） |
+|---|---|---|---|---|
+| ナレーション | — | 既存の導入動画と同じナレーター（音読さん）（37文） | 1.0／0／ナレーション（落ち着いて、はっきり） | |
+| あなた | OPTEX-FA 新人営業（学生） | 明るく丁寧な20代の声（新人営業。学生が自分を重ねられる、素直で落ち着いた話し方）（29文） | 1.0／やや高い（+0.5）／ビジネス（明るく丁寧に） | |
+| 佐藤さん | 飲料工場 設備課（30代後半・男性） | 落ち着いた30代後半の男性。現場をよく知る実務担当。丁寧だが率直（29文） | 0.95／やや低い（-0.5）／ビジネス（現場の担当者らしく、率直に） | |
+| 高橋さん | 飲料工場 品質管理課（30代前半・女性） | はきはきした30代前半の女性。数字と品質に厳しい（12文） | 1.0／0／ビジネス（はきはきと） | |
+| 森さん | OPTEX-FA 営業（先輩社員・女性） | 温かく頼れる30代の女性。学生の判断を奪わず、問いかける口調（9文） | 0.95／0／やさしく（問いかける口調で） | |
+| 中田さん | OPTEX-FA アプリケーションエンジニア（男性） | 穏やかな40代の男性。技術を短く分かりやすく話す（18文） | 0.95／低い（-1.0）／落ち着いて（短く分かりやすく） | |
+
+- 男性：佐藤さん・中田さん。女性：高橋さん・森さん。お客様（佐藤さん・高橋さん）と営業（あなた）は、必ず別の声にする。
+- 「…」で終わる文は、少し間をとって言いよどむ感じに。
 
 ## 原稿ファイル（音読さんに貼るもの）
 
-話者ごとにまとめた原稿：[all_narration.txt](ondoku/all_narration.txt)（ナレーション）・[all_sales.txt](ondoku/all_sales.txt)（あなた）・[all_sato.txt](ondoku/all_sato.txt)（佐藤さん）・[all_takahashi.txt](ondoku/all_takahashi.txt)（高橋さん）・[all_mori.txt](ondoku/all_mori.txt)（森さん）・[all_nakata.txt](ondoku/all_nakata.txt)（中田さん）
-
-フェーズごとの原稿：
-
-| ファイル | 話者 | 文の数 |
-|---|---|---|
-| [ondoku/01_intro_narration.txt](ondoku/01_intro_narration.txt) | ナレーション | 2 |
-| [ondoku/02_p1_mori.txt](ondoku/02_p1_mori.txt) | 森さん | 2 |
-| [ondoku/02_p1_narration.txt](ondoku/02_p1_narration.txt) | ナレーション | 2 |
-| [ondoku/02_p1_sales.txt](ondoku/02_p1_sales.txt) | あなた | 6 |
-| [ondoku/02_p1_sato.txt](ondoku/02_p1_sato.txt) | 佐藤さん | 11 |
-| [ondoku/02_p1_takahashi.txt](ondoku/02_p1_takahashi.txt) | 高橋さん | 3 |
-| [ondoku/03_p2_nakata.txt](ondoku/03_p2_nakata.txt) | 中田さん | 10 |
-| [ondoku/03_p2_narration.txt](ondoku/03_p2_narration.txt) | ナレーション | 9 |
-| [ondoku/03_p2_sales.txt](ondoku/03_p2_sales.txt) | あなた | 7 |
-| [ondoku/03_p2_sato.txt](ondoku/03_p2_sato.txt) | 佐藤さん | 8 |
-| [ondoku/04_p3_mori.txt](ondoku/04_p3_mori.txt) | 森さん | 2 |
-| [ondoku/04_p3_narration.txt](ondoku/04_p3_narration.txt) | ナレーション | 7 |
-| [ondoku/04_p3_sales.txt](ondoku/04_p3_sales.txt) | あなた | 6 |
-| [ondoku/04_p3_sato.txt](ondoku/04_p3_sato.txt) | 佐藤さん | 4 |
-| [ondoku/04_p3_takahashi.txt](ondoku/04_p3_takahashi.txt) | 高橋さん | 5 |
-| [ondoku/05_p4_mori.txt](ondoku/05_p4_mori.txt) | 森さん | 5 |
-| [ondoku/05_p4_nakata.txt](ondoku/05_p4_nakata.txt) | 中田さん | 8 |
-| [ondoku/05_p4_narration.txt](ondoku/05_p4_narration.txt) | ナレーション | 10 |
-| [ondoku/05_p4_sales.txt](ondoku/05_p4_sales.txt) | あなた | 10 |
-| [ondoku/05_p4_sato.txt](ondoku/05_p4_sato.txt) | 佐藤さん | 6 |
-| [ondoku/05_p4_takahashi.txt](ondoku/05_p4_takahashi.txt) | 高橋さん | 4 |
-| [ondoku/06_reflection_narration.txt](ondoku/06_reflection_narration.txt) | ナレーション | 7 |
+| ファイル | 話者 | 文の数 | 文字数 | 最初のセリフID |
+|---|---|---|---|---|
+| [ondoku/narration_01.txt](ondoku/narration_01.txt) | ナレーション | 19 | 396 | `bridge_01` |
+| [ondoku/narration_02.txt](ondoku/narration_02.txt) | ナレーション | 16 | 393 | `p3-summary_05` |
+| [ondoku/narration_03.txt](ondoku/narration_03.txt) | ナレーション | 2 | 70 | `closing_02` |
+| [ondoku/sales_01.txt](ondoku/sales_01.txt) | あなた | 19 | 411 | `p1-q1-a_01` |
+| [ondoku/sales_02.txt](ondoku/sales_02.txt) | あなた | 10 | 298 | `p4-q1-a_01` |
+| [ondoku/sato_01.txt](ondoku/sato_01.txt) | 佐藤さん | 15 | 393 | `p1-open_01` |
+| [ondoku/sato_02.txt](ondoku/sato_02.txt) | 佐藤さん | 14 | 324 | `p2-q1-c_02` |
+| [ondoku/takahashi_01.txt](ondoku/takahashi_01.txt) | 高橋さん | 12 | 317 | `p1-data_01` |
+| [ondoku/mori_01.txt](ondoku/mori_01.txt) | 森さん | 9 | 284 | `hint-P1-Q1_01` |
+| [ondoku/nakata_01.txt](ondoku/nakata_01.txt) | 中田さん | 14 | 422 | `hint-P2-Q1_01` |
+| [ondoku/nakata_02.txt](ondoku/nakata_02.txt) | 中田さん | 4 | 117 | `p4-setup_03` |
 
 ## 全編のセリフ（再生順）
 
