@@ -1,16 +1,11 @@
-// 素材ID → 映像。assets.json の kind / variant で描き分け、セリフは場面データから取る。
+// 素材ID → 映像（v3：写真ベース）。assets.json の shots（写真＋カメラの動き＋重ねる情報）を、セリフに合わせて切り替える。
+// セリフ・字幕・音声は場面データ（phases.json）から取り、収録した音声の長さに合わせてタイミングが決まる。
 import React from 'react';
-import {AbsoluteFill, OffthreadVideo, staticFile} from 'remotion';
-import {assetById, linesForAsset, phases, responderFor, scenes, videoPathFor} from '../data';
-import {ClipShell} from './ClipShell';
-import {FactoryScene} from './scenes/FactoryScene';
-import {SensorScene, BottleScene} from './scenes/CloseupScenes';
-import {CustomerScene, peopleIn} from './scenes/CustomerScene';
-import {DocumentScene} from './scenes/DocumentScene';
-import {TechScene} from './scenes/TechScene';
-import {ProductScene} from './scenes/ProductScene';
-import {DemoScene} from './scenes/DemoScene';
-import {ApplicationsScene, EndingScene, TitleScene} from './scenes/EndingScenes';
+import {AbsoluteFill, Audio, OffthreadVideo, Sequence, interpolate, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
+import {assetById, lineAudioPath, lineSchedule, linesForAsset, videoPathFor} from '../data';
+import {FONT} from './theme';
+import {Brand, Header, PlatePhoto, Subtitle, Tags, resolvePlate} from './v3/Frame';
+import {DIM, Overlay} from './v3/Overlays';
 
 export type ExperienceClipProps = {
   assetId: string;
@@ -20,83 +15,87 @@ export type ExperienceClipProps = {
   useVideo?: boolean;
   // 正式な製品写真が配置済みか
   hasImage?: boolean;
-  // 声の音声（public/experience/audio/<素材ID>.mp3）が配置済みか
+  // 声を流すか（収録済みの文だけ）
   hasAudio?: boolean;
 };
 
-const LIGHT = new Set(['document', 'tech', 'product', 'applications']);
+const XFADE = 8;
 
-export const phaseLabelFor = (assetId: string) => {
-  const s = scenes.find(
-    (sc) =>
-      ((sc.type === 'clip' || sc.type === 'demo') && sc.videoAsset === assetId) ||
-      (sc.type === 'question' && (sc.backdropAsset === assetId || sc.choices.some((c) => c.videoAsset === assetId))) ||
-      (sc.type === 'reflection' && sc.videoAsset === assetId),
-  );
-  const p = s ? phases.find((ph) => ph.phaseId === s.phaseId) : undefined;
-  return p ? p.phaseTitle.toUpperCase() : 'CONSULTING SALES EXPERIENCE';
-};
+const SIM = new Set(['signal-double', 'demo-normal', 'demo-wobble', 'demo-gap', 'demo-height']);
+const DATA = new Set(['figures', 'chart', 'result']);
+const BEAM = new Set(['sensor-existing', 'beam', 'sensor-check', 'line-walk', 'setup', 'signal-double', 'demo-normal', 'demo-wobble', 'demo-gap', 'demo-height']);
 
 export const ExperienceClip: React.FC<ExperienceClipProps> = ({assetId, showSubtitles, showStatus, useVideo, hasImage, hasAudio}) => {
+  const frame = useCurrentFrame();
+  const {fps, durationInFrames} = useVideoConfig();
   const a = assetById.get(assetId);
   if (!a) return <AbsoluteFill style={{background: '#000', color: '#fff', fontSize: 40}}>素材 {assetId} がありません</AbsoluteFill>;
-  const lines = linesForAsset(assetId);
-  const tone = a.variant === 'message' || a.kind === 'title' ? 'dark' : LIGHT.has(a.kind) ? 'light' : 'dark';
-  const simulation = a.kind === 'demo' && ['normal', 'offset', 'gap', 'wobble', 'shape'].includes(a.variant);
-  const status = useVideo ? [] : a.status;
-  const onScreen = a.kind === 'customer' ? peopleIn(a.variant) : a.variant === 'intro-senior' ? ['mori'] : [];
+  const sched = lineSchedule(linesForAsset(assetId), a.dialogAt ?? 0.8, assetId);
+  const t = frame / fps;
+  const current = sched.find((l) => t >= l.from && t < l.to);
+
+  // ショットの開始フレーム
+  const starts = a.shots.map((s, i) => (i === 0 || s.atLine === undefined ? (i === 0 ? 0 : null) : Math.round((sched[s.atLine]?.from ?? 0) * fps) - 4));
+  const shotStart = (i: number) => starts[i] ?? 0;
+  const shotEnd = (i: number) => (i + 1 < a.shots.length ? shotStart(i + 1) : durationInFrames);
+  const idx = a.shots.reduce((k, _, i) => (frame >= shotStart(i) ? i : k), 0);
+  const shot = a.shots[idx];
+  const substitute = resolvePlate(shot).substitute;
+
+  const tags: string[] = [];
+  if (showStatus && !useVideo) {
+    if (substitute) tags.push(`仮画像（${shot.plate} の画像待ち）`);
+    if (SIM.has(shot.overlay)) tags.push('研修用シミュレーション');
+    if (DATA.has(shot.overlay)) tags.push('研修用の架空データ');
+    if (BEAM.has(shot.overlay)) tags.push('光の線は説明用の表現');
+    if (a.status.includes('awaiting-license') && !hasImage) tags.push('公式製品画像：許諾確認待ち');
+  }
+
   return (
-    <ClipShell
-      assetId={assetId}
-      tone={tone}
-      label={phaseLabelFor(assetId)}
-      lines={lines}
-      dialogAt={a.dialogAt ?? 0.8}
-      showSubtitles={showSubtitles && a.kind !== 'title'} // 扉は画面の文字がそのままセリフ
-      showStatus={showStatus}
-      status={hasImage ? status.filter((s) => s !== 'awaiting-license') : status}
-      kind={a.kind}
-      simulation={simulation && !useVideo}
-      responderMood={responderFor(assetId)?.mood}
-      onScreen={useVideo ? ['sato', 'takahashi', 'mori', 'nakata'] : onScreen}
-      withAudio={hasAudio !== false}
-    >
+    <AbsoluteFill style={{background: '#0E0F11', fontFamily: FONT}}>
       {useVideo ? (
-        <AbsoluteFill>
-          <OffthreadVideo src={staticFile(videoPathFor(a.assetId))} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
-        </AbsoluteFill>
+        <OffthreadVideo src={staticFile(videoPathFor(a.assetId))} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
       ) : (
-        <Visual kind={a.kind} variant={a.variant} imagePath={hasImage ? a.imagePath : undefined} assetId={assetId} />
+        a.shots.map((s, i) => {
+          const from = shotStart(i);
+          const to = shotEnd(i);
+          if (frame < from - 1 || frame > to + XFADE) return null;
+          const o = i === 0 ? 1 : interpolate(frame, [from, from + XFADE], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+          const p = interpolate(frame, [from, to], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+          return (
+            <AbsoluteFill key={i} style={{opacity: o}}>
+              <Sequence from={from} layout="none">
+                <PlatePhoto shot={s} progress={p} dim={DIM[s.overlay] ?? 0} />
+                {/* 下部の字幕を読みやすくするグラデーション */}
+                <AbsoluteFill style={{background: 'linear-gradient(180deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0) 22%, rgba(0,0,0,0) 70%, rgba(0,0,0,0.35) 100%)'}} />
+                <Overlay overlay={s.overlay} card={s.card} imagePath={hasImage ? a.imagePath : undefined} />
+              </Sequence>
+            </AbsoluteFill>
+          );
+        })
       )}
-    </ClipShell>
+      {shot.header && !useVideo ? (
+        <Sequence key={`h${idx}`} from={shotStart(idx)} layout="none">
+          <HeaderAt no={shot.header.no} title={shot.header.title} />
+        </Sequence>
+      ) : null}
+      <Brand />
+      {hasAudio !== false
+        ? sched
+            .filter((l) => l.recorded && l.lineId)
+            .map((l) => (
+              <Sequence key={l.lineId} from={Math.round(l.from * fps)} layout="none">
+                <Audio src={staticFile(lineAudioPath(l.lineId!))} />
+              </Sequence>
+            ))
+        : null}
+      {showSubtitles && current ? <Subtitle speaker={current.speaker} text={current.text} from={Math.round(current.from * fps)} frame={frame} /> : null}
+      <Tags tags={tags} />
+    </AbsoluteFill>
   );
 };
 
-const Visual: React.FC<{kind: string; variant: string; imagePath?: string; assetId: string}> = ({kind, variant, imagePath, assetId}) => {
-  switch (kind) {
-    case 'title':
-      return <TitleScene />;
-    case 'factory':
-      return <FactoryScene variant={variant} />;
-    case 'sensor':
-      return <SensorScene variant={variant} imagePath={imagePath} />;
-    case 'bottle':
-      return <BottleScene variant={variant} />;
-    case 'customer':
-      return <CustomerScene variant={variant} />;
-    case 'document':
-      return <DocumentScene variant={variant} />;
-    case 'tech':
-      return <TechScene variant={variant} />;
-    case 'product':
-      return <ProductScene variant={variant} imagePath={imagePath} assetId={assetId} />;
-    case 'demo':
-      return <DemoScene variant={variant} />;
-    case 'applications':
-      return <ApplicationsScene />;
-    case 'ending':
-      return <EndingScene />;
-    default:
-      return null;
-  }
+const HeaderAt: React.FC<{no?: string; title: string}> = ({no, title}) => {
+  const frame = useCurrentFrame();
+  return <Header no={no} title={title} frame={frame} />;
 };

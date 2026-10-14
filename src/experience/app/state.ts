@@ -7,7 +7,16 @@ export type ChoiceId = 'A' | 'B' | 'C';
 export type Step = 'ready' | 'playing' | 'done' | 'think' | 'choose' | 'result';
 
 export type Answer = {choiceId: ChoiceId; reason: string; at: number; tries: ChoiceId[]};
-export type DemoResult = {passed: string; outputs: string; counted: string; chatter: '' | 'yes' | 'no'; note: string; source: 'live' | 'video' | 'simulation'};
+// 実測の記録（センサごと）。通過本数・センサの出力回数・PLCのカウント値・1本の通過中の出力の切り替わり
+export type Measure = {passed: string; outputs: string; counted: string; chatter: '' | 'yes' | 'no'};
+export type SensorKey = 'existing' | 'optex';
+export const SENSORS: {key: SensorKey; name: string}[] = [
+  {key: 'existing', name: '既設センサ（他社製・回帰反射型）'},
+  {key: 'optex', name: 'OPTEX-FA KR-Qシリーズ'},
+];
+export type DemoResult = {existing: Measure; optex: Measure; note: string; source: 'live' | 'video' | 'simulation'};
+export const emptyMeasure = (): Measure => ({passed: '', outputs: '', counted: '', chatter: ''});
+export const emptyDemo = (): DemoResult => ({existing: emptyMeasure(), optex: emptyMeasure(), note: '', source: 'simulation'});
 
 export type State = {
   sceneId: string;
@@ -27,7 +36,7 @@ export type State = {
   playToken: number; // 再生し直しの合図
 };
 
-const KEY = 'optexfa-xp-session-v2';
+const KEY = 'optexfa-xp-session-v3';
 
 export const initialStep = (s: Scene | undefined): Step => (s?.type === 'question' ? 'think' : 'ready');
 
@@ -72,7 +81,7 @@ export type Action =
   | {type: 'hint'; on: boolean}
   | {type: 'vote'; vote: State['vote']}
   | {type: 'compare'; on: boolean}
-  | {type: 'demo'; sceneId: string; result: Partial<DemoResult>}
+  | {type: 'demo'; sceneId: string; meta?: Partial<Pick<DemoResult, 'note' | 'source'>>; sensor?: SensorKey; measure?: Partial<Measure>}
   | {type: 'note'; sceneId: string; text: string}
   | {type: 'toggle'; key: 'showSubtitles' | 'showStatus'}
   | {type: 'volume'; value: number}
@@ -82,7 +91,7 @@ export type Action =
   | {type: 'replace'; state: State};
 
 // 実機デモの判定（記録がなければ null）
-export const judge = (r?: DemoResult): boolean | null => {
+export const judge = (r?: Measure): boolean | null => {
   // センサの出力回数（表示灯・出力の記録）と PLC のカウント値を分けて記録し、両方が実際の本数と一致したときだけ基準を満たす
   if (!r || !r.passed || !r.outputs || !r.counted || r.chatter === '') return null;
   const p = Number(r.passed);
@@ -92,13 +101,24 @@ export const judge = (r?: DemoResult): boolean | null => {
   return p === o && p === c && r.chatter === 'no';
 };
 
+// 過剰カウント率（%）。記録がなければ null
+export const overRate = (r?: Measure): number | null => {
+  if (!r || !r.passed || !r.counted) return null;
+  const p = Number(r.passed);
+  const c = Number(r.counted);
+  return p > 0 ? ((c - p) / p) * 100 : null;
+};
+
+// 提案の判断に使うのは、提案するセンサ（KR-Qシリーズ）の実測
+export const judgeDemo = (r?: DemoResult) => judge(r?.optex);
+
 const DEMO_SCENES = scenes.filter((s) => s.type === 'demo').map((s) => s.sceneId);
 
-// この問いの前提となる実測（p4-q3 は通常条件、p4-q4 はそれまでの全条件）
+// この問いの前提となる実測（それまでのすべての比較デモで、KR-Qシリーズの記録が基準を満たしたか）
 export const demoGate = (q: QuestionScene, demo: Record<string, DemoResult>) => {
   const idx = scenes.findIndex((s) => s.sceneId === q.sceneId);
   const needed = DEMO_SCENES.filter((id) => scenes.findIndex((s) => s.sceneId === id) < idx);
-  const results = needed.map((id) => ({id, ok: judge(demo[id])}));
+  const results = needed.map((id) => ({id, ok: judgeDemo(demo[id])}));
   if (results.some((r) => r.ok === false)) return {status: 'fail' as const, results};
   if (results.some((r) => r.ok === null)) return {status: 'missing' as const, results};
   return {status: 'pass' as const, results};
@@ -166,8 +186,10 @@ export const reducer = (s: State, a: Action): State => {
     case 'compare':
       return {...s, compare: a.on};
     case 'demo': {
-      const prev = s.demo[a.sceneId] ?? {passed: '', outputs: '', counted: '', chatter: '', note: '', source: 'simulation'};
-      return {...s, demo: {...s.demo, [a.sceneId]: {...prev, ...a.result}}};
+      const prev = s.demo[a.sceneId] ?? emptyDemo();
+      const next = {...prev, ...(a.meta ?? {})};
+      if (a.sensor && a.measure) next[a.sensor] = {...prev[a.sensor], ...a.measure};
+      return {...s, demo: {...s.demo, [a.sceneId]: next}};
     }
     case 'note':
       return {...s, notes: {...s.notes, [a.sceneId]: a.text}};

@@ -286,3 +286,32 @@ button.big { font-size: 22px; padding: 14px 28px; }
 .va-err { font-weight: 700; color: var(--red); }
 .va-wait { font-size: 18px; font-weight: 700; color: var(--ink2); margin-top: 30px; }
 @media (max-width: 720px) { .found-grid { grid-template-columns: 1fr; } }
+
+/* ---- v3：比較デモ（既設センサ／KR-Qシリーズ）と結果の比較 ---- */
+.live-table { width: 100%; border-collapse: collapse; margin-top: 24px; font-size: clamp(16px, 1.6vw, 26px); }
+.live-table th, .live-table td { border-bottom: 1px solid rgba(255,255,255,0.25); padding: 10px 12px; text-align: center; }
+.live-table tbody th { text-align: left; font-weight: 700; }
+.live-table td.ok { color: #4ade80; font-weight: 700; }
+.live-table td.ng { color: #ff6b74; font-weight: 700; }
+.live-note { margin-top: 14px; font-size: 14px; color: rgba(255,255,255,0.7); }
+.sensor-rec { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px 12px; margin-top: 10px; }
+.sensor-rec.optex { border-color: var(--red); }
+.sensor-rec legend { font-weight: 700; padding: 0 6px; }
+.sensor-rec.optex legend { color: var(--red); }
+.result-compare { flex: 1; display: flex; gap: 20px; padding: 20px; flex-wrap: wrap; align-items: flex-start; }
+.rc-media { position: relative; flex: 1 1 520px; min-width: 0; }
+.rc-table { flex: 1 1 560px; min-width: 0; background: var(--white); padding: 20px 24px; border-top: 6px solid var(--red); }
+.rc-class { font-size: 14px; color: var(--ink2); line-height: 2; }
+.rc-class .cls { display: inline-block; font-weight: 700; color: var(--white); padding: 0 8px; margin: 0 6px 0 10px; border-radius: 3px; }
+.rc-class .cls:first-child { margin-left: 0; }
+.cls.measured { background: var(--ink); }
+.cls.sim { background: var(--gray); }
+.cls.expect { background: #8a6d1f; }
+.rc-before { margin-top: 8px; font-weight: 700; }
+.rc-table table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+.rc-table th, .rc-table td { border-bottom: 1px solid var(--line); padding: 10px; text-align: left; vertical-align: top; }
+.rc-table td small { display: block; color: var(--gray); }
+.rc-table td.ok b { color: var(--ok); }
+.rc-table td.ng b { color: var(--red); }
+.rc-table td.none { color: var(--gray); }
+.rc-note { margin-top: 12px; font-size: 13px; color: var(--gray); }

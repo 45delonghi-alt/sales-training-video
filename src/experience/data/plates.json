@@ -1,0 +1,268 @@
+[
+ {
+  "plateId": "CAST",
+  "scene": "人物マスター",
+  "description": "登場人物の基準画像（左から 森さん・中田さん・佐藤さん・高橋さん）。人物画像が届くまでの仮画像にも使う",
+  "people": [
+   "mori",
+   "nakata",
+   "sato",
+   "takahashi"
+  ],
+  "sensorLayout": false,
+  "file": "experience/plates/CAST.jpg",
+  "prompt": "Photorealistic character reference sheet: four Japanese adults side by side in a clean beverage factory (see scripts / flow).",
+  "source": "ElevenLabs gemini-3-pro-image（2026-10-14）",
+  "status": "generated",
+  "note": "顔・服装の基準。ロゴ・名札・文字なし"
+ },
+ {
+  "plateId": "F01",
+  "scene": "SCENE 01",
+  "description": "ライン全景（センサと反射板がボトル下部の高さで向かい合う）",
+  "people": [],
+  "sensorLayout": true,
+  "file": "experience/plates/F01.jpg",
+  "prompt": "Photorealistic wide shot. A long straight stainless-steel conveyor runs from the left background toward the right foreground, carrying a steady row of upright transparent 500 ml PET bottles filled with water, white caps, no labels. No people. Sensor layout (must follow exactly): on ONE side of the conveyor, a small plain dark-gray rectangular photoelectric sensor (matchbox size, one round lens on its front face, cable out of the back, no logo, no text) on a short stainless bracket points horizontally ACROSS the conveyor. Directly opposite on the OTHER side, at exactly the same height and facing the sensor, is a small square gray prismatic retroreflector plate (about 5 cm square, no text) on its own bracket. Both are low, at the height of the LOWER part of the bottles (about one fifth of the bottle height above the belt), never at the shoulder or cap. No visible light beams, no lasers. No text, no logos, no signs, no labels, no name tags, no badges anywhere. Clean, bright Japanese beverage bottling factory, stainless steel, bright white ceiling lights, pale blue-gray tones, high-end corporate photography, 16:9, 2K.",
+  "source": "ElevenLabs gemini-3-pro-image（2026-10-14）",
+  "status": "review",
+  "note": "センサのレンズが反射板ではなく手前を向き、反射板も下流側にずれている＝配置ルール不適合。センサ部分は使わず、左側のラインだけをトリミングして使う"
+ },
+ {
+  "plateId": "F01L",
+  "scene": "SCENE 01・背景",
+  "description": "F01 の左側（センサが写らない部分）をトリミングしたライン全景",
+  "people": [],
+  "sensorLayout": false,
+  "file": "experience/plates/F01L.jpg",
+  "prompt": "Derived from F01 by cropping the left part (no sensor in frame). No text, no logos.",
+  "source": "F01 から切り出し（2026-10-14）",
+  "status": "approved",
+  "note": "センサ・反射板は写っていない。配置は CG の配置図で示す"
+ },
+ {
+  "plateId": "F02",
+  "scene": "SCENE 02",
+  "description": "お客様（佐藤さん・高橋さん）からの相談。学生の目線",
+  "people": [
+   "sato",
+   "takahashi"
+  ],
+  "sensorLayout": false,
+  "file": "experience/plates/F02.jpg",
+  "prompt": "Using the attached cast reference sheet (Ms. Mori and Mr. Nakata in light blue-gray work jackets; Mr. Sato and Ms. Takahashi in white food-factory uniforms; everyone in a white hygiene cap), keep faces, caps and clothing exactly the same. Medium shot next to the conveyor. Camera at eye level as the visiting sales person. Mr. Sato center-left explains a problem with a slightly troubled, sincere expression and an open hand; Ms. Takahashi slightly behind on the right holds a clipboard, listening seriously. Right third calmer for captions. No text, no logos, no signs, no labels, no name tags, no badges anywhere. Clean, bright Japanese beverage bottling factory, stainless steel, bright white ceiling lights, pale blue-gray tones, high-end corporate photography, 16:9, 2K.",
+  "source": "",
+  "status": "awaiting"
+ },
+ {
+  "plateId": "F03",
+  "scene": "SCENE 02",
+  "description": "佐藤さん（前向き・協力的）",
+  "people": [
+   "sato"
+  ],
+  "sensorLayout": false,
+  "file": "experience/plates/F03.jpg",
+  "prompt": "Using the attached cast reference sheet (Ms. Mori and Mr. Nakata in light blue-gray work jackets; Mr. Sato and Ms. Takahashi in white food-factory uniforms; everyone in a white hygiene cap), keep faces, caps and clothing exactly the same. Medium close-up of Mr. Sato on the left third, relieved, cooperative, gently positive expression, nodding slightly. Conveyor with PET bottles blurred behind. 85mm. No text, no logos, no signs, no labels, no name tags, no badges anywhere. Clean, bright Japanese beverage bottling factory, stainless steel, bright white ceiling lights, pale blue-gray tones, high-end corporate photography, 16:9, 2K.",
+  "source": "",
+  "status": "awaiting"
+ },
+ {
+  "plateId": "F04",
+  "scene": "SCENE 02",
+  "description": "佐藤さん（心配・迷い）",
+  "people": [
+   "sato"
+  ],
+  "sensorLayout": false,
+  "file": "experience/plates/F04.jpg",
+  "prompt": "Using the attached cast reference sheet (Ms. Mori and Mr. Nakata in light blue-gray work jackets; Mr. Sato and Ms. Takahashi in white food-factory uniforms; everyone in a white hygiene cap), keep faces, caps and clothing exactly the same. Medium close-up of Mr. Sato on the right third, looking down and aside, worried and hesitant, hand on chin. Conveyor blurred behind. 85mm. No text, no logos, no signs, no labels, no name tags, no badges anywhere. Clean, bright Japanese beverage bottling factory, stainless steel, bright white ceiling lights, pale blue-gray tones, high-end corporate photography, 16:9, 2K.",
+  "source": "",
+  "status": "awaiting"
+ },
+ {
+  "plateId": "F05",
+  "scene": "SCENE 02",
+  "description": "佐藤さん（落ち着いた・控えめ）",
+  "people": [
+   "sato"
+  ],
+  "sensorLayout": false,
+  "file": "experience/plates/F05.jpg",
+  "prompt": "Using the attached cast reference sheet (Ms. Mori and Mr. Nakata in light blue-gray work jackets; Mr. Sato and Ms. Takahashi in white food-factory uniforms; everyone in a white hygiene cap), keep faces, caps and clothing exactly the same. Medium shot of Mr. Sato beside the conveyor, arms loosely folded, calm, neutral, slightly reserved expression. 50mm. No text, no logos, no signs, no labels, no name tags, no badges anywhere. Clean, bright Japanese beverage bottling factory, stainless steel, bright white ceiling lights, pale blue-gray tones, high-end corporate photography, 16:9, 2K.",
+  "source": "",
+  "status": "awaiting"
+ },
+ {
+  "plateId": "F06",
+  "scene": "SCENE 03",
+  "description": "高橋さん（品質管理・記録の説明。右半分はグラフ用の余白）",
+  "people": [
+   "takahashi"
+  ],
+  "sensorLayout": false,
+  "file": "experience/plates/F06.jpg",
+  "prompt": "Using the attached cast reference sheet (Ms. Mori and Mr. Nakata in light blue-gray work jackets; Mr. Sato and Ms. Takahashi in white food-factory uniforms; everyone in a white hygiene cap), keep faces, caps and clothing exactly the same. Medium shot of Ms. Takahashi at a quality-control station, on the left third, holding a tablet with the screen facing away, crisp attentive expression. Right half: softly blurred line, clean space for an on-screen chart. No text, no logos, no signs, no labels, no name tags, no badges anywhere. Clean, bright Japanese beverage bottling factory, stainless steel, bright white ceiling lights, pale blue-gray tones, high-end corporate photography, 16:9, 2K.",
+  "source": "",
+  "status": "awaiting"
+ },
+ {
+  "plateId": "F07",
+  "scene": "SCENE 03",
+  "description": "高橋さん（確認作業の負担を話す）",
+  "people": [
+   "takahashi"
+  ],
+  "sensorLayout": false,
+  "file": "experience/plates/F07.jpg",
+  "prompt": "Using the attached cast reference sheet (Ms. Mori and Mr. Nakata in light blue-gray work jackets; Mr. Sato and Ms. Takahashi in white food-factory uniforms; everyone in a white hygiene cap), keep faces, caps and clothing exactly the same. Medium close-up of Ms. Takahashi on the right third, serious, slightly tired and concerned, clipboard against her chest. Stopped conveyor blurred behind. 85mm. No text, no logos, no signs, no labels, no name tags, no badges anywhere. Clean, bright Japanese beverage bottling factory, stainless steel, bright white ceiling lights, pale blue-gray tones, high-end corporate photography, 16:9, 2K.",
+  "source": "",
+  "status": "awaiting"
+ },
+ {
+  "plateId": "F08",
+  "scene": "SCENE 04",
+  "description": "既設センサと反射板のクローズアップ（ボトル下部の高さ）",
+  "people": [],
+  "sensorLayout": true,
+  "file": "experience/plates/F08.jpg",
+  "prompt": "Photorealistic close-up at conveyor level. The conveyor crosses the frame left to right, slightly angled, with two or three upright transparent PET water bottles in the center. Sensor on the RIGHT edge of the conveyor pointing LEFT; reflector on the LEFT edge facing it. No people. Sensor layout (must follow exactly): on ONE side of the conveyor, a small plain dark-gray rectangular photoelectric sensor (matchbox size, one round lens on its front face, cable out of the back, no logo, no text) on a short stainless bracket points horizontally ACROSS the conveyor. Directly opposite on the OTHER side, at exactly the same height and facing the sensor, is a small square gray prismatic retroreflector plate (about 5 cm square, no text) on its own bracket. Both are low, at the height of the LOWER part of the bottles (about one fifth of the bottle height above the belt), never at the shoulder or cap. No visible light beams, no lasers. No text, no logos, no signs, no labels, no name tags, no badges anywhere. Clean, bright Japanese beverage bottling factory, stainless steel, bright white ceiling lights, pale blue-gray tones, high-end corporate photography, 16:9, 2K.",
+  "source": "",
+  "status": "awaiting"
+ },
+ {
+  "plateId": "F09",
+  "scene": "SCENE 05・06",
+  "description": "ボトルの揺れ・接近（センサは映さない）",
+  "people": [],
+  "sensorLayout": false,
+  "file": "experience/plates/F09.jpg",
+  "prompt": "Photorealistic close shot at bottle height. Transparent PET water bottles travel left to right; several bunched close together, one slightly tilted and wobbling, subtle motion blur. Stainless guide rails. No sensors visible. No people. No text, no logos, no signs, no labels, no name tags, no badges anywhere. Clean, bright Japanese beverage bottling factory, stainless steel, bright white ceiling lights, pale blue-gray tones, high-end corporate photography, 16:9, 2K.",
+  "source": "ElevenLabs gemini-3-pro-image（2026-10-14）",
+  "status": "generated",
+  "note": "ボトルが空・キャップなし（充填前に見える）。差し替え候補"
+ },
+ {
+  "plateId": "F10",
+  "scene": "SCENE 07",
+  "description": "ボトル下部のマクロ（光の屈折・反射）",
+  "people": [],
+  "sensorLayout": false,
+  "file": "experience/plates/F10.jpg",
+  "prompt": "Photorealistic macro of the lower part of a transparent PET water bottle on a stainless conveyor: curved ribs and petaloid base with clear water, side light creating refractions and caustics, dark-to-light gradient background. 100mm macro. No light beams. No text, no logos, no signs, no labels, no name tags, no badges anywhere. Clean, bright Japanese beverage bottling factory, stainless steel, bright white ceiling lights, pale blue-gray tones, high-end corporate photography, 16:9, 2K.",
+  "source": "",
+  "status": "awaiting"
+ },
+ {
+  "plateId": "F11",
+  "scene": "SCENE 08",
+  "description": "制御盤（PLC）と佐藤さん。右側にグラフ用の黒い画面",
+  "people": [
+   "sato"
+  ],
+  "sensorLayout": false,
+  "file": "experience/plates/F11.jpg",
+  "prompt": "Using the attached cast reference sheet (Ms. Mori and Mr. Nakata in light blue-gray work jackets; Mr. Sato and Ms. Takahashi in white food-factory uniforms; everyone in a white hygiene cap), keep faces, caps and clothing exactly the same. An open gray control cabinet with generic PLC modules, status LEDs and tidy wiring (no brand names). Mr. Sato on the left points at the modules. On the right, a wall-mounted monitor with a plain black screen. No text, no logos, no signs, no labels, no name tags, no badges anywhere. Clean, bright Japanese beverage bottling factory, stainless steel, bright white ceiling lights, pale blue-gray tones, high-end corporate photography, 16:9, 2K.",
+  "source": "",
+  "status": "awaiting"
+ },
+ {
+  "plateId": "F12",
+  "scene": "SCENE 03",
+  "description": "ライン停止・人手での数え直し",
+  "people": [
+   "takahashi"
+  ],
+  "sensorLayout": false,
+  "file": "experience/plates/F12.jpg",
+  "prompt": "Using the attached cast reference sheet (Ms. Mori and Mr. Nakata in light blue-gray work jackets; Mr. Sato and Ms. Takahashi in white food-factory uniforms; everyone in a white hygiene cap), keep faces, caps and clothing exactly the same. The PET bottle line is stopped, a red signal tower light is lit. Two staff in white hygienic uniforms, caps, masks and blue gloves recount bottles in crates. Ms. Takahashi in the foreground right with a clipboard, concerned. No text, no logos, no signs, no labels, no name tags, no badges anywhere. Clean, bright Japanese beverage bottling factory, stainless steel, bright white ceiling lights, pale blue-gray tones, high-end corporate photography, 16:9, 2K.",
+  "source": "",
+  "status": "awaiting"
+ },
+ {
+  "plateId": "F13",
+  "scene": "SCENE 09",
+  "description": "ライン脇での打ち合わせ（森さん・佐藤さん・高橋さん）",
+  "people": [
+   "mori",
+   "sato",
+   "takahashi"
+  ],
+  "sensorLayout": false,
+  "file": "experience/plates/F13.jpg",
+  "prompt": "Using the attached cast reference sheet (Ms. Mori and Mr. Nakata in light blue-gray work jackets; Mr. Sato and Ms. Takahashi in white food-factory uniforms; everyone in a white hygiene cap), keep faces, caps and clothing exactly the same. Medium-wide shot at a stainless standing table beside the line. Ms. Mori on the left explains calmly with a tablet (screen not visible); Mr. Sato and Ms. Takahashi listen across the table on the right. No text, no logos, no signs, no labels, no name tags, no badges anywhere. Clean, bright Japanese beverage bottling factory, stainless steel, bright white ceiling lights, pale blue-gray tones, high-end corporate photography, 16:9, 2K.",
+  "source": "",
+  "status": "awaiting"
+ },
+ {
+  "plateId": "F14",
+  "scene": "SCENE 09",
+  "description": "森さん（先輩社員・助言）",
+  "people": [
+   "mori"
+  ],
+  "sensorLayout": false,
+  "file": "experience/plates/F14.jpg",
+  "prompt": "Using the attached cast reference sheet (Ms. Mori and Mr. Nakata in light blue-gray work jackets; Mr. Sato and Ms. Takahashi in white food-factory uniforms; everyone in a white hygiene cap), keep faces, caps and clothing exactly the same. Medium close-up of Ms. Mori on the right third, warm, encouraging, intelligent smile, holding a tablet at her side. 85mm. No text, no logos, no signs, no labels, no name tags, no badges anywhere. Clean, bright Japanese beverage bottling factory, stainless steel, bright white ceiling lights, pale blue-gray tones, high-end corporate photography, 16:9, 2K.",
+  "source": "",
+  "status": "awaiting"
+ },
+ {
+  "plateId": "F15",
+  "scene": "SCENE 09",
+  "description": "中田さん（説明。右半分は製品カード用の余白）",
+  "people": [
+   "nakata"
+  ],
+  "sensorLayout": false,
+  "file": "experience/plates/F15.jpg",
+  "prompt": "Using the attached cast reference sheet (Ms. Mori and Mr. Nakata in light blue-gray work jackets; Mr. Sato and Ms. Takahashi in white food-factory uniforms; everyone in a white hygiene cap), keep faces, caps and clothing exactly the same. Medium close-up of Mr. Nakata on the left third explaining calmly with one hand toward the right. Small test conveyor blurred behind; right half calm for an on-screen product card. 85mm. No text, no logos, no signs, no labels, no name tags, no badges anywhere. Clean, bright Japanese beverage bottling factory, stainless steel, bright white ceiling lights, pale blue-gray tones, high-end corporate photography, 16:9, 2K.",
+  "source": "",
+  "status": "awaiting"
+ },
+ {
+  "plateId": "F16",
+  "scene": "SCENE 10",
+  "description": "比較デモの試験台（センサと反射板・中田さん・佐藤さん）",
+  "people": [
+   "nakata",
+   "sato"
+  ],
+  "sensorLayout": true,
+  "file": "experience/plates/F16.jpg",
+  "prompt": "Using the attached cast reference sheet (Ms. Mori and Mr. Nakata in light blue-gray work jackets; Mr. Sato and Ms. Takahashi in white food-factory uniforms; everyone in a white hygiene cap), keep faces, caps and clothing exactly the same. A compact test bench: a short stainless test conveyor left to right with a few PET water bottles. Mr. Nakata adjusts the sensor bracket height with a small tool; Mr. Sato watches on the right. A laptop on a side table, screen facing away. Sensor layout (must follow exactly): on ONE side of the conveyor, a small plain dark-gray rectangular photoelectric sensor (matchbox size, one round lens on its front face, cable out of the back, no logo, no text) on a short stainless bracket points horizontally ACROSS the conveyor. Directly opposite on the OTHER side, at exactly the same height and facing the sensor, is a small square gray prismatic retroreflector plate (about 5 cm square, no text) on its own bracket. Both are low, at the height of the LOWER part of the bottles (about one fifth of the bottle height above the belt), never at the shoulder or cap. No visible light beams, no lasers. No text, no logos, no signs, no labels, no name tags, no badges anywhere. Clean, bright Japanese beverage bottling factory, stainless steel, bright white ceiling lights, pale blue-gray tones, high-end corporate photography, 16:9, 2K.",
+  "source": "",
+  "status": "awaiting"
+ },
+ {
+  "plateId": "F17",
+  "scene": "SCENE 11",
+  "description": "結果を4人で確認（画面は見せない）",
+  "people": [
+   "mori",
+   "nakata",
+   "sato",
+   "takahashi"
+  ],
+  "sensorLayout": false,
+  "file": "experience/plates/F17.jpg",
+  "prompt": "Using the attached cast reference sheet (Ms. Mori and Mr. Nakata in light blue-gray work jackets; Mr. Sato and Ms. Takahashi in white food-factory uniforms; everyone in a white hygiene cap), keep faces, caps and clothing exactly the same. Medium-wide shot: the four people around a laptop on a stainless side table beside the test conveyor, reviewing results calmly; screen faces away. Not celebrating. No text, no logos, no signs, no labels, no name tags, no badges anywhere. Clean, bright Japanese beverage bottling factory, stainless steel, bright white ceiling lights, pale blue-gray tones, high-end corporate photography, 16:9, 2K.",
+  "source": "",
+  "status": "awaiting"
+ },
+ {
+  "plateId": "F18",
+  "scene": "SCENE 12",
+  "description": "次のアクションに合意（森さんと佐藤さんの握手）",
+  "people": [
+   "mori",
+   "sato",
+   "takahashi"
+  ],
+  "sensorLayout": false,
+  "file": "experience/plates/F18.jpg",
+  "prompt": "Using the attached cast reference sheet (Ms. Mori and Mr. Nakata in light blue-gray work jackets; Mr. Sato and Ms. Takahashi in white food-factory uniforms; everyone in a white hygiene cap), keep faces, caps and clothing exactly the same. Ms. Mori and Mr. Sato shake hands with sincere, hopeful smiles beside the running PET bottle line; Ms. Takahashi nods beside them. No text, no logos, no signs, no labels, no name tags, no badges anywhere. Clean, bright Japanese beverage bottling factory, stainless steel, bright white ceiling lights, pale blue-gray tones, high-end corporate photography, 16:9, 2K.",
+  "source": "",
+  "status": "awaiting"
+ }
+]

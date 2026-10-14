@@ -1,1053 +1,1684 @@
 [
  {
   "assetId": "bridge",
-  "kind": "title",
-  "variant": "bridge",
+  "shots": [
+   {
+    "plate": "F01L",
+    "focus": {
+     "x": 0.5,
+     "y": 0.5,
+     "z0": 1.15,
+     "z1": 1.25
+    },
+    "overlay": "title"
+   }
+  ],
   "seconds": 7,
-  "visualDescription": "タイトル「YOUR MISSION　ペットボトルの誤カウントを解決せよ！」と「それでは、あなたが営業担当です。」。導入動画の世界観（黒・白・赤）のまま本編へ。",
-  "cameraDirection": "黒背景のタイポグラフィ。",
-  "animationDirection": "タイトルが現れる → 「あなたが営業担当です」を赤で強調。",
+  "dialogAt": 0.8,
+  "visualDescription": "ライン全景にYOUR MISSION。あなたはOPTEX-FAの営業担当",
+  "cameraDirection": "ゆっくり寄る",
+  "animationDirection": "タイトル→「あなたは、OPTEX-FAの営業担当です」",
   "status": [
-   "implemented"
-  ],
-  "needs": [],
-  "production": {
-   "method": "cg",
-   "prompt": "Title card",
-   "negativePrompt": "",
-   "note": "CG"
-  },
-  "dialogAt": 3.2
- },
- {
-  "assetId": "p1-open",
-  "kind": "factory",
-  "variant": "miscount",
-  "seconds": 9,
-  "dialogAt": 2.6,
-  "visualDescription": "飲料工場 LINE 03。透明PETボトルがコンベアを流れ、光電センサでカウント。右上の表示で「実際の本数」より「センサのカウント」が1多くなる。",
-  "cameraDirection": "ライン正面の全景（カメラA）→ 誤カウントの瞬間にセンサへズームイン。",
-  "animationDirection": "ボトルが等間隔で流れる → 1本の通過でカウントが2増え、そのボトルが赤く光る → センサへ寄る。お客様の相談の間は、右下に困った表情の小窓。",
-  "status": [
-   "implemented",
+   "placeholder",
    "awaiting-footage"
-  ],
-  "needs": [
-   "実写：飲料工場のPETボトルライン（正面）",
-   "実写：お客様（設備担当）の相談カット"
   ],
   "production": {
    "method": "composite",
-   "prompt": "Front view at bottle height of a stainless steel conveyor line in a modern Japanese beverage factory, clear 500ml PET bottles of green tea with ribbed bodies and white labels moving left to right, evenly spaced, steady motion, bright clean LED lighting, 35mm lens",
-   "negativePrompt": "no logos, no brand names, no readable text, no sensors or electronic devices (unless filmed for real), no distorted hands or faces",
-   "note": "センサ部分は実機撮影または公式画像を合成。HUDはCGで重ねる"
+   "prompt": "シーン画像：F01（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+  }
+ },
+ {
+  "assetId": "p1-open",
+  "shots": [
+   {
+    "plate": "F01L",
+    "focus": {
+     "x": 0.5,
+     "y": 0.5,
+     "z0": 1.05,
+     "z1": 1.2
+    },
+    "overlay": "miscount",
+    "header": {
+     "no": "01",
+     "title": "オープニング・課題発生"
+    }
+   },
+   {
+    "plate": "F02",
+    "focus": {
+     "x": 0.45,
+     "y": 0.45,
+     "z0": 1.0,
+     "z1": 1.06
+    },
+    "overlay": "talk",
+    "header": {
+     "no": "02",
+     "title": "お客様からの相談"
+    },
+    "atLine": 1
+   }
+  ],
+  "seconds": 10,
+  "dialogAt": 0.8,
+  "visualDescription": "ライン全景で「実際よりも多くカウントされる…」。続いて佐藤さん・高橋さんが学生（営業）に相談",
+  "cameraDirection": "全景→相談の2人へカット",
+  "animationDirection": "カウント表示が時々＋1。赤で「実際よりも多くカウントされる…」",
+  "status": [
+   "placeholder",
+   "awaiting-footage"
+  ],
+  "production": {
+   "method": "composite",
+   "prompt": "シーン画像：F01・F02（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
   }
  },
  {
   "assetId": "p1-q1-a",
-  "kind": "sensor",
-  "variant": "existing",
+  "shots": [
+   {
+    "plate": "F08",
+    "focus": {
+     "x": 0.5,
+     "y": 0.55,
+     "z0": 1.0,
+     "z1": 1.12
+    },
+    "overlay": "sensor-existing",
+    "header": {
+     "no": "04",
+     "title": "既設センサの確認"
+    }
+   }
+  ],
   "seconds": 8,
-  "dialogAt": 3.5,
-  "visualDescription": "既設センサ（透明体用の回帰反射型）にカメラが寄る。本体の外観、取付金具、反射板の方向、型式ラベル（読み取れない）。メーカーの正式な製品写真が届けば差し替える。",
-  "cameraDirection": "一人称で近づく（カメラA→センサ寄り）。ラベルでいったん止まる。",
-  "animationDirection": "ズームイン → 型式ラベルにフォーカス枠 → 「型式：確認中」。",
-  "status": [
-   "implemented",
-   "awaiting-footage"
-  ],
-  "needs": [
-   "既設センサの正式な製品写真（OMRON または KEYENCE の公式画像。用途・型式を確認し、許諾を得たもの）、または実機の撮影"
-  ],
-  "production": {
-   "method": "shoot",
-   "prompt": "Close-up push-in on an industrial photoelectric sensor mounted on a bracket beside a conveyor, label area out of focus",
-   "negativePrompt": "",
-   "note": "既設センサは実物を撮影し、メーカー・型式が読めない撮り方にする（AI生成しない）"
-  },
-  "imagePath": "experience/products/existing/existing-sensor.png"
- },
- {
-  "assetId": "p1-q1-b",
-  "kind": "document",
-  "variant": "weekly-counts",
-  "seconds": 13,
-  "visualDescription": "生産数の管理画面：4週間の実際の本数（10,000本）とカウント値（10,060／10,300／10,050／10,080）、差（＋0.6／＋3.0／＋0.5／＋0.8%）の表と棒グラフ。第1週 → 最大の第2週の順に強調。",
-  "cameraDirection": "管理画面（モニター）を一人称で。",
-  "animationDirection": "表の行が順に現れる → 第1週を強調 → 第2週（＋3.0%）を赤で強調 → グラフ。",
-  "status": [
-   "implemented"
-  ],
-  "needs": [],
-  "production": {
-   "method": "cg",
-   "prompt": "Monitor showing a weekly production count table and bar chart",
-   "negativePrompt": "",
-   "note": "CG（研修用の架空データ。画面に明記）"
-  },
-  "dialogAt": 6.0
- },
- {
-  "assetId": "p1-q1-c",
-  "kind": "customer",
-  "variant": "sato-uneasy",
-  "seconds": 7,
-  "visualDescription": "設備課の佐藤さんが少し困った表情で答える。",
-  "cameraDirection": "営業の一人称。正面のバストショット。",
-  "animationDirection": "視線を落とす → 返答。",
+  "dialogAt": 0.8,
+  "visualDescription": "既設の他社製回帰反射型センサと反射板（型式は表示しない）",
+  "cameraDirection": "センサに寄る",
+  "animationDirection": "ラベル「センサ（投光・受光）」「反射板（リフレクタ）」。配置図を小窓で",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
-  "needs": [
-   "実写：佐藤さん役（30代後半・男性）の困った表情"
-  ],
   "production": {
-   "method": "shoot",
-   "prompt": "Japanese male maintenance engineer, late 30s, workers wear clean white factory uniforms and hygiene caps that cover all hair, no jewelry, slightly troubled expression, eye-level medium close-up, clean beverage factory behind",
-   "negativePrompt": "",
-   "note": "人物は全カット同一（撮影推奨）"
+   "method": "composite",
+   "prompt": "シーン画像：F08（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
   },
-  "dialogAt": 2.0
+  "sensorType": "他社製 回帰反射型光電センサ（透明体専用かは未確認）",
+  "productName": "既設センサ（他社製）",
+  "productModel": "未確定（表示しない）",
+  "verificationStatus": "型式・用途は未確認。メーカー名は出さない"
  },
  {
-  "assetId": "p1-q2-a",
-  "kind": "factory",
-  "variant": "split-compare",
-  "seconds": 14,
-  "visualDescription": "画面を左右に分割：左＝通常運転（等間隔で流れる）、右＝流れが乱れた状態（間隔が詰まり、揺れる）。右側でだけカウントが余分に増える。",
-  "cameraDirection": "左右同じ画角のライン正面（カメラA）。右はスロー。",
-  "animationDirection": "左右を同時に再生 → 右で＋1 → 「乱れたときに起きる」。",
-  "status": [
-   "implemented",
-   "awaiting-footage"
+  "assetId": "p1-q1-b",
+  "shots": [
+   {
+    "plate": "F02",
+    "focus": {
+     "x": 0.45,
+     "y": 0.45,
+     "z0": 1.05,
+     "z1": 1.12
+    },
+    "overlay": "talk",
+    "header": {
+     "no": "02",
+     "title": "お客様からの相談"
+    }
+   },
+   {
+    "plate": "F02",
+    "focus": {
+     "x": 0.45,
+     "y": 0.45,
+     "z0": 1.12,
+     "z1": 1.16
+    },
+    "overlay": "figures",
+    "header": {
+     "no": "03",
+     "title": "現状データの確認"
+    },
+    "atLine": 1
+   }
   ],
-  "needs": [
-   "実写：通常運転と流れが乱れた状態（同じ画角）"
+  "seconds": 8,
+  "dialogAt": 0.8,
+  "visualDescription": "佐藤さんが数字で答える。通常＋0.5〜0.8%、最大＋3.0%のカードが出る",
+  "cameraDirection": "佐藤さんに寄る",
+  "animationDirection": "数字カード（研修用の架空データ）",
+  "status": [
+   "placeholder",
+   "awaiting-footage"
   ],
   "production": {
    "method": "composite",
-   "prompt": "Split-screen of the same conveyor: left steady flow, right bottles bunching and wobbling, PET bottles of tea, front view at bottle height",
-   "negativePrompt": "no logos, no brand names, no readable text, no sensors or electronic devices (unless filmed for real), no distorted hands or faces, no suits on the factory floor",
-   "note": "左右は同じ画角で撮影。カウント表示はCG"
-  },
-  "dialogAt": 5.0
+   "prompt": "シーン画像：F02（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+  }
+ },
+ {
+  "assetId": "p1-q1-c",
+  "shots": [
+   {
+    "plate": "F04",
+    "focus": {
+     "x": 0.6,
+     "y": 0.4,
+     "z0": 1.0,
+     "z1": 1.08
+    },
+    "overlay": "talk",
+    "header": {
+     "no": "02",
+     "title": "お客様からの相談"
+    }
+   }
+  ],
+  "seconds": 8,
+  "dialogAt": 0.8,
+  "visualDescription": "佐藤さんが迷う表情で答える",
+  "cameraDirection": "ゆっくり寄る",
+  "animationDirection": "表情のアップ",
+  "status": [
+   "placeholder",
+   "awaiting-footage"
+  ],
+  "production": {
+   "method": "composite",
+   "prompt": "シーン画像：F04（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+  }
+ },
+ {
+  "assetId": "p1-data",
+  "shots": [
+   {
+    "plate": "F06",
+    "focus": {
+     "x": 0.3,
+     "y": 0.45,
+     "z0": 1.0,
+     "z1": 1.05
+    },
+    "overlay": "chart",
+    "header": {
+     "no": "03",
+     "title": "現状データの確認"
+    }
+   }
+  ],
+  "seconds": 12,
+  "dialogAt": 0.8,
+  "visualDescription": "高橋さんが記録を説明。右に4週間の推移グラフ（10,060／10,300／10,050／10,080）",
+  "cameraDirection": "高橋さん→グラフへ",
+  "animationDirection": "折れ線が描かれ、第2週だけ＋3.0%。「毎週3%ではない」",
+  "status": [
+   "placeholder",
+   "awaiting-footage"
+  ],
+  "production": {
+   "method": "composite",
+   "prompt": "シーン画像：F06（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+  }
+ },
+ {
+  "assetId": "p1-q2-a",
+  "shots": [
+   {
+    "plate": "F09",
+    "focus": {
+     "x": 0.45,
+     "y": 0.6,
+     "z0": 1.0,
+     "z1": 1.15
+    },
+    "overlay": "line-walk",
+    "header": {
+     "no": "01",
+     "title": "オープニング・課題発生"
+    }
+   }
+  ],
+  "seconds": 8,
+  "dialogAt": 0.8,
+  "visualDescription": "ラインを見せてもらう。センサはボトル下部を横から見ている",
+  "cameraDirection": "ラインに沿って横移動",
+  "animationDirection": "配置図（側面）を小窓で",
+  "status": [
+   "placeholder",
+   "awaiting-footage"
+  ],
+  "production": {
+   "method": "composite",
+   "prompt": "シーン画像：F09（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+  }
  },
  {
   "assetId": "p1-q2-b",
-  "kind": "document",
-  "variant": "budget",
-  "seconds": 7,
-  "dialogAt": 2.5,
-  "visualDescription": "お客様が設備予算の資料を開く（金額は表示しない）。",
-  "cameraDirection": "資料を一人称で。わずかに傾いた状態から正面へ起こし、ゆっくり寄る。",
-  "animationDirection": "資料が開く → お客様がページを閉じる。",
-  "status": [
-   "implemented"
+  "shots": [
+   {
+    "plate": "F05",
+    "focus": {
+     "x": 0.45,
+     "y": 0.4,
+     "z0": 1.0,
+     "z1": 1.08
+    },
+    "overlay": "talk",
+    "header": {
+     "no": "02",
+     "title": "お客様からの相談"
+    }
+   }
   ],
-  "needs": [],
+  "seconds": 8,
+  "dialogAt": 0.8,
+  "visualDescription": "佐藤さんが控えめに断る",
+  "cameraDirection": "固定",
+  "animationDirection": "—",
+  "status": [
+   "placeholder",
+   "awaiting-footage"
+  ],
   "production": {
-   "method": "cg",
-   "prompt": "Budget document with amounts hidden",
-   "negativePrompt": "",
-   "note": "CG"
+   "method": "composite",
+   "prompt": "シーン画像：F05（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
   }
  },
  {
   "assetId": "p1-q2-c",
-  "kind": "document",
-  "variant": "maintenance-log",
-  "seconds": 8,
-  "dialogAt": 3.0,
-  "visualDescription": "設備の点検履歴（導入日・点検日・内容）を確認する。故障の記録はない。",
-  "cameraDirection": "書類（タブレット）を一人称で覗き込む。わずかに傾いた状態から正面へ起こし、ゆっくり寄る。",
-  "animationDirection": "行が順に表示 → 導入日にマーカー。",
-  "status": [
-   "implemented"
+  "shots": [
+   {
+    "plate": "F05",
+    "focus": {
+     "x": 0.45,
+     "y": 0.4,
+     "z0": 1.08,
+     "z1": 1.0
+    },
+    "overlay": "talk-card",
+    "header": {
+     "no": "02",
+     "title": "お客様からの相談"
+    },
+    "card": "導入して約3年・故障の記録なし"
+   }
   ],
-  "needs": [],
+  "seconds": 8,
+  "dialogAt": 0.8,
+  "visualDescription": "佐藤さんが設備の年数を答える",
+  "cameraDirection": "ゆっくり引く",
+  "animationDirection": "白カード「導入して約3年・故障の記録なし」",
+  "status": [
+   "placeholder",
+   "awaiting-footage"
+  ],
   "production": {
-   "method": "cg",
-   "prompt": "Tablet screen showing a maintenance log table",
-   "negativePrompt": "",
-   "note": "表はCG（教育用の架空データ）"
+   "method": "composite",
+   "prompt": "シーン画像：F05（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
   }
  },
  {
   "assetId": "p2-open",
-  "kind": "factory",
-  "variant": "side-detect",
-  "seconds": 15,
-  "visualDescription": "コンベアの側面から、ボトルの下部を横方向に検出している設備。片側に投光・受光一体型のセンサ、反対側に反射板。高さを合わせて正対。光はセンサ → ボトル下部 → 反射板 → センサへ戻る（行き・戻りを区別）。",
-  "cameraDirection": "斜め上からの寄り → ボトル下部の検出位置へズーム。",
-  "animationDirection": "ラベル「センサ（光を出して受ける）」「反射板（光を戻すだけ）」「検出位置：ボトルの下部」を順に表示。",
+  "shots": [
+   {
+    "plate": "F08",
+    "focus": {
+     "x": 0.5,
+     "y": 0.55,
+     "z0": 1.0,
+     "z1": 1.06
+    },
+    "overlay": "sensor-existing",
+    "header": {
+     "no": "04",
+     "title": "既設センサの確認"
+    }
+   },
+   {
+    "plate": "F08",
+    "focus": {
+     "x": 0.5,
+     "y": 0.6,
+     "z0": 1.06,
+     "z1": 1.18
+    },
+    "overlay": "beam",
+    "header": {
+     "no": "04",
+     "title": "既設センサの確認"
+    },
+    "atLine": 2
+   }
+  ],
+  "seconds": 12,
+  "dialogAt": 0.8,
+  "visualDescription": "既設センサの確認。光の往復（センサ→ボトル下部→反射板→同じセンサ）を行き・戻りで分けてCG表示",
+  "cameraDirection": "センサ付近へ寄る",
+  "animationDirection": "行き／戻りの光（説明用の表現）",
   "status": [
-   "implemented",
+   "placeholder",
    "awaiting-footage"
-  ],
-  "needs": [
-   "実写：センサと反射板の設置（ボトル下部の高さ）"
-  ],
-  "production": {
-   "method": "shoot",
-   "prompt": "Close shot of a conveyor side: photoelectric sensor mounted sideways at the lower part of clear PET bottles, reflector on the opposite side at the same height",
-   "negativePrompt": "",
-   "note": "センサは実機を撮影（AI生成しない）"
-  },
-  "dialogAt": 2.0
- },
- {
-  "assetId": "p2-q1-a",
-  "kind": "factory",
-  "variant": "wobble",
-  "seconds": 9,
-  "dialogAt": 2.0,
-  "visualDescription": "ボトルが寄り合い、揺れながら流れる様子をスローモーションで。センサ付近の乱れに注目させる。",
-  "cameraDirection": "センサ付近をローアングルで寄る。スロー（約0.4倍）。",
-  "animationDirection": "ボトルが詰まって揺れる → センサの位置にマーカー。",
-  "status": [
-   "implemented",
-   "awaiting-footage"
-  ],
-  "needs": [
-   "実写：センサ付近のボトルの揺れ（スロー）"
   ],
   "production": {
    "method": "composite",
-   "prompt": "Low-angle close shot near the middle of a stainless steel conveyor line in a modern Japanese beverage factory, clear 500ml PET bottles of green tea with ribbed bodies and white labels moving left to right, bottles jostling and tilting slightly, 120fps slow motion, shallow depth of field",
-   "negativePrompt": "no logos, no brand names, no readable text, no sensors or electronic devices (unless filmed for real), no distorted hands or faces",
-   "note": "センサは実機撮影を合成"
+   "prompt": "シーン画像：F08（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+  }
+ },
+ {
+  "assetId": "p2-q1-a",
+  "shots": [
+   {
+    "plate": "F09",
+    "focus": {
+     "x": 0.6,
+     "y": 0.6,
+     "z0": 1.05,
+     "z1": 1.2
+    },
+    "overlay": "cause-wobble",
+    "header": {
+     "no": "05",
+     "title": "原因の候補① ボトルの揺れ"
+    }
+   },
+   {
+    "plate": "F09",
+    "focus": {
+     "x": 0.45,
+     "y": 0.6,
+     "z0": 1.2,
+     "z1": 1.25
+    },
+    "overlay": "cause-gap",
+    "header": {
+     "no": "06",
+     "title": "原因の候補② ボトルの接近"
+    },
+    "atLine": 2
+   }
+  ],
+  "seconds": 8,
+  "dialogAt": 0.8,
+  "visualDescription": "ボトルの揺れと接近。原因の候補①②",
+  "cameraDirection": "揺れているボトルに寄る",
+  "animationDirection": "揺れの矢印→間隔の矢印",
+  "status": [
+   "placeholder",
+   "awaiting-footage"
+  ],
+  "production": {
+   "method": "composite",
+   "prompt": "シーン画像：F09（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
   }
  },
  {
   "assetId": "p2-q1-b",
-  "kind": "sensor",
-  "variant": "reflector-check",
-  "seconds": 14,
-  "visualDescription": "センサと反射板を近くで確認。チェック項目：センサの高さ／反射板の角度／汚れ／光が当たる位置。",
-  "cameraDirection": "センサ → 反射板の順に寄る。",
-  "animationDirection": "項目ごとにチェックマーク。",
+  "shots": [
+   {
+    "plate": "F08",
+    "focus": {
+     "x": 0.55,
+     "y": 0.6,
+     "z0": 1.1,
+     "z1": 1.25
+    },
+    "overlay": "sensor-check",
+    "header": {
+     "no": "04",
+     "title": "既設センサの確認"
+    }
+   }
+  ],
+  "seconds": 8,
+  "dialogAt": 0.8,
+  "visualDescription": "センサと反射板の状態を確認（高さ・角度・汚れ・光の戻り）",
+  "cameraDirection": "反射板→センサへ",
+  "animationDirection": "チェックリストのカード",
   "status": [
-   "implemented",
+   "placeholder",
    "awaiting-footage"
   ],
-  "needs": [
-   "実写：センサと反射板の寄り"
-  ],
   "production": {
-   "method": "shoot",
-   "prompt": "Close-up of a sideways-mounted sensor and its reflector across a conveyor, checking height and angle",
-   "negativePrompt": "",
-   "note": "実機を撮影"
-  },
-  "dialogAt": 2.0
+   "method": "composite",
+   "prompt": "シーン画像：F08（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+  }
  },
  {
   "assetId": "p2-q1-c",
-  "kind": "tech",
-  "variant": "signal-vs-plc",
-  "seconds": 14,
-  "visualDescription": "センサの信号（ON/OFF の波形）と、PLC のカウンターを並べて表示。1本につき信号1回でも、PLC側で余分に数える場合がある、という図。",
-  "cameraDirection": "CG。左に信号、右にカウンター。",
-  "animationDirection": "ボトル通過 → 信号1回 → カウンター＋1。続いて「もしPLC側で＋2されたら？」の例（仮定）。",
-  "status": [
-   "implemented"
+  "shots": [
+   {
+    "plate": "F11",
+    "focus": {
+     "x": 0.4,
+     "y": 0.5,
+     "z0": 1.0,
+     "z1": 1.08
+    },
+    "overlay": "control",
+    "header": {
+     "no": "08",
+     "title": "原因の候補④ 制御側の条件"
+    }
+   }
   ],
-  "needs": [],
+  "seconds": 8,
+  "dialogAt": 0.8,
+  "visualDescription": "制御盤（PLC）。数え方の設定は保全担当が把握",
+  "cameraDirection": "制御盤に寄る",
+  "animationDirection": "右の画面に「センサの出力」と「PLCのカウント」",
+  "status": [
+   "placeholder",
+   "awaiting-footage"
+  ],
   "production": {
-   "method": "cg",
-   "prompt": "Diagram: sensor signal waveform beside a PLC counter",
-   "negativePrompt": "",
-   "note": "CG（仮定の説明であることを表示）"
-  },
-  "dialogAt": 2.0
+   "method": "composite",
+   "prompt": "シーン画像：F11（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+  }
  },
  {
-  "assetId": "p2-light",
-  "kind": "tech",
-  "variant": "transparent-light",
-  "seconds": 30,
-  "dialogAt": 0.8,
-  "visualDescription": "左：3D CG（回帰反射型。手前にセンサ、奥に反射板。光がコンベアを横切って往復）。不透明なモノは光を遮り、透明なボトルは光を通す。その場の受光量と出力ON/OFFを表示。右：受光量のグラフ（模式図）。透明ボトルはわずかに減り、曲面で2回くぼむ → 出力が2回ON。",
-  "cameraDirection": "3D：カメラがゆっくり回り込む（オービット）。右は2Dグラフ。",
-  "animationDirection": "不透明なモノで原理 → 「考えよう」で一時停止（透明なボトルだとどうなる？）→ 透明ボトルに切り替え → 受光量が基準付近を行き来 → 出力が2回ON → 「必ず誤検出するわけではない」。",
-  "status": [
-   "implemented"
+  "assetId": "p2-signal",
+  "shots": [
+   {
+    "plate": "F10",
+    "focus": {
+     "x": 0.5,
+     "y": 0.55,
+     "z0": 1.0,
+     "z1": 1.1
+    },
+    "overlay": "signal-double",
+    "header": {
+     "no": "07",
+     "title": "原因の候補③ 透明ボトルの光の変化"
+    }
+   }
   ],
-  "needs": [],
+  "seconds": 14,
+  "dialogAt": 0.8,
+  "visualDescription": "研修用の仮想検証：ボトル1本の通過中に、出力が2回変化する。光の通り方の変化（仮説）",
+  "cameraDirection": "ボトル下部のマクロ",
+  "animationDirection": "出力波形が2回ON。「研修用シミュレーション」表示",
+  "status": [
+   "placeholder",
+   "awaiting-footage"
+  ],
   "production": {
    "method": "cg",
-   "prompt": "3D CG: top-down and perspective views of a retro-reflective photoelectric sensor across a conveyor, red light beam passing through a clear bottle, received-light graph",
-   "negativePrompt": "",
-   "note": "光学原理はCGで制作。数値は入れない"
+   "prompt": "シーン画像：F10（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
   }
  },
  {
   "assetId": "p2-q2-a",
-  "kind": "customer",
-  "variant": "sato-frown",
-  "seconds": 7,
-  "visualDescription": "佐藤さんが眉をひそめ、交換して直らなかったらと心配する。",
-  "cameraDirection": "営業の一人称。正面のバストショット。",
-  "animationDirection": "眉をひそめる → 返答。",
+  "shots": [
+   {
+    "plate": "F04",
+    "focus": {
+     "x": 0.6,
+     "y": 0.4,
+     "z0": 1.1,
+     "z1": 1.15
+    },
+    "overlay": "talk",
+    "header": {
+     "no": "02",
+     "title": "お客様からの相談"
+    }
+   }
+  ],
+  "seconds": 8,
+  "dialogAt": 0.8,
+  "visualDescription": "佐藤さんの不安",
+  "cameraDirection": "固定",
+  "animationDirection": "—",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
-  "needs": [
-   "実写：佐藤さん役の心配する表情"
-  ],
   "production": {
-   "method": "shoot",
-   "prompt": "Same male engineer frowning, worried, workers wear clean white factory uniforms and hygiene caps that cover all hair, no jewelry",
-   "negativePrompt": "",
-   "note": "人物を固定"
-  },
-  "dialogAt": 2.0
+   "method": "composite",
+   "prompt": "シーン画像：F04（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+  }
  },
  {
   "assetId": "p2-q2-b",
-  "kind": "tech",
-  "variant": "signal-log",
-  "seconds": 16,
-  "visualDescription": "記録の画面：ボトル1本ごとに「センサ信号の変化回数」と「PLCのカウント」を並べた表と波形。1本で信号が2回出ている行があれば「センサ側？」、信号1回でカウント2なら「PLC側？」と切り分ける考え方（例示）。",
-  "cameraDirection": "CG。記録画面を一人称で。",
-  "animationDirection": "行が順に記録される → 切り分けの矢印。",
-  "status": [
-   "implemented"
+  "shots": [
+   {
+    "plate": "F11",
+    "focus": {
+     "x": 0.55,
+     "y": 0.5,
+     "z0": 1.05,
+     "z1": 1.12
+    },
+    "overlay": "compare-plc",
+    "header": {
+     "no": "08",
+     "title": "原因の候補④ 制御側の条件"
+    }
+   }
   ],
-  "needs": [],
+  "seconds": 8,
+  "dialogAt": 0.8,
+  "visualDescription": "センサの出力とPLCのカウントを同時に記録して比べる（例：実測ではない）",
+  "cameraDirection": "画面へ寄る",
+  "animationDirection": "1本ごとの記録表（例）",
+  "status": [
+   "placeholder",
+   "awaiting-footage"
+  ],
   "production": {
    "method": "cg",
-   "prompt": "Logging screen comparing sensor signal changes and PLC counts per bottle",
-   "negativePrompt": "",
-   "note": "CG（例示であり実測ではないことを表示）"
-  },
-  "dialogAt": 2.0
+   "prompt": "シーン画像：F11（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+  }
  },
  {
   "assetId": "p2-q2-c",
-  "kind": "factory",
-  "variant": "overview-speed",
-  "seconds": 9,
-  "dialogAt": 3.0,
-  "visualDescription": "生産ライン全体を俯瞰し、ライン速度の表示と生産計画の進み具合を示す。",
-  "cameraDirection": "センサ付近からクレーンで引き、ライン全体の俯瞰へ（カメラC）。",
-  "animationDirection": "速度メーターが一定を保つ → 生産計画のバーが進む。",
+  "shots": [
+   {
+    "plate": "F05",
+    "focus": {
+     "x": 0.45,
+     "y": 0.4,
+     "z0": 1.0,
+     "z1": 1.06
+    },
+    "overlay": "talk-card",
+    "header": {
+     "no": "02",
+     "title": "お客様からの相談"
+    },
+    "card": "ラインの速度は落とせない"
+   }
+  ],
+  "seconds": 8,
+  "dialogAt": 0.8,
+  "visualDescription": "速度は落とせない",
+  "cameraDirection": "固定",
+  "animationDirection": "白カード",
   "status": [
-   "implemented",
+   "placeholder",
    "awaiting-footage"
   ],
-  "needs": [
-   "実写：工場の全景（俯瞰）"
-  ],
   "production": {
-   "method": "ai-image",
-   "prompt": "High-angle wide establishing shot of a large modern Japanese beverage factory floor, long stainless steel conveyor line in a modern Japanese beverage factory, clear 500ml PET bottles of green tea with ribbed bodies and white labels moving left to right, workers in the distance, clean and orderly",
-   "negativePrompt": "no logos, no brand names, no readable text, no sensors or electronic devices (unless filmed for real), no distorted hands or faces",
-   "note": "速度表示はCGで重ねる"
+   "method": "composite",
+   "prompt": "シーン画像：F05（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
   }
  },
  {
   "assetId": "p2-isolation",
-  "kind": "tech",
-  "variant": "isolation",
-  "seconds": 16,
-  "dialogAt": 0.8,
-  "visualDescription": "センサ → 配線 → PLC（カウント処理）のつながりを示し、数が増えうる場所を3つ挙げる。",
-  "cameraDirection": "CG。左から右への信号の流れ。",
-  "animationDirection": "信号パルスが流れる → 3か所に「？」 → 「切り分け」の文字。",
-  "status": [
-   "implemented"
+  "shots": [
+   {
+    "plate": "F09",
+    "focus": {
+     "x": 0.5,
+     "y": 0.5,
+     "z0": 1.0,
+     "z1": 1.04
+    },
+    "overlay": "isolation",
+    "header": {
+     "title": "原因の候補を整理する"
+    }
+   }
   ],
-  "needs": [],
+  "seconds": 10,
+  "dialogAt": 0.8,
+  "visualDescription": "原因の候補4つ（揺れ・接近・光の変化・制御側）を並べる",
+  "cameraDirection": "固定",
+  "animationDirection": "4枚のカードが順に",
+  "status": [
+   "placeholder",
+   "awaiting-footage"
+  ],
   "production": {
    "method": "cg",
-   "prompt": "Diagram: sensor output, wiring, PLC counting",
-   "negativePrompt": "",
-   "note": "CG"
+   "prompt": "シーン画像：F09（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
   }
  },
  {
   "assetId": "p3-open",
-  "kind": "customer",
-  "variant": "pair-thinking",
-  "seconds": 10,
-  "visualDescription": "佐藤さん（設備課）と高橋さん（品質管理課・女性）が並ぶ。佐藤さんが言いよどむ。",
-  "cameraDirection": "営業の一人称。2人のミディアムショット。",
-  "animationDirection": "佐藤さんが考え込む → 高橋さんが自己紹介。",
+  "shots": [
+   {
+    "plate": "F02",
+    "focus": {
+     "x": 0.55,
+     "y": 0.45,
+     "z0": 1.08,
+     "z1": 1.0
+    },
+    "overlay": "talk",
+    "header": {
+     "title": "本当の困りごとは？"
+    }
+   }
+  ],
+  "seconds": 8,
+  "dialogAt": 0.8,
+  "visualDescription": "佐藤さん「何とか対応できてはいる」。高橋さんが照合を担当",
+  "cameraDirection": "ゆっくり引く",
+  "animationDirection": "—",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
-  "needs": [
-   "実写：佐藤さん役・高橋さん役（30代前半・女性）"
-  ],
   "production": {
-   "method": "shoot",
-   "prompt": "Japanese male engineer (late 30s) and female quality control staff (early 30s) standing side by side, workers wear clean white factory uniforms and hygiene caps that cover all hair, no jewelry",
-   "negativePrompt": "",
-   "note": "人物を固定"
-  },
-  "dialogAt": 1.5
+   "method": "composite",
+   "prompt": "シーン画像：F02（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+  }
  },
  {
   "assetId": "p3-q1-a",
-  "kind": "factory",
-  "variant": "stopped-recount",
-  "seconds": 11,
-  "dialogAt": 4.0,
-  "visualDescription": "ラインが停止し、作業者がボトルを数え直す。現場担当者が対応に追われる。",
-  "cameraDirection": "ライン正面 → 停止後、数え直す作業者へ寄る。",
-  "animationDirection": "停止ランプ点灯 → ボトルが止まる → 作業者が1本ずつ数える（カウント表示）。",
+  "shots": [
+   {
+    "plate": "F12",
+    "focus": {
+     "x": 0.5,
+     "y": 0.5,
+     "z0": 1.0,
+     "z1": 1.08
+    },
+    "overlay": "burden",
+    "header": {
+     "title": "数が合わないと、何が起きる？"
+    }
+   }
+  ],
+  "seconds": 8,
+  "dialogAt": 0.8,
+  "visualDescription": "ライン停止・人手で数え直す",
+  "cameraDirection": "作業者へ寄る",
+  "animationDirection": "赤い停止ランプ。カード「確認し直す」「ラインを止める」",
   "status": [
-   "implemented",
+   "placeholder",
    "awaiting-footage"
   ],
-  "needs": [
-   "実写：作業者が数量を確認するカット"
-  ],
   "production": {
-   "method": "shoot",
-   "prompt": "The conveyor line stops, a red stop lamp lights up, two workers in navy work jackets count bottles by hand along the stainless steel conveyor line in a modern Japanese beverage factory, clear 500ml PET bottles of green tea with ribbed bodies and white labels moving left to right",
-   "negativePrompt": "",
-   "note": "作業者役2名で撮影"
+   "method": "composite",
+   "prompt": "シーン画像：F12（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
   }
  },
  {
   "assetId": "p3-q1-b",
-  "kind": "document",
-  "variant": "price",
-  "seconds": 7,
-  "dialogAt": 2.5,
-  "visualDescription": "価格表を開こうとする（金額は表示しない）。",
-  "cameraDirection": "資料を一人称で。わずかに傾いた状態から正面へ起こし、ゆっくり寄る。",
-  "animationDirection": "価格表 → お客様の手が止める。",
-  "status": [
-   "implemented"
+  "shots": [
+   {
+    "plate": "F05",
+    "focus": {
+     "x": 0.45,
+     "y": 0.4,
+     "z0": 1.06,
+     "z1": 1.1
+    },
+    "overlay": "talk",
+    "header": {
+     "title": "本当の困りごとは？"
+    }
+   }
   ],
-  "needs": [],
+  "seconds": 8,
+  "dialogAt": 0.8,
+  "visualDescription": "価格の前に原因を知りたい",
+  "cameraDirection": "固定",
+  "animationDirection": "—",
+  "status": [
+   "placeholder",
+   "awaiting-footage"
+  ],
   "production": {
-   "method": "cg",
-   "prompt": "Price list with amounts hidden",
-   "negativePrompt": "",
-   "note": "CG"
+   "method": "composite",
+   "prompt": "シーン画像：F05（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
   }
  },
  {
   "assetId": "p3-q1-c",
-  "kind": "customer",
-  "variant": "takahashi-cool",
-  "seconds": 7,
-  "visualDescription": "高橋さんが少し困ったように答える。",
-  "cameraDirection": "営業の一人称。正面のバストショット。",
-  "animationDirection": "首をかしげる → 返答。",
+  "shots": [
+   {
+    "plate": "F07",
+    "focus": {
+     "x": 0.6,
+     "y": 0.4,
+     "z0": 1.0,
+     "z1": 1.08
+    },
+    "overlay": "talk",
+    "header": {
+     "title": "本当の困りごとは？"
+    }
+   }
+  ],
+  "seconds": 8,
+  "dialogAt": 0.8,
+  "visualDescription": "高橋さん「うちの現場を見てほしい」",
+  "cameraDirection": "固定",
+  "animationDirection": "—",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
-  "needs": [
-   "実写：高橋さん役の表情"
-  ],
   "production": {
-   "method": "shoot",
-   "prompt": "Japanese female quality control staff, early 30s, workers wear clean white factory uniforms and hygiene caps that cover all hair, no jewelry, polite but unimpressed expression",
-   "negativePrompt": "",
-   "note": "人物を固定"
-  },
-  "dialogAt": 2.0
+   "method": "composite",
+   "prompt": "シーン画像：F07（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+  }
  },
  {
   "assetId": "p3-q2-a",
-  "kind": "sensor",
-  "variant": "maker-question",
-  "seconds": 9,
-  "visualDescription": "既設センサに「メーカーが古い？」の問いが重なり、その問いに「？」が残る（原因は決まっていない）。",
-  "cameraDirection": "センサの寄り。",
-  "animationDirection": "「メーカーが古い？」→ 取り消し線ではなく「まだ分からない」。",
+  "shots": [
+   {
+    "plate": "F07",
+    "focus": {
+     "x": 0.6,
+     "y": 0.4,
+     "z0": 1.1,
+     "z1": 1.05
+    },
+    "overlay": "talk-card",
+    "header": {
+     "title": "本当の困りごとは？"
+    },
+    "card": "メーカーが原因とは決まっていない"
+   }
+  ],
+  "seconds": 8,
+  "dialogAt": 0.8,
+  "visualDescription": "メーカーを原因と決めつけない",
+  "cameraDirection": "ゆっくり引く",
+  "animationDirection": "白カード",
   "status": [
-   "implemented",
+   "placeholder",
    "awaiting-footage"
   ],
-  "needs": [
-   "既設センサの正式な製品写真または実機の撮影"
-  ],
   "production": {
-   "method": "shoot",
-   "prompt": "Close-up of the existing sensor with a question overlay",
-   "negativePrompt": "",
-   "note": "既設センサの扱いは p1-q1-a と同じ"
-  },
-  "dialogAt": 3.0,
-  "imagePath": "experience/products/existing/existing-sensor.png"
+   "method": "composite",
+   "prompt": "シーン画像：F07（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+  }
  },
  {
   "assetId": "p3-q2-b",
-  "kind": "tech",
-  "variant": "chain",
-  "seconds": 13,
-  "dialogAt": 6.0,
-  "visualDescription": "誤カウント → 数量不一致 → 確認作業 → 作業負担 → 生産効率への影響。最後に「正確な数量管理と安定した生産」。",
-  "cameraDirection": "CG。上から下へ連鎖。",
-  "animationDirection": "矢印でつながる順次表示 → 最後の2段を赤で強調。",
-  "status": [
-   "implemented"
+  "shots": [
+   {
+    "plate": "F03",
+    "focus": {
+     "x": 0.35,
+     "y": 0.4,
+     "z0": 1.0,
+     "z1": 1.08
+    },
+    "overlay": "talk",
+    "header": {
+     "title": "本当の困りごとは？"
+    }
+   },
+   {
+    "plate": "F12",
+    "focus": {
+     "x": 0.5,
+     "y": 0.5,
+     "z0": 1.08,
+     "z1": 1.0
+    },
+    "overlay": "chain",
+    "header": {
+     "title": "本当の困りごとは？"
+    },
+    "atLine": 1
+   }
   ],
-  "needs": [],
+  "seconds": 8,
+  "dialogAt": 0.8,
+  "visualDescription": "佐藤さんが同意。表面の問題→業務への影響→実現したいこと",
+  "cameraDirection": "佐藤さん→作業の様子へ",
+  "animationDirection": "連鎖のカード",
+  "status": [
+   "placeholder",
+   "awaiting-footage"
+  ],
   "production": {
-   "method": "cg",
-   "prompt": "Cause-and-effect chain diagram",
-   "negativePrompt": "",
-   "note": "CG"
+   "method": "composite",
+   "prompt": "シーン画像：F03・F12（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
   }
  },
  {
   "assetId": "p3-q2-c",
-  "kind": "document",
-  "variant": "new-sensor-flyer",
+  "shots": [
+   {
+    "plate": "F05",
+    "focus": {
+     "x": 0.45,
+     "y": 0.4,
+     "z0": 1.0,
+     "z1": 1.08
+    },
+    "overlay": "talk-card",
+    "header": {
+     "title": "本当の困りごとは？"
+    },
+    "card": "価格より、安定した生産"
+   }
+  ],
   "seconds": 8,
-  "visualDescription": "「新しいセンサ」のチラシ（メーカー名・型式なし）。お客様の手が止まる。",
-  "cameraDirection": "資料を一人称で。",
-  "animationDirection": "チラシ → スタンプ「欲しいのはセンサではない」。",
+  "dialogAt": 0.8,
+  "visualDescription": "価格より安定生産",
+  "cameraDirection": "固定",
+  "animationDirection": "白カード",
   "status": [
-   "implemented"
-  ],
-  "needs": [],
-  "production": {
-   "method": "cg",
-   "prompt": "Generic flyer for a new sensor without brand",
-   "negativePrompt": "",
-   "note": "CG（メーカー名・型式なし）"
-  },
-  "dialogAt": 2.5
- },
- {
-  "assetId": "p4-open",
-  "kind": "product",
-  "variant": "intro-senior",
-  "seconds": 12,
-  "visualDescription": "OPTEX-FA の透明体検出センサ（候補：KR-Qシリーズ等）の公式製品画像と、先輩社員の森さん（女性・作業服と衛生帽・来訪者バッジ）。",
-  "cameraDirection": "左に製品、右下に森さん。",
-  "animationDirection": "製品がスライドイン → 森さんの小窓。",
-  "status": [
-   "implemented",
-   "awaiting-license",
+   "placeholder",
    "awaiting-footage"
-  ],
-  "needs": [
-   "OPTEX-FA 公式製品画像（許諾後）",
-   "実写：森さん役（30代・女性）"
   ],
   "production": {
    "method": "composite",
-   "prompt": "Product presentation layout with space for an official product photo",
-   "negativePrompt": "no logos, no brand names, no readable text, no sensors or electronic devices (unless filmed for real), no distorted hands or faces, no suits on the factory floor",
-   "note": "製品は公式画像のみ"
-  },
-  "dialogAt": 1.2,
-  "imagePath": "experience/products/optex-fa/transparent-sensor.png"
+   "prompt": "シーン画像：F05（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+  }
+ },
+ {
+  "assetId": "p3-summary",
+  "shots": [
+   {
+    "plate": "F12",
+    "focus": {
+     "x": 0.5,
+     "y": 0.5,
+     "z0": 1.1,
+     "z1": 1.0
+    },
+    "overlay": "issues3",
+    "header": {
+     "title": "見えてきた課題"
+    }
+   }
+  ],
+  "seconds": 12,
+  "dialogAt": 0.8,
+  "visualDescription": "課題3つ：正確な本数管理・確認の手戻り削減・安定した生産",
+  "cameraDirection": "ゆっくり引く",
+  "animationDirection": "3枚のカード→「欲しいのは安定した生産」",
+  "status": [
+   "placeholder",
+   "awaiting-footage"
+  ],
+  "production": {
+   "method": "cg",
+   "prompt": "シーン画像：F12（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+  }
+ },
+ {
+  "assetId": "p4-open",
+  "shots": [
+   {
+    "plate": "F14",
+    "focus": {
+     "x": 0.65,
+     "y": 0.4,
+     "z0": 1.0,
+     "z1": 1.06
+    },
+    "overlay": "talk",
+    "header": {
+     "no": "09",
+     "title": "解決提案（OPTEX-FA KR-Qシリーズ）"
+    }
+   }
+  ],
+  "seconds": 8,
+  "dialogAt": 0.8,
+  "visualDescription": "先輩の森さん「センサを提案してみましょう」",
+  "cameraDirection": "森さんに寄る",
+  "animationDirection": "—",
+  "status": [
+   "placeholder",
+   "awaiting-footage"
+  ],
+  "production": {
+   "method": "composite",
+   "prompt": "シーン画像：F14（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+  }
  },
  {
   "assetId": "p4-q1-a",
-  "kind": "document",
-  "variant": "catalog-generic",
-  "seconds": 8,
-  "dialogAt": 3.0,
-  "visualDescription": "一般的な製品紹介（「高性能」「高速応答」などの言葉が並ぶ）。メーカー名・型式は表示しない。",
-  "cameraDirection": "カタログを一人称で。わずかに傾いた状態から正面へ起こし、ゆっくり寄る。",
-  "animationDirection": "特長の項目が並ぶ → お客様の問いかけ。",
-  "status": [
-   "implemented"
+  "shots": [
+   {
+    "plate": "F04",
+    "focus": {
+     "x": 0.6,
+     "y": 0.4,
+     "z0": 1.0,
+     "z1": 1.04
+    },
+    "overlay": "talk",
+    "header": {
+     "no": "09",
+     "title": "解決提案（OPTEX-FA KR-Qシリーズ）"
+    }
+   }
   ],
-  "needs": [],
+  "seconds": 8,
+  "dialogAt": 0.8,
+  "visualDescription": "佐藤さん「何が違うんですか？」",
+  "cameraDirection": "固定",
+  "animationDirection": "—",
+  "status": [
+   "placeholder",
+   "awaiting-footage"
+  ],
   "production": {
-   "method": "cg",
-   "prompt": "Generic sensor catalog page without brand names",
-   "negativePrompt": "",
-   "note": "CG（メーカー名・型式なし）"
+   "method": "composite",
+   "prompt": "シーン画像：F04（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
   }
  },
  {
   "assetId": "p4-q1-b",
-  "kind": "product",
-  "variant": "proposal",
-  "seconds": 12,
-  "dialogAt": 6.0,
-  "visualDescription": "OPTEX-FA の透明体検出センサ（公式製品画像）が登場 → 透明PETボトルの特徴 → 検出の考え方を簡単なCGで。",
-  "cameraDirection": "製品画像を大きく → 横にボトルと光路の図。",
-  "animationDirection": "製品がスライドイン → ボトルを通過した光のわずかな変化をとらえる図。",
-  "status": [
-   "implemented",
-   "awaiting-license"
+  "shots": [
+   {
+    "plate": "F13",
+    "focus": {
+     "x": 0.4,
+     "y": 0.45,
+     "z0": 1.0,
+     "z1": 1.05
+    },
+    "overlay": "talk",
+    "header": {
+     "no": "09",
+     "title": "解決提案（OPTEX-FA KR-Qシリーズ）"
+    }
+   },
+   {
+    "plate": "F03",
+    "focus": {
+     "x": 0.35,
+     "y": 0.4,
+     "z0": 1.0,
+     "z1": 1.08
+    },
+    "overlay": "talk",
+    "header": {
+     "no": "09",
+     "title": "解決提案（OPTEX-FA KR-Qシリーズ）"
+    },
+    "atLine": 2
+   }
   ],
-  "imagePath": "experience/products/optex-fa/transparent-sensor.png",
-  "needs": [
-   "OPTEX-FA 公式製品画像（現行の透明体検出センサ。型式確定後・許諾後）"
+  "seconds": 8,
+  "dialogAt": 0.8,
+  "visualDescription": "実際のボトルで比較しようと提案→佐藤さんが前向き",
+  "cameraDirection": "打ち合わせ→佐藤さん",
+  "animationDirection": "—",
+  "status": [
+   "placeholder",
+   "awaiting-footage"
   ],
   "production": {
    "method": "composite",
-   "prompt": "Clean product presentation background, soft gradient, space on the left for a product photo",
-   "negativePrompt": "no logos, no brand names, no readable text, no sensors or electronic devices (unless filmed for real), no distorted hands or faces",
-   "note": "製品は公式画像のみ（許諾後）"
+   "prompt": "シーン画像：F03・F13（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
   }
  },
  {
   "assetId": "p4-q1-c",
-  "kind": "factory",
-  "variant": "manual-check",
-  "seconds": 9,
-  "dialogAt": 4.0,
-  "visualDescription": "作業者がラインの横で目視で数を確認し続ける。",
-  "cameraDirection": "作業者の寄り → ライン全体へ引く。",
-  "animationDirection": "作業者の視線がボトルを追う → 手元のカウンタを押す。",
-  "status": [
-   "implemented",
-   "awaiting-footage"
+  "shots": [
+   {
+    "plate": "F07",
+    "focus": {
+     "x": 0.6,
+     "y": 0.4,
+     "z0": 1.05,
+     "z1": 1.0
+    },
+    "overlay": "talk",
+    "header": {
+     "no": "09",
+     "title": "解決提案（OPTEX-FA KR-Qシリーズ）"
+    }
+   }
   ],
-  "needs": [
-   "実写：目視確認のカット"
-  ],
-  "production": {
-   "method": "ai-image",
-   "prompt": "A worker in a navy work jacket standing beside a stainless steel conveyor line in a modern Japanese beverage factory, clear 500ml PET bottles of green tea with ribbed bodies and white labels moving left to right, counting bottles by eye with a handheld tally counter",
-   "negativePrompt": "no logos, no brand names, no readable text, no sensors or electronic devices (unless filmed for real), no distorted hands or faces",
-   "note": "—"
-  }
- },
- {
-  "assetId": "p4-setup",
-  "kind": "demo",
-  "variant": "setup",
-  "seconds": 18,
-  "visualDescription": "実機デモの準備：実際の透明PETボトル、片側に横向きのセンサ、反対側に反射板、高さはボトルの下部。光の往復（行き・戻り）をCGで区別して表示。",
-  "cameraDirection": "検証台の正面 → 検出位置に寄る。",
-  "animationDirection": "部品の名前を順に表示 → 光の行き（センサ→反射板）・戻り（反射板→センサ）を矢印で。",
-  "status": [
-   "implemented",
-   "awaiting-footage"
-  ],
-  "needs": [
-   "実写：検証台の設置（センサ横向き・ボトル下部の高さ）"
-  ],
-  "production": {
-   "method": "shoot",
-   "prompt": "Demo bench: small conveyor, sideways-mounted sensor at the lower part of clear PET bottles, reflector opposite",
-   "negativePrompt": "",
-   "note": "実機を撮影"
-  },
-  "dialogAt": 1.5
- },
- {
-  "assetId": "p4-q2-a",
-  "kind": "product",
-  "variant": "exterior",
   "seconds": 8,
-  "visualDescription": "製品の外観（公式画像の枠）を眺める。お客様は「数えられるか」が大事と返す。",
-  "cameraDirection": "製品写真の寄り。",
-  "animationDirection": "写真の枠にズーム → お客様の小窓。",
+  "dialogAt": 0.8,
+  "visualDescription": "高橋さん「人の作業は増やしたくない」",
+  "cameraDirection": "固定",
+  "animationDirection": "—",
   "status": [
-   "implemented",
-   "awaiting-license"
-  ],
-  "needs": [
-   "OPTEX-FA 公式製品画像（許諾後）"
+   "placeholder",
+   "awaiting-footage"
   ],
   "production": {
    "method": "composite",
-   "prompt": "Official product photo close-up",
-   "negativePrompt": "no logos, no brand names, no readable text, no sensors or electronic devices (unless filmed for real), no distorted hands or faces, no suits on the factory floor",
-   "note": "製品は公式画像のみ"
+   "prompt": "シーン画像：F07（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+  }
+ },
+ {
+  "assetId": "p4-product",
+  "shots": [
+   {
+    "plate": "F15",
+    "focus": {
+     "x": 0.3,
+     "y": 0.45,
+     "z0": 1.0,
+     "z1": 1.04
+    },
+    "overlay": "product",
+    "header": {
+     "no": "09",
+     "title": "解決提案（OPTEX-FA KR-Qシリーズ）"
+    }
+   }
+  ],
+  "seconds": 12,
+  "dialogAt": 0.8,
+  "visualDescription": "KR-Qシリーズの紹介。製品画像は公式画像のみ（届くまでは枠）",
+  "cameraDirection": "中田さん＋製品カード",
+  "animationDirection": "「透明体検出タイプ・回帰反射型」「仕様は公式資料で確認」",
+  "status": [
+   "placeholder",
+   "awaiting-footage",
+   "awaiting-license"
+  ],
+  "production": {
+   "method": "composite",
+   "prompt": "シーン画像：F15（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
   },
-  "dialogAt": 3.0,
-  "imagePath": "experience/products/optex-fa/transparent-sensor.png"
+  "imagePath": "experience/products/optex-fa/transparent-sensor.png",
+  "productName": "OPTEX-FA KR-Qシリーズ（透明体検出タイプ）",
+  "productModel": "候補：KR-Q50N／KR-Q150NW／KR-Q300NW 等（公式資料で確認中）",
+  "sensorType": "回帰反射型（反射ミラー使用）",
+  "assetLicenseStatus": "公式製品画像：許諾確認待ち",
+  "verificationStatus": "現行品・仕様は公式ページで照合待ち（検索抜粋では製品ページ公開中）"
+ },
+ {
+  "assetId": "p4-setup",
+  "shots": [
+   {
+    "plate": "F16",
+    "focus": {
+     "x": 0.5,
+     "y": 0.5,
+     "z0": 1.0,
+     "z1": 1.08
+    },
+    "overlay": "setup",
+    "header": {
+     "no": "10",
+     "title": "設置と比較デモ"
+    }
+   }
+  ],
+  "seconds": 14,
+  "dialogAt": 0.8,
+  "visualDescription": "比較デモの準備。同じボトル・速度・高さで、既設センサとKR-Qシリーズを比べる",
+  "cameraDirection": "試験台全体→センサへ",
+  "animationDirection": "配置図（上から・横から）と測るもの",
+  "status": [
+   "placeholder",
+   "awaiting-footage"
+  ],
+  "production": {
+   "method": "composite",
+   "prompt": "シーン画像：F16（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+  }
+ },
+ {
+  "assetId": "p4-q2-a",
+  "shots": [
+   {
+    "plate": "F05",
+    "focus": {
+     "x": 0.45,
+     "y": 0.4,
+     "z0": 1.0,
+     "z1": 1.05
+    },
+    "overlay": "talk",
+    "header": {
+     "no": "10",
+     "title": "設置と比較デモ"
+    }
+   }
+  ],
+  "seconds": 8,
+  "dialogAt": 0.8,
+  "visualDescription": "見た目より、数えられるか",
+  "cameraDirection": "固定",
+  "animationDirection": "—",
+  "status": [
+   "placeholder",
+   "awaiting-footage"
+  ],
+  "production": {
+   "method": "composite",
+   "prompt": "シーン画像：F05（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+  }
  },
  {
   "assetId": "p4-q2-b",
-  "kind": "document",
-  "variant": "test-plan",
-  "seconds": 14,
-  "dialogAt": 3.0,
-  "visualDescription": "検証項目と合格基準（試す前に決める）：①1本ずつ検出 ②出力が何度も切り替わらない ③カウント値＝実際の本数 ④位置ずれ等でも①〜③を満たす。",
-  "cameraDirection": "ホワイトボードを正面から。わずかに傾いた状態から正面へ起こし、ゆっくり寄る。",
-  "animationDirection": "項目が順に書き込まれる。",
-  "status": [
-   "implemented"
+  "shots": [
+   {
+    "plate": "F16",
+    "focus": {
+     "x": 0.5,
+     "y": 0.5,
+     "z0": 1.08,
+     "z1": 1.12
+    },
+    "overlay": "criteria",
+    "header": {
+     "no": "10",
+     "title": "設置と比較デモ"
+    }
+   }
   ],
-  "needs": [],
+  "seconds": 8,
+  "dialogAt": 0.8,
+  "visualDescription": "合格の基準：1本につき出力1回／通過本数＝出力回数＝PLCのカウント",
+  "cameraDirection": "固定",
+  "animationDirection": "基準カード",
+  "status": [
+   "placeholder",
+   "awaiting-footage"
+  ],
   "production": {
-   "method": "cg",
-   "prompt": "Whiteboard listing test items and pass criteria",
-   "negativePrompt": "",
-   "note": "CG（実際の基準は当日に設備担当と決める）"
+   "method": "composite",
+   "prompt": "シーン画像：F16（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
   }
  },
  {
   "assetId": "p4-q2-c",
-  "kind": "document",
-  "variant": "catalog-pages",
-  "seconds": 7,
-  "dialogAt": 2.5,
-  "visualDescription": "カタログ（ページ数の表示だけが目立つ。仕様値は伏せる）。",
-  "cameraDirection": "資料を一人称で。わずかに傾いた状態から正面へ起こし、ゆっくり寄る。",
-  "animationDirection": "仕様表 → お客様の返答。",
-  "status": [
-   "implemented"
+  "shots": [
+   {
+    "plate": "F07",
+    "focus": {
+     "x": 0.6,
+     "y": 0.4,
+     "z0": 1.0,
+     "z1": 1.08
+    },
+    "overlay": "talk-card",
+    "header": {
+     "no": "10",
+     "title": "設置と比較デモ"
+    },
+    "card": "ページ数では判断できない"
+   }
   ],
-  "needs": [],
+  "seconds": 8,
+  "dialogAt": 0.8,
+  "visualDescription": "カタログのページ数では判断できない",
+  "cameraDirection": "固定",
+  "animationDirection": "白カード",
+  "status": [
+   "placeholder",
+   "awaiting-footage"
+  ],
   "production": {
-   "method": "cg",
-   "prompt": "Specification table with values hidden",
-   "negativePrompt": "",
-   "note": "CG"
+   "method": "composite",
+   "prompt": "シーン画像：F07（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
   }
  },
  {
   "assetId": "p4-demo-normal",
-  "kind": "demo",
-  "variant": "normal",
-  "seconds": 16,
-  "visualDescription": "シミュレーション：最初の1本だけで、検出表示がONになりカウントが1増える「見方」を示す。2本目以降の結果は見せず、「この先は実機で確かめる」につなぐ（結果をネタバレしない）。",
-  "cameraDirection": "実機全景 → センサ → ボトル通過 → 検出表示 → カウンターの順に寄る。",
-  "animationDirection": "1本目の通過で ON 1回・カウント+1 を説明 → 2本目から表示を「—」にして実機へ。「シミュレーション」の表示を常時。",
-  "status": [
-   "implemented",
-   "awaiting-footage"
+  "shots": [
+   {
+    "plate": "F16",
+    "focus": {
+     "x": 0.5,
+     "y": 0.55,
+     "z0": 1.05,
+     "z1": 1.15
+    },
+    "overlay": "demo-normal",
+    "header": {
+     "no": "10",
+     "title": "設置と比較デモ"
+    }
+   }
   ],
-  "needs": [
-   "実写：実機デモ（センサ正面・側面・反射板・ボトル・配線・検出表示・カウンター・全体）"
-  ],
-  "production": {
-   "method": "shoot",
-   "prompt": "Live demo: bottles pass the sensor one by one, indicator lamp and counter visible",
-   "negativePrompt": "",
-   "note": "実機を撮影。数値は実測としてのみ扱う"
-  }
- },
- {
-  "assetId": "p4-bench",
-  "kind": "demo",
-  "variant": "bench",
-  "seconds": 8,
-  "visualDescription": "実機デモの検証台：小型コンベア、センサ、反射板、透明PETボトル、検出表示、カウンター。",
-  "cameraDirection": "検証台の全景（正面）。",
-  "animationDirection": "静かなカット。各部の名前を表示。",
-  "status": [
-   "implemented",
-   "awaiting-footage"
-  ],
-  "needs": [
-   "実写：実機デモ検証台の全景"
-  ],
-  "production": {
-   "method": "shoot",
-   "prompt": "Demo bench: small conveyor, OPTEX-FA sensor and reflector, clear PET bottles, counter display",
-   "negativePrompt": "",
-   "note": "実機を撮影（AI生成しない）"
-  }
- },
- {
-  "assetId": "p4-q3-a",
-  "kind": "customer",
-  "variant": "sato-worried",
-  "seconds": 7,
-  "dialogAt": 2.0,
-  "visualDescription": "お客様が「流れが乱れたとき」を思い浮かべて心配する（吹き出しに乱れたライン）。",
-  "cameraDirection": "営業の一人称。",
-  "animationDirection": "吹き出しにボトルの乱れ → 返答。",
+  "seconds": 14,
+  "dialogAt": 0.8,
+  "visualDescription": "比較デモ（通常搬送）。シミュレーションは見方の説明だけ。結果は実機で記録",
+  "cameraDirection": "試験台のセンサ付近",
+  "animationDirection": "シミュレーション表示。既設／KR-Qの結果欄は「実機で記録」",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
-  "needs": [
-   "実写：お客様役の心配するカット"
-  ],
-  "production": {
-   "method": "ai-image",
-   "prompt": "Same engineer looking worried, imagining bunched bottles, eye-level medium close-up",
-   "negativePrompt": "no logos, no brand names, no readable text, no sensors or electronic devices (unless filmed for real), no distorted hands or faces",
-   "note": "人物を固定"
-  }
- },
- {
-  "assetId": "p4-q3-b",
-  "kind": "demo",
-  "variant": "setup-conditions",
-  "seconds": 9,
-  "dialogAt": 4.5,
-  "visualDescription": "問題が起きていた条件（ボトルの揺れ・位置ずれ・間隔の変化・形状の違い）を再現する準備。",
-  "cameraDirection": "検証台の正面。",
-  "animationDirection": "3つの条件カードが並ぶ → チェック欄。",
-  "status": [
-   "implemented",
-   "awaiting-footage"
-  ],
-  "needs": [
-   "実写：悪条件を準備するカット"
-  ],
-  "production": {
-   "method": "shoot",
-   "prompt": "Preparing test conditions on the demo bench: shifting bottle positions, narrowing gaps, rotating bottles",
-   "negativePrompt": "",
-   "note": "実機を撮影"
-  }
- },
- {
-  "assetId": "p4-q3-c",
-  "kind": "document",
-  "variant": "price-compare",
-  "seconds": 8,
-  "visualDescription": "2社の価格比較表（金額は伏せる）。お客様は価格より使えるかが先と返す。",
-  "cameraDirection": "資料を一人称で。",
-  "animationDirection": "比較表 → スタンプ。",
-  "status": [
-   "implemented"
-  ],
-  "needs": [],
   "production": {
    "method": "cg",
-   "prompt": "Price comparison table with amounts hidden",
-   "negativePrompt": "",
-   "note": "CG"
-  },
-  "dialogAt": 2.5
+   "prompt": "シーン画像：F16（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+  }
  },
  {
   "assetId": "p4-demo-wobble",
-  "kind": "demo",
-  "variant": "wobble",
+  "shots": [
+   {
+    "plate": "F16",
+    "focus": {
+     "x": 0.5,
+     "y": 0.55,
+     "z0": 1.05,
+     "z1": 1.15
+    },
+    "overlay": "demo-wobble",
+    "header": {
+     "no": "10",
+     "title": "設置と比較デモ"
+    }
+   }
+  ],
   "seconds": 14,
-  "visualDescription": "シミュレーション：ボトルが揺れながら流れる。観察すること（1本1回の信号か、カウントのタイミング）を示し、結果は実機で測る。",
-  "cameraDirection": "ライン正面。センサの位置に寄る。",
-  "animationDirection": "揺れて通過 → 観察ポイント → 「結果：実機で測定する」。",
+  "dialogAt": 0.8,
+  "visualDescription": "比較デモ（ボトルの揺れ）。シミュレーションは見方の説明だけ。結果は実機で記録",
+  "cameraDirection": "試験台のセンサ付近",
+  "animationDirection": "シミュレーション表示。既設／KR-Qの結果欄は「実機で記録」",
   "status": [
-   "implemented",
+   "placeholder",
    "awaiting-footage"
   ],
-  "needs": [
-   "実写：揺れの条件での実機テスト"
-  ],
   "production": {
-   "method": "shoot",
-   "prompt": "Live demo with wobbling bottles",
-   "negativePrompt": "",
-   "note": "実機を撮影"
-  }
- },
- {
-  "assetId": "p4-demo-offset",
-  "kind": "demo",
-  "variant": "offset",
-  "seconds": 14,
-  "visualDescription": "シミュレーション：ボトルの位置がセンサ側・反射板側にずれて流れる。観察ポイントを示し、結果は実機で測る。",
-  "cameraDirection": "俯瞰（カメラB）で位置ずれを見せる。",
-  "animationDirection": "ボトルが左右にずれて通過 → 観察ポイント → 「結果：実機で測定」。",
-  "status": [
-   "implemented",
-   "awaiting-footage"
-  ],
-  "needs": [
-   "実写：位置ずれ条件での実機テスト"
-  ],
-  "production": {
-   "method": "shoot",
-   "prompt": "Live demo: bottles pass with positions shifted toward and away from the sensor",
-   "negativePrompt": "",
-   "note": "実機を撮影"
+   "method": "cg",
+   "prompt": "シーン画像：F16（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
   }
  },
  {
   "assetId": "p4-demo-gap",
-  "kind": "demo",
-  "variant": "gap",
+  "shots": [
+   {
+    "plate": "F16",
+    "focus": {
+     "x": 0.5,
+     "y": 0.55,
+     "z0": 1.05,
+     "z1": 1.15
+    },
+    "overlay": "demo-gap",
+    "header": {
+     "no": "10",
+     "title": "設置と比較デモ"
+    }
+   }
+  ],
   "seconds": 14,
-  "visualDescription": "シミュレーション：ボトルどうしの間隔が詰まって流れる。結果は実機で測る。",
-  "cameraDirection": "ライン正面（カメラA）。",
-  "animationDirection": "間隔が詰まって通過 → 観察ポイント → 「結果：実機で測定」。",
-  "status": [
-   "implemented",
-   "awaiting-footage"
-  ],
-  "needs": [
-   "実写：間隔が詰まる条件での実機テスト"
-  ],
-  "production": {
-   "method": "shoot",
-   "prompt": "Live demo: bottles pass with very small gaps",
-   "negativePrompt": "",
-   "note": "実機を撮影"
-  }
- },
- {
-  "assetId": "p4-demo-shape",
-  "kind": "demo",
-  "variant": "shape",
-  "seconds": 14,
-  "visualDescription": "シミュレーション：形の違うボトル（くびれ・凹凸・容量の違い）が流れる。観察ポイントを示し、結果は実機で測る。",
-  "cameraDirection": "ライン正面。",
-  "animationDirection": "形の違うボトルが通過 → 観察ポイント → 「結果：実機で測定する」。",
-  "status": [
-   "implemented",
-   "awaiting-footage"
-  ],
-  "needs": [
-   "実写：形状の違うボトルでの実機テスト"
-  ],
-  "production": {
-   "method": "shoot",
-   "prompt": "Live demo with differently shaped bottles",
-   "negativePrompt": "",
-   "note": "実機を撮影"
-  }
- },
- {
-  "assetId": "p4-q4-a",
-  "kind": "customer",
-  "variant": "sato-cool",
-  "seconds": 7,
-  "dialogAt": 2.0,
-  "visualDescription": "お客様の反応が薄い。",
-  "cameraDirection": "営業の一人称。",
-  "animationDirection": "目線をそらす → 返答。",
+  "dialogAt": 0.8,
+  "visualDescription": "比較デモ（間隔の変化）。シミュレーションは見方の説明だけ。結果は実機で記録",
+  "cameraDirection": "試験台のセンサ付近",
+  "animationDirection": "シミュレーション表示。既設／KR-Qの結果欄は「実機で記録」",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
-  "needs": [
-   "実写：お客様役の反応が薄いカット"
-  ],
-  "production": {
-   "method": "ai-image",
-   "prompt": "Same engineer with a lukewarm, polite expression, looking slightly away",
-   "negativePrompt": "no logos, no brand names, no readable text, no sensors or electronic devices (unless filmed for real), no distorted hands or faces",
-   "note": "人物を固定"
-  }
- },
- {
-  "assetId": "p4-q4-b",
-  "kind": "document",
-  "variant": "catalog-send",
-  "seconds": 8,
-  "visualDescription": "カタログを送るメールの画面（宛先・本文のみ）。お客様は判断が難しいと返す。",
-  "cameraDirection": "画面を一人称で。",
-  "animationDirection": "メール作成 → 送信ボタンの前で止まる → スタンプ。",
-  "status": [
-   "implemented"
-  ],
-  "needs": [],
   "production": {
    "method": "cg",
-   "prompt": "Email draft attaching a catalog",
-   "negativePrompt": "",
-   "note": "CG"
-  },
-  "dialogAt": 2.5
+   "prompt": "シーン画像：F16（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+  }
  },
  {
-  "assetId": "p4-q4-c",
-  "kind": "customer",
-  "variant": "together",
-  "seconds": 8,
-  "dialogAt": 2.0,
-  "visualDescription": "お客様が前向きにうなずき、設備担当者と一緒に確認することを提案する。",
-  "cameraDirection": "営業の一人称。お客様の横に設備担当者。",
-  "animationDirection": "うなずく → 設備担当者が加わる。",
+  "assetId": "p4-demo-height",
+  "shots": [
+   {
+    "plate": "F16",
+    "focus": {
+     "x": 0.5,
+     "y": 0.55,
+     "z0": 1.05,
+     "z1": 1.15
+    },
+    "overlay": "demo-height",
+    "header": {
+     "no": "10",
+     "title": "設置と比較デモ"
+    }
+   }
+  ],
+  "seconds": 14,
+  "dialogAt": 0.8,
+  "visualDescription": "比較デモ（検出高さの比較）。シミュレーションは見方の説明だけ。結果は実機で記録",
+  "cameraDirection": "試験台のセンサ付近",
+  "animationDirection": "シミュレーション表示。既設／KR-Qの結果欄は「実機で記録」",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
-  "needs": [
-   "実写：お客様役と設備担当者役の前向きなカット"
+  "production": {
+   "method": "cg",
+   "prompt": "シーン画像：F16（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+  }
+ },
+ {
+  "assetId": "p4-result",
+  "shots": [
+   {
+    "plate": "F17",
+    "focus": {
+     "x": 0.5,
+     "y": 0.5,
+     "z0": 1.0,
+     "z1": 1.04
+    },
+    "overlay": "result",
+    "header": {
+     "no": "11",
+     "title": "結果の比較"
+    }
+   }
+  ],
+  "seconds": 12,
+  "dialogAt": 0.8,
+  "visualDescription": "結果の比較の見方：改善前（現状）は通常＋0.5〜0.8%・最大＋3.0%。改善後は実測が得られるまで未確定。実測・シミュレーション・期待効果を分ける",
+  "cameraDirection": "固定",
+  "animationDirection": "比較の枠（改善後は「未確定」）",
+  "status": [
+   "placeholder",
+   "awaiting-footage"
   ],
   "production": {
-   "method": "ai-image",
-   "prompt": "Same engineer nodding positively, a colleague in the same navy work jacket joins beside him, eye-level medium shot",
-   "negativePrompt": "no logos, no brand names, no readable text, no sensors or electronic devices (unless filmed for real), no distorted hands or faces",
-   "note": "人物を固定"
+   "method": "cg",
+   "prompt": "シーン画像：F17（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+  }
+ },
+ {
+  "assetId": "p4-q3-a",
+  "shots": [
+   {
+    "plate": "F04",
+    "focus": {
+     "x": 0.6,
+     "y": 0.4,
+     "z0": 1.05,
+     "z1": 1.12
+    },
+    "overlay": "talk",
+    "header": {
+     "no": "12",
+     "title": "お客様の評価・次のアクション"
+    }
+   }
+  ],
+  "seconds": 8,
+  "dialogAt": 0.8,
+  "visualDescription": "佐藤さん「実際のラインでも同じように？」",
+  "cameraDirection": "固定",
+  "animationDirection": "—",
+  "status": [
+   "placeholder",
+   "awaiting-footage"
+  ],
+  "production": {
+   "method": "composite",
+   "prompt": "シーン画像：F04（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+  }
+ },
+ {
+  "assetId": "p4-q3-b",
+  "shots": [
+   {
+    "plate": "F18",
+    "focus": {
+     "x": 0.4,
+     "y": 0.45,
+     "z0": 1.0,
+     "z1": 1.06
+    },
+    "overlay": "next-actions",
+    "header": {
+     "no": "12",
+     "title": "お客様の評価・次のアクション"
+    }
+   }
+  ],
+  "seconds": 8,
+  "dialogAt": 0.8,
+  "visualDescription": "実ラインでの検証に合意。次のアクションのチェックリスト",
+  "cameraDirection": "握手に寄る",
+  "animationDirection": "チェックリスト",
+  "status": [
+   "placeholder",
+   "awaiting-footage"
+  ],
+  "production": {
+   "method": "composite",
+   "prompt": "シーン画像：F18（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+  }
+ },
+ {
+  "assetId": "p4-q3-c",
+  "shots": [
+   {
+    "plate": "F07",
+    "focus": {
+     "x": 0.6,
+     "y": 0.4,
+     "z0": 1.0,
+     "z1": 1.05
+    },
+    "overlay": "talk-card",
+    "header": {
+     "no": "12",
+     "title": "お客様の評価・次のアクション"
+    },
+    "card": "カタログだけでは判断できない"
+   }
+  ],
+  "seconds": 8,
+  "dialogAt": 0.8,
+  "visualDescription": "カタログだけでは判断が難しい",
+  "cameraDirection": "固定",
+  "animationDirection": "白カード",
+  "status": [
+   "placeholder",
+   "awaiting-footage"
+  ],
+  "production": {
+   "method": "composite",
+   "prompt": "シーン画像：F07（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
   }
  },
  {
   "assetId": "p4-followup",
-  "kind": "tech",
-  "variant": "followup",
-  "seconds": 16,
-  "dialogAt": 0.8,
-  "visualDescription": "結果が基準に届かなかったときの次の手：設置位置・角度、感度設定、PLC側の処理、別の検出方式。",
-  "cameraDirection": "CG。",
-  "animationDirection": "4つの選択肢カードが順に表示。",
-  "status": [
-   "implemented"
+  "shots": [
+   {
+    "plate": "F17",
+    "focus": {
+     "x": 0.5,
+     "y": 0.5,
+     "z0": 1.05,
+     "z1": 1.0
+    },
+    "overlay": "followup",
+    "header": {
+     "title": "結果が基準に届かなかったとき"
+    }
+   }
   ],
-  "needs": [],
+  "seconds": 12,
+  "dialogAt": 0.8,
+  "visualDescription": "基準未達のときの次の一手（設置・感度・PLC・別方式）",
+  "cameraDirection": "ゆっくり引く",
+  "animationDirection": "4枚のカード",
+  "status": [
+   "placeholder",
+   "awaiting-footage"
+  ],
   "production": {
    "method": "cg",
-   "prompt": "Four option cards",
-   "negativePrompt": "",
-   "note": "CG"
+   "prompt": "シーン画像：F17（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
   }
  },
  {
   "assetId": "p4-message",
-  "kind": "tech",
-  "variant": "message",
-  "seconds": 13,
-  "dialogAt": 0.8,
-  "visualDescription": "「実機デモは売り込みではない。お客様と一緒に確かめる活動」というメッセージ。",
-  "cameraDirection": "CG（黒背景）。",
-  "animationDirection": "「売り込み」に取り消し線 → 「一緒に確かめる」を赤で。",
-  "status": [
-   "implemented"
+  "shots": [
+   {
+    "plate": "F18",
+    "focus": {
+     "x": 0.45,
+     "y": 0.45,
+     "z0": 1.0,
+     "z1": 1.08
+    },
+    "overlay": "message",
+    "header": {
+     "no": "12",
+     "title": "お客様の評価・次のアクション"
+    }
+   }
   ],
-  "needs": [],
+  "seconds": 10,
+  "dialogAt": 0.8,
+  "visualDescription": "実機の比較で確かめた。次は実際のラインで、お客様と一緒に",
+  "cameraDirection": "握手に寄る",
+  "animationDirection": "「お客様と一緒に確かめる」",
+  "status": [
+   "placeholder",
+   "awaiting-footage"
+  ],
   "production": {
-   "method": "cg",
-   "prompt": "Typography on black",
-   "negativePrompt": "",
-   "note": "CG"
+   "method": "composite",
+   "prompt": "シーン画像：F18（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
   }
  },
  {
   "assetId": "closing",
-  "kind": "applications",
-  "variant": "montage",
-  "seconds": 16,
-  "visualDescription": "さまざまな製造現場（食品・容器・包装・設備の位置確認）をテンポよく見せながら、最後のメッセージ。",
-  "cameraDirection": "現場ごとに短いカット（各約3秒）。",
-  "animationDirection": "カットごとに検出の光と「検出」のラベル。",
+  "shots": [
+   {
+    "plate": "F01L",
+    "focus": {
+     "x": 0.5,
+     "y": 0.5,
+     "z0": 1.2,
+     "z1": 1.3
+    },
+    "overlay": "closing"
+   }
+  ],
+  "seconds": 12,
+  "dialogAt": 0.8,
+  "visualDescription": "営業は、商品を売るだけの仕事ではない",
+  "cameraDirection": "ゆっくり寄る",
+  "animationDirection": "メッセージ",
   "status": [
-   "implemented",
+   "placeholder",
    "awaiting-footage"
   ],
-  "needs": [
-   "実写：食品・容器・包装・組立など複数の製造現場"
-  ],
   "production": {
-   "method": "ai-image",
-   "prompt": "Four quick shots of Japanese factories: food trays on a conveyor, cups on a filling line, cardboard boxes being packed, a robotic jig arriving at position",
-   "negativePrompt": "no logos, no brand names, no readable text, no sensors or electronic devices (unless filmed for real), no distorted hands or faces",
-   "note": "自社の導入事例の実写があれば優先"
-  },
-  "dialogAt": 0.8
+   "method": "composite",
+   "prompt": "シーン画像：F01（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+  }
  },
  {
   "assetId": "ending",
-  "kind": "ending",
-  "variant": "main",
-  "seconds": 18,
-  "visualDescription": "「売るだけでは、終わらない。」→ 聞く。考える。課題を見つける。提案する。→ そして、確かめる。→ OPTEX-FA CONSULTING SALES EXPERIENCE。",
-  "cameraDirection": "黒背景のタイポグラフィ。",
-  "animationDirection": "1語ずつテンポよく表示 → ロゴ。",
+  "shots": [
+   {
+    "plate": "F18",
+    "focus": {
+     "x": 0.45,
+     "y": 0.45,
+     "z0": 1.1,
+     "z1": 1.0
+    },
+    "overlay": "ending"
+   }
+  ],
+  "seconds": 16,
+  "dialogAt": 0,
+  "visualDescription": "聞く・考える・課題を見つける・提案する、そして確かめる",
+  "cameraDirection": "ゆっくり引く",
+  "animationDirection": "4ステップ→ブランド",
   "status": [
-   "implemented",
+   "placeholder",
    "awaiting-footage"
   ],
-  "needs": [
-   "実写：製造現場・実製品・実機デモ・お客様との対話（エンディング用の短いカット）"
-  ],
   "production": {
-   "method": "shoot",
-   "prompt": "Montage: factory floor, OPTEX-FA product (official footage), demo bench, sales rep talking with customer",
-   "negativePrompt": "",
-   "note": "実写・公式素材で構成"
+   "method": "composite",
+   "prompt": "シーン画像：F18（src/experience/data/plates.json のプロンプトで生成）",
+   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
+   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
   }
  }
 ]

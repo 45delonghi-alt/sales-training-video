@@ -41,7 +41,7 @@ const nameOf = (sp: Speaker) => characterById.get(sp)?.name ?? sp;
 // 音読さんの原稿ファイル名：<2桁のフェーズ番号>_<フェーズ>_<話者>
 const groupFile = (phaseId: string, sp: Speaker) => `${String(phases.findIndex((p) => p.phaseId === phaseId) + 1).padStart(2, '0')}_${phaseId}_${sp}`;
 
-const writeTalk = () => {
+export const writeTalk = () => {
   const lines = talkLines();
   mkdirSync(ONDOKU, {recursive: true});
   for (const f of readdirSync(ONDOKU)) rmSync(join(ONDOKU, f));
@@ -250,7 +250,9 @@ const importAudio = () => {
   console.log(`完了：${Object.keys(timing).length}/${lines.length}文を取り込みました（${SPEED}倍速）。未収録の文は字幕だけで進みます。`);
 };
 
-const cmd = process.argv[2];
-if (cmd === 'talk') writeTalk();
-else if (cmd === 'import') importAudio();
-else console.error('usage: talk-script.ts talk|import');
+if (process.argv[1]?.endsWith('talk-script.ts')) {
+  const cmd = process.argv[2];
+  if (cmd === 'talk') writeTalk();
+  else if (cmd === 'import') importAudio();
+  else console.error('usage: talk-script.ts talk|import');
+}

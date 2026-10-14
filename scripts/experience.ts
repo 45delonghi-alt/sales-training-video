@@ -20,19 +20,25 @@ import {
   scenes,
   videoPathFor,
 } from '../src/experience/data';
-import {VARIANTS} from '../src/experience/remotion/variants';
+import {OVERLAYS} from '../src/experience/remotion/v3/overlayNames';
+import platesJson from '../src/experience/data/plates.json';
+import {writeTalk} from './talk-script';
+import type {Plate} from '../src/experience/types';
 import {allLines} from '../src/consulting/timeline';
 import {script as introScript} from '../src/consulting/script';
 import type {Line} from '../src/experience/types';
 
 const ROOT = join(__dirname, '..');
+const plates = platesJson as Plate[];
+const plateById = new Map(plates.map((p) => [p.plateId, p]));
+const shotsOf = (a: (typeof assets)[number]) => a.shots.map((s) => `${s.plate}:${s.overlay}`).join(' → ');
 const PUBLIC = join(ROOT, 'public');
 const DOCS = join(ROOT, 'docs', 'consulting-experience');
 
 type Issue = {level: 'error' | 'warn'; msg: string};
 
 const assetOfScene = (s: (typeof scenes)[number]): string[] => {
-  if (s.type === 'clip' || s.type === 'demo') return [s.videoAsset];
+  if (s.type === 'clip' || s.type === 'demo' || s.type === 'result') return [s.videoAsset];
   if (s.type === 'question') return [s.backdropAsset, ...s.choices.map((c) => c.videoAsset)];
   if (s.type === 'reflection' && s.videoAsset) return [s.videoAsset];
   return [];
@@ -87,11 +93,26 @@ export const validate = (): Issue[] => {
   const paths = new Set<string>();
   for (const a of assets) {
     if (!referenced.has(a.assetId)) warn(`素材 ${a.assetId} はどの場面からも使われていない`);
-    if (!VARIANTS[a.kind]?.includes(a.variant)) err(`素材 ${a.assetId}：描画できない種類 ${a.kind}/${a.variant}`);
+    const nLines = linesForAsset(a.assetId).length;
+    if (!a.shots.length) err(`素材 ${a.assetId}：ショットがない`);
+    a.shots.forEach((sh, i) => {
+      if (!(OVERLAYS as readonly string[]).includes(sh.overlay)) err(`素材 ${a.assetId}：描画できない overlay ${sh.overlay}`);
+      if (!plateById.has(sh.plate)) err(`素材 ${a.assetId}：シーン画像 ${sh.plate} が plates.json にない`);
+      if (i > 0 && (sh.atLine === undefined || sh.atLine >= nLines)) err(`素材 ${a.assetId}：${i + 1}つ目のショットの切り替え位置（atLine）が範囲外`);
+    });
     const vp = videoPathFor(a.assetId);
     if (paths.has(vp)) err(`素材 ${a.assetId}：映像の置き場所 ${vp} が重複`);
     paths.add(vp);
     if (a.imagePath && !existsSync(join(PUBLIC, a.imagePath))) warn(`素材 ${a.assetId}：正式な製品写真 ${a.imagePath} が未配置（仮表示で代用中）`);
+  }
+
+  // シーン画像（写真）
+  for (const p of plates) {
+    const placed = existsSync(join(PUBLIC, p.file));
+    if (p.status !== 'awaiting' && !placed) err(`シーン画像 ${p.plateId}：状態が ${p.status} なのに ${p.file} がない`);
+    if (p.status === 'awaiting') warn(`シーン画像 ${p.plateId}（${p.description}）：未生成（仮画像で代用中）`);
+    if (p.status === 'review') warn(`シーン画像 ${p.plateId}：要確認 — ${p.note ?? ''}`);
+    if (/\b(text|logo)\b/i.test(p.prompt) && !/no text/i.test(p.prompt)) err(`シーン画像 ${p.plateId}：プロンプトに「文字なし」の指定がない`);
   }
 
   // 映像の途中で止めるポイント
@@ -130,7 +151,8 @@ export const validate = (): Issue[] => {
   const text = JSON.stringify(scenes);
   for (const bad of ['検出漏れが起き', '少なくカウント', 'カウントが少な']) if (text.includes(bad)) err(`過剰カウントと検出漏れを混同した表現：「${bad}」`);
   for (const bad of ['反射板が光を出', '反射板で受光', '反射板が受光']) if (text.includes(bad)) err(`反射板の説明が誤り：「${bad}」`);
-  if (!text.includes('0.5～0.8%') || !text.includes('3%')) err('通常 0.5〜0.8%・最大 3% の説明が見つからない');
+  if (!/0\.5[～〜]0\.8%/.test(text) || !text.includes('3%')) err('通常 0.5〜0.8%・最大 3% の説明が見つからない');
+  if (/改善後[^"]{0,20}\+?0\.[1-3]/.test(text)) err('改善後の数値を、実測前に示している');
 
   return issues;
 };
@@ -264,7 +286,7 @@ const storyboard = () => {
       }
       return s.sceneId;
     });
-    out.push(`## \`${a.assetId}\`　${a.kind}/${a.variant}（約${sec(assetSeconds(a.assetId))}）`, '', `**使う場面**：${used.join('、') || '—'}`, '');
+    out.push(`## \`${a.assetId}\`　${shotsOf(a)}（約${sec(assetSeconds(a.assetId))}）`, '', `**使う場面**：${used.join('、') || '—'}`, '');
     out.push('| 項目 | 内容 |', '|---|---|', `| 映像 | ${a.visualDescription} |`, `| カメラ | ${a.cameraDirection} |`, `| 動き | ${a.animationDirection} |`, `| 状態 | ${a.status.map((x) => STATUS[x]).join('・')} |`);
     if (a.needs?.length) out.push(`| 不足素材 | ${a.needs.join('／')} |`);
     out.push('');
@@ -283,51 +305,23 @@ const assetList = () => {
   const out = HEAD('映像素材一覧', 'src/experience/data/assets.json');
   out.push('| 素材ID | 種類 | 内容 | 作り方 | 状態 | 不足素材 | 置き場所 |', '|---|---|---|---|---|---|---|');
   for (const a of assets)
-    out.push(`| \`${a.assetId}\` | ${a.kind}/${a.variant} | ${a.visualDescription} | ${METHOD[a.production.method]} | ${a.status.map((x) => STATUS[x]).join('・')} | ${(a.needs ?? []).join('／') || '—'} | \`public/${videoPathFor(a.assetId)}\`${a.imagePath ? `<br>写真：\`public/${a.imagePath}\`` : ''} |`);
-  return out.join('\n');
-};
-
-// 7. 音声ナレーション原稿（話者ごと。音読さん・収録用）
-const voiceScript = () => {
-  const by = new Map<string, {file: string; text: string}[]>();
-  for (const a of assets) {
-    for (const l of linesForAsset(a.assetId)) {
-      if (!by.has(l.speaker)) by.set(l.speaker, []);
-      by.get(l.speaker)!.push({file: a.assetId, text: l.text});
-    }
-  }
-  for (const q of questions) if (q.hint) (by.get(q.hint.speaker) ?? by.set(q.hint.speaker, []).get(q.hint.speaker)!).push({file: `hint-${q.questionId}`, text: q.hint.text});
-  const out = HEAD('音声ナレーション原稿（話者ごと）');
-  out.push(
-    '> 1つの素材（映像）につき、セリフをつなげた音声ファイルを1つ用意し、`public/experience/audio/<素材ID>.mp3` に置くと、映像の中のセリフの開始時刻から再生されます（字幕は従来どおり表示）。',
-    '> 顧客役・営業役・先輩社員・ナレーションは、声を分けてください。機械的な棒読みを避け、会話として自然に読む。',
-    '',
-  );
-  for (const [sp, list] of by) {
-    const c = characterById.get(sp as never);
-    out.push(`## ${name(sp)}`, '', c ? `声のイメージ：${c.voice}` : '', '', '| 素材ID | セリフ |', '|---|---|');
-    list.forEach((x) => out.push(`| ${x.file} | ${x.text} |`));
-    out.push('');
-  }
-  // 音読さん用 TSV
-  const dir = join(ROOT, 'out', 'experience', 'ondoku');
-  mkdirSync(dir, {recursive: true});
-  for (const [sp, list] of by) writeFileSync(join(dir, `${sp}.tsv`), list.map((x) => `${x.file}\t${x.text}`).join('\n') + '\n');
+    out.push(`| \`${a.assetId}\` | ${shotsOf(a)} | ${a.visualDescription} | ${METHOD[a.production.method]} | ${a.status.map((x) => STATUS[x]).join('・')} | ${(a.needs ?? []).join('／') || '—'} | \`public/${videoPathFor(a.assetId)}\`${a.imagePath ? `<br>写真：\`public/${a.imagePath}\`` : ''} |`);
   return out.join('\n');
 };
 
 // 8. 実機デモ台本
 const demoScript = () => {
-  const out = HEAD('実機デモ台本（PHASE 4）');
+  const out = HEAD('実機デモ台本（PHASE 4：既設センサと KR-Qシリーズの比較）');
   out.push(
-    '> 映像上の結果と、現実の実験結果を区別します。シミュレーション映像は「見方」の説明だけで、結果は出しません。結果はアプリの「実測を記録」に入力し、その値だけを結果として扱います。',
+    '> 結果は3つに分けて扱います：1. 実測データ（アプリの「実測を記録」に入力した値）／2. 研修用シミュレーション（映像。見方の説明だけで結果は出さない）／3. 期待する改善効果（確かめる前の見込み。数値は出さない）。',
+    '> 比較は同じボトル・同じ搬送速度・同じ設置の高さ（ボトル下部）で行い、反射板と設定はそれぞれのセンサの使用条件に合わせます。',
     '',
   );
-  const ids = ['p4-open', 'p4-q1', 'p4-setup', 'p4-q2', 'p4-demo-normal', 'p4-q3', 'p4-demo-wobble', 'p4-demo-offset', 'p4-demo-gap', 'p4-demo-shape', 'p4-q4', 'p4-followup', 'p4-message'];
+  const ids = scenes.filter((x) => x.phaseId === 'p4').map((x) => x.sceneId);
   for (const id of ids) {
     const s = sceneById.get(id)!;
     out.push(`## ${s.title}　\`${id}\``, '');
-    if (s.type === 'clip') s.lines.forEach((l) => out.push(`- **${name(l.speaker)}**：${l.text}`));
+    if (s.type === 'clip' || s.type === 'result') s.lines.forEach((l) => out.push(`- **${name(l.speaker)}**：${l.text}`));
     if (s.type === 'question') {
       if (s.situation) out.push(`- **${name(s.situation.speaker)}**：${s.situation.text}`);
       out.push(`- **問い**：${s.questionText}（推奨は回答後に表示：${s.recommendedChoice}）`);
@@ -335,7 +329,7 @@ const demoScript = () => {
       if (s.requiresDemoPass) out.push(`- **条件**：実測が基準を満たしたときだけ出す。満たさない・未記録なら「${sceneById.get(s.fallbackSceneId!)?.title}」へ。`);
     }
     if (s.type === 'demo') {
-      out.push(`- **条件**：${s.condition}`, `- **予想させる問い**：${s.predictPrompt ?? '—'}`, `- **確かめること**：${s.checks.join('／')}`, '- **記録**：通過させた本数・カウント値・1本の通過中に信号が何度も変化したか → 判定');
+      out.push(`- **条件**：${s.condition}`, `- **予想させる問い**：${s.predictPrompt ?? '—'}`, `- **確かめること**：${s.checks.join('／')}`, '- **記録（既設センサ・KR-Qシリーズそれぞれ）**：通過させた本数・センサの出力回数・PLCのカウント値・1本の通過中に出力が何度も切り替わったか → 判定と過剰率');
     }
     if (s.facilitatorNote) out.push(`- **進行役メモ**：${s.facilitatorNote}`);
     out.push('');
@@ -345,21 +339,27 @@ const demoScript = () => {
 
 // 生成用プロンプト（素材の作り方）
 const promptsMd = () => {
-  const METHOD: Record<string, string> = {shoot: '実写撮影', 'ai-image': 'AI画像（実写風）', cg: 'CG（Remotion）', composite: '合成（背景＋実写・公式画像）'};
-  const out = HEAD('素材の作り方と生成用プロンプト', 'src/experience/data/assets.json');
+  const STATUS_P: Record<string, string> = {awaiting: '未生成', generated: '生成済み', review: '要確認', approved: '採用'};
+  const out = HEAD('シーン画像の生成プロンプト', 'src/experience/data/plates.json');
   out.push(
-    '- **センサ製品は生成しない。**実機を撮影するか、正式な製品写真（許諾済み）を使う。他社製品の写真を使う場合も正式な写真のみ。ロゴや型式をAIで作らない。',
-    '- 工場内の人物は全員、清潔な作業服と衛生帽（髪・耳を覆う）。スーツで工場に入らない。装飾品なし。',
-    '- センサと反射板はコンベアを挟んで正対し、ボトルの下部を横から検出する配置に統一する。',
-    '- 数値の映る素材（カウント・結果）は、実測値か「シミュレーション」表示のCGだけ。',
+    '画像生成（ElevenLabs の無料枠は1日3枚まで）で作れない分は、お手持ちの画像生成ツールで下のプロンプトを使って作り、`public/experience/plates/<画像ID>.jpg` に置いてください。',
+    '置いたら `src/experience/data/plates.json` のその画像の `status` を `generated` にして、`npm run experience:validate` → `npm run experience:render`。届くまでは人物マスター（CAST）などの仮画像で動きます。',
+    '',
+    '## 共通のルール',
+    '',
+    '- **1920×1080（16:9）以上**。画像の中に**文字・ロゴ・名札・型式を入れない**（字幕・説明・グラフは動画側で重ねる）。',
+    '- 人物は**人物マスター（CAST.jpg）を参照画像として渡し**、顔・衛生帽・服装をそろえる（森さん・中田さん＝淡いブルーグレーの作業ジャンパー、佐藤さん・高橋さん＝白い衛生作業服、全員が白い衛生帽）。',
+    '- **センサ製品の外観を作らない。**写るセンサは、ロゴのない汎用の小さな箱（既設の他社製センサ、または比較用の汎用表現）に限る。OPTEX-FA 製品は公式画像だけを使う。',
+    '- センサが写る画像は**配置ルール**を必ず確認する：センサはコンベアの片側で横向き、反射板は反対側の同じ高さで正対、検出位置はボトルの下部。光の線は描かせない（動画側で描く）。合わない画像は使わない。',
+    '- 生成した画像は、生成元・日付を `plates.json` の `source` に書く。',
+    '',
+    '| 画像ID | 使う場面 | 内容 | 人物 | 状態 |',
+    '|---|---|---|---|---|',
+    ...plates.map((p) => `| ${p.plateId} | ${p.scene} | ${p.description} | ${p.people.join('・') || '—'} | ${STATUS_P[p.status]}${p.note ? `（${p.note}）` : ''} |`),
     '',
   );
-  for (const a of assets) {
-    const pr = a.production;
-    out.push(`## \`${a.assetId}\`　${METHOD[pr.method]}`, '', `- 内容：${a.visualDescription}`);
-    if (pr.method === 'cg') out.push(`- 制作：Remotion で実装済み（\`XP-${a.assetId}\`）。${pr.note}`);
-    else out.push('', '```text', pr.prompt, '```', '', pr.negativePrompt ? `- ネガティブ：${pr.negativePrompt}` : '', `- 注意：${pr.note}`, `- 置き場所：\`public/${videoPathFor(a.assetId)}\``);
-    out.push('');
+  for (const p of plates.filter((x) => x.status === 'awaiting')) {
+    out.push(`## ${p.plateId}　${p.description}`, '', `- 置き場所：\`public/${p.file}\``, `- 参照画像：${p.people.length ? 'CAST.jpg（人物マスター）' : 'なし'}${p.sensorLayout ? '／**センサ配置ルールを確認**' : ''}`, '', '```text', p.prompt, '```', '');
   }
   return out.join('\n');
 };
@@ -376,15 +376,15 @@ const exportAll = () => {
     ['question-list.md', questionList()],
     ['storyboard.md', storyboard()],
     ['asset-list.md', assetList()],
-    ['voice-script.md', voiceScript()],
     ['demo-script.md', demoScript()],
     ['generation-prompts.md', promptsMd()],
   ];
   for (const [f, body] of files) writeFileSync(join(DOCS, f), body + '\n');
-  const header = ['素材ID', '種類', '使う場面', '内容', 'カメラ', '動き', '作り方', '状態', '不足素材', '製品写真'];
+  writeTalk();
+  const header = ['素材ID', 'ショット（シーン画像:重ねる情報）', '使う場面', '内容', 'カメラ', '動き', '作り方', '状態', '不足素材', '製品写真'];
   const rows = assets.map((a) => [
     a.assetId,
-    `${a.kind}/${a.variant}`,
+    shotsOf(a),
     scenes.filter((s) => assetOfScene(s).includes(a.assetId)).map((s) => s.sceneId).join(' / '),
     a.visualDescription,
     a.cameraDirection,

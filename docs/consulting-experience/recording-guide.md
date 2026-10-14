@@ -1,54 +1,38 @@
-# 撮影・収録ガイド
+# 収録・画像の差し替えガイド（v3）
 
-いまの映像は線画CG（仮素材）。実写・実機の映像、公式製品画像、音声が届いたら、決まった場所に置くだけで差し替わる。どの素材に何が足りないかは [asset-list.md](asset-list.md)（素材ごと）と [asset-manifest.csv](asset-manifest.csv)。
+## 1. 声（音読さん）
 
-## 1. 置き場所と形式
+手順と全セリフは [talk-script.md](talk-script.md)。
+
+1. 話者ごとに音読さんの声を決める（同じ話者は最後まで同じ声。お客様と営業は必ず別の声）。
+2. `ondoku/` の原稿を貼って読み上げる。話者ごと（`all_sato.txt` など6ファイル）か、フェーズ×話者（`02_p1_sato.txt` など22ファイル）の、どちらで録ってもよい。
+3. 音声を同じ名前で `audio_import/experience/` に置く（mp3／wav／m4a）。1文だけ録り直すときは、セリフIDの名前（例：`p1-q1-b_02.mp3`）で置く。
+4. `npm run experience:import-audio` → 無音で文ごとに分け、`public/experience/audio/<セリフID>.mp3` に保存。`src/experience/data/audioTiming.json` に各文の長さが入り、**映像の長さ・字幕・ショットの切り替えが音声に合わせて自動で調整**される。
+   - 速さを変えるときは `SPEED=0.9 npm run experience:import-audio` のように指定する（導入動画は 0.85 倍）。
+   - 分け方がずれた文は、その文だけ単独の音声で置き直す。
+5. `npm run experience:render` で動画を書き出す。アプリは書き出さなくても、そのまま声付きで再生できる。
+
+問いの読み上げ（`q-…`）・先輩のヒント（`hint-…`）・振り返りの問い（`r-…`）も、収録すればアプリで再生される。
+
+## 2. シーン画像（写真）
+
+一覧とプロンプトは [generation-prompts.md](generation-prompts.md)、データは `src/experience/data/plates.json`。
+
+| 手順 | 内容 |
+|---|---|
+| 1 | プロンプトで画像を作る（1920×1080以上・文字なし）。人物は `public/experience/plates/CAST.jpg` を参照画像にする |
+| 2 | センサが写る画像（F08・F16 など）は、配置ルール（[technical-rules.md](technical-rules.md)）に合うか確認する。合わなければ使わない |
+| 3 | `public/experience/plates/<画像ID>.jpg` に置き、`plates.json` の `status` を `generated`（確認済みなら `approved`）にする |
+| 4 | `npm run experience:validate` → `npm run experience:stills`（静止画で確認）→ `npm run experience:render` |
+
+画像が届くまでは、人物マスター（CAST）やライン（F01L・F09）を寄り・引きで使った**仮画像**で動く（画面左下に「仮画像」と表示）。
+
+## 3. 実写・実機の映像
 
 | 素材 | 置き場所 | 形式 |
 |---|---|---|
-| 映像（実写・実機・合成） | `public/experience/videos/<素材ID>.mp4` | 1920×1080、30fps、H.264、音声AAC（無音でも可） |
-| 音声（セリフ） | `public/experience/audio/<素材ID>.mp3` | 1素材につき1ファイル。セリフをつなげて収録 |
-| OPTEX-FA 製品画像 | `public/experience/products/optex-fa/transparent-sensor.png` | 公式画像（許諾済み）。背景透過または白 |
-| 既設センサ画像 | `public/experience/products/existing/existing-sensor.png` | OMRON または KEYENCE の公式画像（型式・用途を確認し、許諾済み） |
+| 映像（実写・実機） | `public/experience/videos/<素材ID>.mp4` | 1920×1080、30fps、H.264。字幕は焼き込まない |
+| OPTEX-FA 製品画像（公式） | `public/experience/products/optex-fa/transparent-sensor.png` | 許諾済みのもの |
+| 実機デモの当日映像 | アプリの実機デモ画面 →「実機の動画」 | 保存不要 |
 
-置いたら `npm run experience:validate` → `npm run experience:build`。映像の長さは CG 版と同じにそろえる（[storyboard.md](storyboard.md) の秒数）。字幕はアプリ側で重ねるので、映像に焼き込まない。
-
-## 2. 撮影カット（実写が必要な18素材）
-
-作り方が「実写撮影」の素材。合成・AI画像の素材も含めた全体は [asset-list.md](asset-list.md)。
-
-| 区分 | 素材ID | 撮るもの |
-|---|---|---|
-| 既設センサ | p1-q1-a、p3-q2-a(合成) | 既設センサの外観・取付金具・反射板の方向（型式ラベルは読めなくてよい） |
-| お客様の表情 | p1-q1-c、p3-q1-c、ほか customer 系 | 佐藤さん役（30代後半・男性）、高橋さん役（30代前半・女性）。作業服・衛生帽。困った・考え込む・前向き などの表情 |
-| ライン | p2-open、p2-q1-b、p2-q2-a、p3-open、p3-q1-a | 飲料工場のPETボトルライン（正面・センサ付近・停止して数え直す様子） |
-| 実機デモ | p4-setup、p4-bench、p4-demo-normal／wobble／offset／gap／shape、p4-q3-b | 実機の設置、通常条件、悪条件4つ。**撮影日・条件をメモ**し、実測値と映像を対応させる |
-| エンディング | ending | 現場の雰囲気（任意） |
-
-### 撮影の決まりごと
-
-- センサは片側に横向き、反射板は反対側に同じ高さで正対、検出位置はボトルの下部（[technical-rules.md](technical-rules.md)）。
-- 映り込む人は全員、清潔な作業服と衛生帽。アクセサリーなし。
-- 工場名・顧客名・他社ロゴが映らないようにする（映る場合はぼかす）。
-- 実機デモの映像は「その日の条件での結果」。成功した部分だけを切り出して編集しない。
-
-## 3. 音声収録
-
-原稿は [voice-script.md](voice-script.md)（話者ごと）。音読さん用のセリフ一覧は `out/experience/ondoku/<話者>.tsv`（`npm run experience:export` で作成）。
-
-| 話者 | 声のイメージ |
-|---|---|
-| 佐藤さん（設備課） | 落ち着いた30〜40代の男性。現場をよく知る実務担当。丁寧だが率直 |
-| 高橋さん（品質管理課） | はきはきした30代の女性。数字と品質に厳しい |
-| あなた（営業） | 明るく丁寧な20代の声（入れない場合は字幕のみ） |
-| 森さん（OPTEX-FA 営業） | 温かく頼れる30代の女性。問いかける口調 |
-| 中田さん（OPTEX-FA エンジニア） | 穏やかな40代の男性。短く分かりやすく |
-| ナレーション | 既存の導入動画と同じナレーター |
-
-- お客様と営業は、必ず別の声にする。棒読みを避け、会話として自然に。
-- 1素材のセリフを1ファイルにつなげる。セリフの間は約0.4秒。アプリは映像の「セリフ開始時刻」から再生する。
-- 音声合成（TTS）を使う場合は、利用規約と費用をご確認のうえで（[README.md](README.md) の「ご判断が必要な事項」）。届くまでは字幕だけで進行できる。
-
-## 4. AI 画像・動画の生成
-
-[generation-prompts.md](generation-prompts.md) に、素材ごとのプロンプトと禁止事項（ネガティブプロンプト）をまとめた。**まだ1点も生成していない**（費用の承認待ち。動画生成は現在の契約では使えない）。生成した場合も、実在製品のロゴ・型式は入れない。
+実機デモを撮るときの決まり：既設センサと KR-Qシリーズを**同じボトル・同じ速度・同じ高さ**で撮る。撮影日・条件をメモし、記録シート（[demo-record-sheet.md](demo-record-sheet.md)）の実測値と対応させる。成功した部分だけを切り出さない。

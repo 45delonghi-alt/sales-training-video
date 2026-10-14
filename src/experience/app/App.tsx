@@ -2,10 +2,10 @@
 //   学生画面：投影する画面。問い → 考える → 選ぶ → 映像 → お客様の回答 → 分かったこと
 //   進行役：右側のパネルで解説・比較・結果記録・場面移動・時間管理。投影用ウィンドウを別に開ける（?view=projector）
 import React, {useEffect, useMemo, useRef, useState} from 'react';
-import {characterById, glossaryByKey, phases, questions, salesLineOf, sceneById, scenes} from '../data';
-import type {Choice, DemoScene, Line, QuestionScene, ReflectionScene, Scene} from '../types';
+import {characterById, glossaryByKey, lineAudioPath, phases, questions, recordedSeconds, salesLineOf, sceneById, scenes} from '../data';
+import type {Choice, DemoScene, Line, QuestionScene, ReflectionScene, ResultScene, Scene} from '../types';
 import {ClipPlayer, pauseFrames, type PlayerControl} from './ClipPlayer';
-import {demoGate, discoveries, judge, phaseOf, useExperience, type Action, type ChoiceId, type DemoResult, type State} from './state';
+import {SENSORS, demoGate, discoveries, judge, judgeDemo, overRate, phaseOf, useExperience, type Action, type ChoiceId, type DemoResult, type Measure, type SensorKey, type State} from './state';
 import {createSession, sendVote, serverInfo, setCurrent, useVoteStatus, voterId, type VoteStatus} from './vote';
 
 const params = new URLSearchParams(location.search);
@@ -273,6 +273,8 @@ const SceneView: React.FC<{scene: Scene; ctx: Ctx}> = ({scene, ctx}) => {
       return <QuestionView q={scene} ctx={ctx} />;
     case 'demo':
       return <DemoView d={scene} ctx={ctx} />;
+    case 'result':
+      return <CompareResultView r={scene} ctx={ctx} />;
     case 'reflection':
       return <ReflectionView r={scene} ctx={ctx} />;
     default:
@@ -315,12 +317,29 @@ const ClipView: React.FC<{ctx: Ctx; assetId: string; title: string; sceneId: str
   );
 };
 
+// 問いの読み上げ・先輩のヒントの声（収録済みのときだけ。音を出すウィンドウでだけ鳴らす）
+const useLineAudio = (lineId: string, on: boolean, ctx: Ctx) => {
+  const volume = ctx.state.volume;
+  const silent = ctx.projectorOpen && !ctx.projector;
+  useEffect(() => {
+    if (!on || silent || recordedSeconds(lineId) === undefined) return;
+    const a = new Audio(lineAudioPath(lineId));
+    a.volume = volume;
+    a.play().catch(() => undefined);
+    return () => a.pause();
+    // 音量の変更では鳴らし直さない
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lineId, on, silent]);
+};
+
 // ---------------------------------------------------------------- 問い
 // 流れ：お客様の言葉 → 問い → 考える → A/B/C → 選ぶ → 専用映像 → お客様の回答 → 分かったこと → 解説（推奨と理由） → 次へ
 const QuestionView: React.FC<{q: QuestionScene; ctx: Ctx}> = ({q, ctx}) => {
   const {state, dispatch} = ctx;
   const answer = state.answers[q.sceneId];
   const chosen = answer ? q.choices.find((c) => c.choiceId === answer.choiceId) : undefined;
+  useLineAudio(`q-${q.questionId}_01`, state.step === 'think', ctx);
+  useLineAudio(`hint-${q.questionId}_01`, !!state.hints[q.sceneId] && (state.step === 'think' || state.step === 'choose'), ctx);
 
   if (q.requiresDemoPass) {
     const gate = demoGate(q, state.demo);
@@ -547,38 +566,54 @@ const DemoGate: React.FC<{q: QuestionScene; ctx: Ctx; gate: ReturnType<typeof de
   );
 };
 
-// ---------------------------------------------------------------- 実機デモ
+// ---------------------------------------------------------------- 実機デモ（既設センサと KR-Qシリーズを同じ条件で比べる）
+const verdictText = (ok: boolean | null) => (ok === null ? '未記録' : ok ? '基準を満たした' : '基準を満たさない');
+const rateText = (m?: Measure) => {
+  const r = overRate(m);
+  return r === null ? '—' : `${r > 0 ? '+' : ''}${r.toFixed(1)}%`;
+};
+
 const DemoView: React.FC<{d: DemoScene; ctx: Ctx}> = ({d, ctx}) => {
   const {state, dispatch} = ctx;
   const r = state.demo[d.sceneId];
   const source = r?.source ?? 'simulation';
-  const ok = judge(r);
   const fileUrl = ctx.demoFiles[d.sceneId];
   return (
     <div className="demo">
       <div className="demo-stage">
         {source === 'live' ? (
           <div className="live">
-            <div className="live-badge">● LIVE 実機デモ</div>
+            <div className="live-badge">● LIVE 実機デモ（比較）</div>
             <div className="live-cond">{d.condition}</div>
-            <div className="live-counts">
-              <div>
-                <span>通過した本数</span>
-                <b>{r?.passed || '—'}</b>
-              </div>
-              <div>
-                <span>センサの出力回数</span>
-                <b>{r?.outputs || '—'}</b>
-              </div>
-              <div>
-                <span>カウント値（PLC）</span>
-                <b>{r?.counted || '—'}</b>
-              </div>
-              <div>
-                <span>判定</span>
-                <b className={ok === true ? 'ok' : ok === false ? 'ng' : ''}>{ok === null ? '測定中' : ok ? '基準を満たした' : '基準を満たさない'}</b>
-              </div>
-            </div>
+            <table className="live-table">
+              <thead>
+                <tr>
+                  <th />
+                  <th>通過本数</th>
+                  <th>出力回数</th>
+                  <th>PLCカウント</th>
+                  <th>過剰率</th>
+                  <th>判定</th>
+                </tr>
+              </thead>
+              <tbody>
+                {SENSORS.map((s) => {
+                  const m = r?.[s.key];
+                  const ok = judge(m);
+                  return (
+                    <tr key={s.key}>
+                      <th>{s.name}</th>
+                      <td>{m?.passed || '—'}</td>
+                      <td>{m?.outputs || '—'}</td>
+                      <td>{m?.counted || '—'}</td>
+                      <td>{rateText(m)}</td>
+                      <td className={ok === true ? 'ok' : ok === false ? 'ng' : ''}>{ok === null ? '測定中' : verdictText(ok)}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+            <div className="live-note">実測データ（この場で記録した値）</div>
           </div>
         ) : (
           <ClipPlayer assetId={d.videoAsset} autoPlay={state.step === 'playing'} playToken={state.playToken} overrideVideoUrl={source === 'video' ? fileUrl : undefined} {...playerProps(ctx)} />
@@ -618,8 +653,9 @@ const DemoView: React.FC<{d: DemoScene; ctx: Ctx}> = ({d, ctx}) => {
 const DemoRecord: React.FC<{d: DemoScene; ctx: Ctx}> = ({d, ctx}) => {
   const {state, dispatch} = ctx;
   const r = state.demo[d.sceneId];
-  const set = (result: Partial<DemoResult>) => dispatch({type: 'demo', sceneId: d.sceneId, result});
-  const ok = judge(r);
+  const meta = (m: Partial<Pick<DemoResult, 'note' | 'source'>>) => dispatch({type: 'demo', sceneId: d.sceneId, meta: m});
+  const set = (sensor: SensorKey, measure: Partial<Measure>) => dispatch({type: 'demo', sceneId: d.sceneId, sensor, measure});
+  const num = (v: string) => v.replace(/[^0-9]/g, '');
   return (
     <div className="record">
       <div className="seg" role="group" aria-label="映像の切り替え">
@@ -630,7 +666,7 @@ const DemoRecord: React.FC<{d: DemoScene; ctx: Ctx}> = ({d, ctx}) => {
             ['video', '実機の動画'],
           ] as const
         ).map(([k, label]) => (
-          <button key={k} className={(r?.source ?? 'simulation') === k ? 'on' : ''} onClick={() => set({source: k})}>
+          <button key={k} className={(r?.source ?? 'simulation') === k ? 'on' : ''} onClick={() => meta({source: k})}>
             {label}
           </button>
         ))}
@@ -649,32 +685,104 @@ const DemoRecord: React.FC<{d: DemoScene; ctx: Ctx}> = ({d, ctx}) => {
           <small>このブラウザでだけ再生します（投影用ウィンドウには、そちらで選び直してください）</small>
         </label>
       ) : null}
-      <div className="record-title">実測を記録</div>
-      <div className="record-grid">
-        <label>
-          通過させた本数
-          <input inputMode="numeric" value={r?.passed ?? ''} onChange={(e) => set({passed: e.target.value.replace(/[^0-9]/g, '')})} />
-        </label>
-        <label>
-          センサの出力回数
-          <input inputMode="numeric" value={r?.outputs ?? ''} onChange={(e) => set({outputs: e.target.value.replace(/[^0-9]/g, '')})} />
-        </label>
-        <label>
-          カウント値（PLC）
-          <input inputMode="numeric" value={r?.counted ?? ''} onChange={(e) => set({counted: e.target.value.replace(/[^0-9]/g, '')})} />
-        </label>
-      </div>
-      <div className="record-q">1本の通過中に、出力が何度も切り替わった？</div>
-      <div className="seg">
-        <button className={r?.chatter === 'no' ? 'on' : ''} onClick={() => set({chatter: 'no'})}>なかった</button>
-        <button className={r?.chatter === 'yes' ? 'on' : ''} onClick={() => set({chatter: 'yes'})}>あった</button>
-      </div>
+      <div className="record-title">実測を記録（同じ条件で、センサごとに）</div>
+      {SENSORS.map((s) => {
+        const m = r?.[s.key];
+        const ok = judge(m);
+        return (
+          <fieldset key={s.key} className={`sensor-rec ${s.key}`}>
+            <legend>{s.name}</legend>
+            <div className="record-grid">
+              <label>
+                通過させた本数
+                <input inputMode="numeric" value={m?.passed ?? ''} onChange={(e) => set(s.key, {passed: num(e.target.value)})} />
+              </label>
+              <label>
+                センサの出力回数
+                <input inputMode="numeric" value={m?.outputs ?? ''} onChange={(e) => set(s.key, {outputs: num(e.target.value)})} />
+              </label>
+              <label>
+                カウント値（PLC）
+                <input inputMode="numeric" value={m?.counted ?? ''} onChange={(e) => set(s.key, {counted: num(e.target.value)})} />
+              </label>
+            </div>
+            <div className="record-q">1本の通過中に、出力が何度も切り替わった？</div>
+            <div className="seg">
+              <button className={m?.chatter === 'no' ? 'on' : ''} onClick={() => set(s.key, {chatter: 'no'})}>なかった</button>
+              <button className={m?.chatter === 'yes' ? 'on' : ''} onClick={() => set(s.key, {chatter: 'yes'})}>あった</button>
+            </div>
+            <div className={`verdict ${ok === true ? 'ok' : ok === false ? 'ng' : ''}`}>
+              判定：{ok === null ? '未記録（4項目を入力）' : verdictText(ok)}　過剰率：{rateText(m)}
+            </div>
+          </fieldset>
+        );
+      })}
       <label className="record-note">
-        メモ（条件・気づいたこと）
-        <textarea rows={2} value={r?.note ?? ''} onChange={(e) => set({note: e.target.value})} />
+        メモ（搬送条件・気づいたこと）
+        <textarea rows={2} value={r?.note ?? ''} onChange={(e) => meta({note: e.target.value})} />
       </label>
-      <div className={`verdict ${ok === true ? 'ok' : ok === false ? 'ng' : ''}`}>
-        判定：{ok === null ? '未記録（本数・出力回数・カウント値・出力の切り替わりを入力）' : ok ? '基準を満たした' : '基準を満たさない → 追加調査へ'}
+      <div className="fac-small">提案の判断（次の問い）には、KR-Qシリーズの記録を使います。基準を満たさない・未記録のときは追加調査へ進みます。</div>
+    </div>
+  );
+};
+
+// ---------------------------------------------------------------- 結果の比較（記録した実測値だけを表示する）
+const CompareResultView: React.FC<{r: ResultScene; ctx: Ctx}> = ({r, ctx}) => {
+  const {state, dispatch} = ctx;
+  const demos = scenes.filter((s): s is DemoScene => s.type === 'demo');
+  return (
+    <div className="result-compare">
+      <div className="rc-media">
+        <ClipPlayer assetId={r.videoAsset} autoPlay={state.step === 'playing'} playToken={state.playToken} {...playerProps(ctx)} />
+        {state.step === 'ready' && !ctx.projector ? (
+          <button className="play-overlay" onClick={() => dispatch({type: 'step', step: 'playing'})}>
+            ▶ 結果の見方
+          </button>
+        ) : null}
+      </div>
+      <div className="rc-table">
+        <div className="rc-class">
+          <span className="cls measured">1. 実測データ</span>この表（この場で記録した値）
+          <span className="cls sim">2. 研修用シミュレーション</span>映像の説明のみ
+          <span className="cls expect">3. 期待する効果</span>確かめる前の見込み（数値は出さない）
+        </div>
+        <div className="rc-before">改善前（現状・研修用の架空データ）：通常 +0.5〜0.8%／最大 +3.0%</div>
+        <table>
+          <thead>
+            <tr>
+              <th>条件</th>
+              {SENSORS.map((s) => (
+                <th key={s.key}>{s.name}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {demos.map((d) => (
+              <tr key={d.sceneId}>
+                <th>{d.title.replace(/^比較デモ\d：/, '')}</th>
+                {SENSORS.map((s) => {
+                  const m = state.demo[d.sceneId]?.[s.key];
+                  const ok = judge(m);
+                  return (
+                    <td key={s.key} className={ok === true ? 'ok' : ok === false ? 'ng' : 'none'}>
+                      {ok === null ? (
+                        '未記録'
+                      ) : (
+                        <>
+                          <b>{verdictText(ok)}</b>
+                          <small>
+                            {m!.passed}本 → 出力{m!.outputs}回・カウント{m!.counted}（{rateText(m)}）
+                          </small>
+                        </>
+                      )}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div className="rc-note">改善後の数値は、記録した実測値だけを表示します。未記録の欄に数値を入れたり、作ったりしません。</div>
       </div>
     </div>
   );
@@ -686,6 +794,7 @@ const ReflectionView: React.FC<{r: ReflectionScene; ctx: Ctx}> = ({r, ctx}) => {
   const [start, setStart] = useState<number | null>(null);
   const now = useNow();
   const left = start ? r.minutes * 60000 - (now - start) : r.minutes * 60000;
+  useLineAudio(`r-${r.sceneId}_01`, true, ctx);
   return (
     <div className={`reflection ${r.videoAsset ? 'with-media' : ''}`}>
       <div className="refl-main">
@@ -818,7 +927,7 @@ const FacilitatorPanel: React.FC<{ctx: Ctx; onOpenProjector: () => void; sendCmd
             {scenes
               .filter((s): s is DemoScene => s.type === 'demo')
               .map((d) => {
-                const ok = judge(state.demo[d.sceneId]);
+                const ok = judgeDemo(state.demo[d.sceneId]);
                 return (
                   <tr key={d.sceneId}>
                     <td>{d.title}</td>
@@ -913,7 +1022,17 @@ const buildRecord = (s: State) => ({
     }),
   demo: scenes
     .filter((x): x is DemoScene => x.type === 'demo')
-    .map((d) => ({sceneId: d.sceneId, condition: d.condition, ...s.demo[d.sceneId], judged: judge(s.demo[d.sceneId])})),
+    .map((d) => {
+      const r = s.demo[d.sceneId];
+      return {
+        sceneId: d.sceneId,
+        condition: d.condition,
+        source: r?.source ?? null,
+        note: r?.note ?? '',
+        existing: r ? {...r.existing, judged: judge(r.existing), overRate: overRate(r.existing)} : null,
+        optex: r ? {...r.optex, judged: judge(r.optex), overRate: overRate(r.optex)} : null,
+      };
+    }),
   reflection: s.notes,
 });
 

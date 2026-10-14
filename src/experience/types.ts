@@ -28,11 +28,33 @@ export type AssetStatus =
   | 'awaiting-footage' // 実写素材待ち
   | 'awaiting-license'; // 許諾確認待ち
 
-// 映像クリップ。Remotion のコンポジション（XP-<assetId>）として描画し、実写が届いたら差し替える
+// 写真（シーン画像）。public/experience/plates/<plateId>.jpg。生成・撮影したものを置くと使われる
+export type Plate = {
+  plateId: string;
+  scene: string; // 12シーン構成のどこで使うか
+  description: string;
+  people: string[];
+  sensorLayout: boolean; // センサ・反射板が写る（配置ルールの確認が必要）
+  file: string;
+  prompt: string; // 生成用プロンプト（文字・ロゴなし）
+  source: string;
+  status: 'awaiting' | 'generated' | 'review' | 'approved';
+  note?: string;
+};
+
+// 1つのクリップの中のショット：写真＋カメラの動き＋重ねる情報
+export type Shot = {
+  plate: string; // plateId
+  focus: {x: number; y: number; z0: number; z1: number}; // 写真の注視点（0〜1）とズーム（開始→終了）
+  overlay: string; // 重ねる情報の種類（remotion/v3/overlays.tsx）
+  header?: {no?: string; title: string}; // 黒帯の見出し（12シーンの番号）
+  atLine?: number; // このショットに切り替わるセリフ（0始まり）。なければ0秒から
+  card?: string; // 白いカードに出す短い一言
+};
+
 export type Asset = {
   assetId: string;
-  kind: 'title' | 'factory' | 'sensor' | 'bottle' | 'customer' | 'document' | 'tech' | 'product' | 'demo' | 'applications' | 'ending';
-  variant: string;
+  shots: Shot[];
   seconds: number; // 映像だけの長さ（セリフが長ければ自動で延びる）
   dialogAt?: number; // セリフを出し始める秒
   visualDescription: string;
@@ -41,7 +63,12 @@ export type Asset = {
   status: AssetStatus[];
   videoPath?: string; // 実写・実機の映像（public/ からの相対パス）。既定は experience/videos/<assetId>.mp4
   imagePath?: string; // 正式な製品写真（許諾後に配置）
-  needs?: string[]; // 不足している素材
+  productName?: string;
+  productModel?: string;
+  sensorType?: string;
+  assetLicenseStatus?: string;
+  verificationStatus?: string;
+  needs?: string[];
   production: {method: 'shoot' | 'ai-image' | 'cg' | 'composite'; prompt: string; negativePrompt: string; note: string};
 };
 

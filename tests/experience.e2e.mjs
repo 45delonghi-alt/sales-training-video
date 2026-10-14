@@ -105,13 +105,24 @@ for (const s of order.slice(1)) {
   }
   if (s.type === 'demo') {
     if (s.predictPrompt) ok(`${s.sceneId}：再生前に予想の問いを出す`, (await page.locator('.predict-q').innerText()).includes(s.predictPrompt));
-    // 実測の記録：通過10本・カウント10・切り替わりなし → 基準OK（テスト用の入力。実測値ではない）
-    await page.locator('.record-grid input').nth(0).fill('10');
-    await page.locator('.record-grid input').nth(1).fill('10');
-    await page.locator('.record-grid input').nth(2).fill('10');
-    await page.getByRole('button', {name: 'なかった'}).click();
-    ok(`${s.sceneId}：記録すると判定が出る`, (await page.locator('.verdict').innerText()).includes('基準を満たした'));
+    // 実測の記録（テスト用の入力。実測値ではない）
+    //   既設センサ：10本 → 出力11回・カウント11・切り替わりあり（基準を満たさない）
+    //   KR-Qシリーズ：10本 → 出力10回・カウント10・切り替わりなし（基準を満たした）
+    const ex = page.locator('.sensor-rec.existing');
+    const op = page.locator('.sensor-rec.optex');
+    ok(`${s.sceneId}：既設センサとKR-Qシリーズを別々に記録できる`, (await ex.count()) === 1 && (await op.count()) === 1);
+    for (const [loc, v, chat] of [[ex, ['10', '11', '11'], 'あった'], [op, ['10', '10', '10'], 'なかった']]) {
+      for (let i = 0; i < 3; i++) await loc.locator('.record-grid input').nth(i).fill(v[i]);
+      await loc.getByRole('button', {name: chat}).click();
+    }
+    ok(`${s.sceneId}：センサごとに判定と過剰率が出る`, (await ex.locator('.verdict').innerText()).includes('基準を満たさない') && (await ex.locator('.verdict').innerText()).includes('+10.0%') && (await op.locator('.verdict').innerText()).includes('基準を満たした'));
     if (s.sceneId === 'p4-demo-normal') await shot('03-demo');
+  }
+  if (s.type === 'result') {
+    const t = await page.locator('.rc-table').innerText();
+    ok('結果の比較：記録した実測値だけを、センサごと・条件ごとに表示', t.includes('既設センサ') && t.includes('KR-Qシリーズ') && (t.match(/基準を満たした/g) ?? []).length === 4 && (t.match(/基準を満たさない/g) ?? []).length === 4 && t.includes('+10.0%'));
+    ok('結果の比較：改善後の数値を作らない旨を表示', t.includes('未記録の欄に数値を入れたり、作ったりしません') && t.includes('研修用の架空データ'));
+    await shot('03b-result');
   }
 }
 ok('最後の場面（エンディング）まで進める', (await title()) === order[order.length - 1].title);
@@ -121,7 +132,7 @@ try {
   await page.waitForSelector('.end', {timeout: 40000});
   ended = true;
 } catch {}
-ok('エンディングのあとに終了画面（選択の記録）が出る', ended && (await page.locator('.end-table').innerText()).includes('P4-Q4'));
+ok('エンディングのあとに終了画面（選択の記録）が出る', ended && (await page.locator('.end-table').innerText()).includes('P4-Q3'));
 await shot('04-ending');
 
 // 記録が残る（再読み込みしても続きから）
@@ -136,7 +147,7 @@ ok('戻るで1つ前の場面へ', (await title()) === order[order.length - 2].t
 // 基準未達の分岐：通常条件で「切り替わりあり」→ 次の問いではなく追加調査へ
 await page.locator('.fac select').selectOption('p4-demo-normal');
 await page.waitForTimeout(200);
-await page.getByRole('button', {name: 'あった'}).click();
+await page.locator('.sensor-rec.optex').getByRole('button', {name: 'あった'}).click();
 await page.locator('.fac select').selectOption('p4-q3');
 await page.waitForTimeout(200);
 ok('基準未達：次の問いを出さない', (await page.locator('.gate-title').innerText()).includes('基準を満たさない'));
@@ -148,21 +159,21 @@ ok('追加調査 → 実機デモで伝えたいこと', (await title()) === byI
 
 // 未記録のときは記録を促す
 await page.locator('.fac select').selectOption('p4-demo-normal');
-await page.locator('.record-grid input').nth(0).fill('');
+await page.locator('.sensor-rec.optex .record-grid input').nth(0).fill('');
 await page.locator('.fac select').selectOption('p4-q3');
 await page.waitForTimeout(200);
 ok('未記録：記録を促す', (await page.locator('.gate-title').innerText()).includes('未記録'));
 
 // 映像の途中の「考えよう」：解説クリップを再生すると、2文目の前で止まって問いを出す
-await page.locator('.fac select').selectOption('p2-light');
+await page.locator('.fac select').selectOption('p2-signal');
 await page.waitForTimeout(300);
-await page.getByRole('button', {name: /▶ 解説：透明なボトルと光/}).click();
+await page.getByRole('button', {name: /▶ 仮想検証/}).click();
 let paused = false;
 try {
   await page.waitForSelector('.think-pause', {timeout: 25000});
   paused = true;
 } catch {}
-ok('解説の途中で「考えよう」が出て止まる', paused && (await page.locator('.tp-prompt').innerText()).includes('透明なボトル'));
+ok('仮想検証の途中で「考えよう」が出て止まる', paused && (await page.locator('.tp-prompt').innerText()).includes('1本なのに'));
 if (SHOTS) await page.screenshot({path: join(SHOTS, '07-think-pause.png')});
 if (paused) {
   await page.getByRole('button', {name: '続きを見る ▶'}).click();

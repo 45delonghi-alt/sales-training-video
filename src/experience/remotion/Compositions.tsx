@@ -2,8 +2,7 @@
 // 選択肢ごとの映像を個別に MP4 で書き出せる（npm run experience:render）。
 import React from 'react';
 import {Composition, Folder} from 'remotion';
-import {assets, compositionIdFor, linesForAsset} from '../data';
-import {clipSeconds} from './ClipShell';
+import {assets, clipSeconds, compositionIdFor, linesForAsset} from '../data';
 import {ExperienceClip} from './ExperienceClip';
 import {FPS, H, W} from './theme';
 
