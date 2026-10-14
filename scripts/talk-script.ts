@@ -5,7 +5,7 @@
 import {execFileSync, spawnSync} from 'node:child_process';
 import {existsSync, mkdirSync, readdirSync, rmSync, writeFileSync} from 'node:fs';
 import {join} from 'node:path';
-import {characterById, lineIdOf, linesForAsset, phases, scenes, speechOf} from '../src/experience/data';
+import {assetById, characterById, lineIdOf, linesForAsset, phases, scenes, speechOf} from '../src/experience/data';
 import type {Line, Speaker} from '../src/experience/types';
 
 const ROOT = join(__dirname, '..');
@@ -59,6 +59,57 @@ const chunkGroups = (lines: TalkLine[]) => {
     }
   }
   return groups;
+};
+
+// 音読さん Beta の声（話者ごと）。talk-script.md の「話者と声」と同じ
+const BETA: Record<Speaker, string> = {
+  narration: 'Yann',
+  sales: 'Kai',
+  sato: 'Misa',
+  takahashi: 'Tina',
+  mori: 'Lena',
+  nakata: 'Reid',
+};
+
+// スライド（画面）ごとのトークスクリプト：再生順に、画面1枚ずつ、話者・声・読み上げ文・音声ファイル名
+const writeBySlide = (lines: TalkLine[]) => {
+  const slides = new Map<string, TalkLine[]>();
+  for (const l of lines) {
+    const key = l.lineId.replace(/_\d+$/, '');
+    slides.set(key, [...(slides.get(key) ?? []), l]);
+  }
+  const titleOf = (key: string, first: TalkLine) => {
+    if (key.startsWith('q-')) return `問い（${key.slice(2)}）`;
+    if (key.startsWith('hint-')) return `先輩のヒント（${key.slice(5)}）`;
+    if (key.startsWith('r-')) return '振り返りの問い';
+    const h = assetById.get(key)?.shots.find((sh) => sh.header)?.header;
+    return h ? `${h.no ? `${Number(h.no)}. ` : ''}${h.title}` : first.where;
+  };
+  const md: string[] = [
+    '# トークスクリプト（スライドごと）',
+    '',
+    '> `npm run experience:talk` で自動生成。元データは `src/experience/data/phases.json`。',
+    '',
+    '映像の画面（スライド）1枚ごとに、再生順で並べています。',
+    '',
+    '- **読み上げ文**：音読さんに貼る文です。読み間違えやすい語は読み方に直しています（字幕は元の表記）。',
+    '- **音声ファイル名**：1文ずつ作るときは、この名前（例：`p1-open_01.mp3`）で `audio_import/experience/` に置きます。話者ごとにまとめて作る場合は [talk-script.md](talk-script.md) の `ondoku/` を使います。',
+    '- 声の設定（声色値・速度・ピッチ）は [talk-script.md](talk-script.md) の「話者と声」の表のとおりです。',
+    '',
+  ];
+  let phase = '';
+  let n = 0;
+  for (const [key, ls] of slides) {
+    if (ls[0].phaseId !== phase) {
+      phase = ls[0].phaseId;
+      md.push(`## ${phases.find((p) => p.phaseId === phase)?.phaseTitle ?? phase}`, '');
+    }
+    n++;
+    md.push(`### スライド ${String(n).padStart(2, '0')}　${titleOf(key, ls[0])}`, '', `場面：${ls[0].where}`, '', '| # | 話者 | 声 | 読み上げ文 | 音声ファイル名 |', '|---|---|---|---|---|');
+    ls.forEach((l, i) => md.push(`| ${i + 1} | ${nameOf(l.speaker)} | ${BETA[l.speaker]} | ${speechOf(l.text)} | \`${l.lineId}.mp3\` |`));
+    md.push('');
+  }
+  writeFileSync(join(DOCS, 'talk-script-by-slide.md'), md.join('\n') + '\n');
 };
 
 export const writeTalk = () => {
@@ -140,7 +191,8 @@ export const writeTalk = () => {
     ls.forEach((l, i) => index.push([g, i + 1, l.lineId, l.speaker, l.text, speechOf(l.text)].join('\t')));
   }
   writeFileSync(join(ONDOKU, 'index.tsv'), index.join('\n') + '\n');
-  console.log(`書き出し：talk-script.md・ondoku/（${groups.size}ファイル・${lines.length}文）`);
+  writeBySlide(lines);
+  console.log(`書き出し：talk-script.md・talk-script-by-slide.md・ondoku/（${groups.size}ファイル・${lines.length}文）`);
 };
 
 // ---------------------------------------------------------------- 取り込み
