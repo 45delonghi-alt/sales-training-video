@@ -91,7 +91,7 @@ export const writeTalk = () => {
     '|---|---|---|---|---|',
   ];
   const SETTING: Record<string, string> = {
-    narration: '導入動画と同じ：音読さん Beta「Yann（ヤン）」／速度1.2x／ピッチ0／ビジネス（プロフェッショナルでビジネスライクに読み上げてください）／高速',
+    narration: '導入動画と同じ：音読さん Beta「Yann（ヤン）」／声色値 1576295248／速度1.2x（見本は1.0x）／ピッチ0／ビジネス（プロフェッショナルでビジネスライクに読み上げてください）／高速',
     sales: '音読さん Beta「Kai（カイ）」／声色値 -579746604／速度1.0x／ピッチ やや高い（0.5）／ビジネス（プロフェッショナルでビジネスライクに読み上げてください）／高速',
     sato: '音読さん Beta「Misa（ミサ）」／声色値 264584882／速度1.0x／ピッチ やや高い（0.5）／ビジネス（プロフェッショナルでビジネスライクに読み上げてください）／高速',
     takahashi: '音読さん Beta「Tina（ティナ）」／声色値 407820404／速度1.0x／ピッチ 非常に高い（1）／ビジネス（プロフェッショナルでビジネスライクに読み上げてください）／高速',
@@ -101,7 +101,7 @@ export const writeTalk = () => {
   for (const sp of SPEAKER_ORDER) {
     const c = characterById.get(sp);
     const n = lines.filter((l) => l.speaker === sp).length;
-    const sample = existsSync(`assets-src/v3/voice-samples/${sp}.mp3`) ? `[見本](../../assets-src/v3/voice-samples/${sp}.mp3)` : sp === 'narration' ? '導入動画と同じ声' : '';
+    const sample = existsSync(`assets-src/v3/voice-samples/${sp}.mp3`) ? `[見本](../../assets-src/v3/voice-samples/${sp}.mp3)` : '';
     if (c && n) md.push(`| ${c.name} | ${c.title || '—'} | ${c.voice}（${n}文） | ${SETTING[sp] ?? ''} | ${sample} |`);
   }
   const apiVoices = SPEAKER_ORDER.map((sp) => characterById.get(sp)).filter((c) => c?.ondokuVoice).map((c) => `${c!.name}＝${c!.ondokuVoice!.replace('ja-JP-', '')}`);
