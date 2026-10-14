@@ -55,7 +55,7 @@
     "name": "ナレーション",
     "title": "",
     "gender": "any",
-    "voice": "既存の導入動画と同じナレーター（音読さん Beta「Yann（ヤン）」・速度1.2x・ビジネス）",
+    "voice": "既存の導入動画と同じナレーター（音読さん Beta「Yann（ヤン）」・速度1.0x・ビジネス）",
     "appearance": "",
     "ondokuVoice": "ja-JP-DaichiNeural"
   }

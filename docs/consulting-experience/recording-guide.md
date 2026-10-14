@@ -8,7 +8,7 @@
 2. `ondoku/` の原稿（話者ごと・1回で貼れる450文字以内に区切った11ファイル。例：`sato_01.txt`）を貼って読み上げる。
 3. 音声を同じ名前（例：`sato_01.mp3`）で `audio_import/experience/` に置く（mp3／wav／m4a）。1文だけ録り直すときは、セリフIDの名前（例：`p1-q1-b_02.mp3`）で置く。
 4. `npm run experience:import-audio` → 無音で文ごとに分け、`public/experience/audio/<セリフID>.mp3` に保存。`src/experience/data/audioTiming.json` に各文の長さが入り、**映像の長さ・字幕・ショットの切り替えが音声に合わせて自動で調整**される。
-   - 速さを変えるときは `SPEED=0.9 npm run experience:import-audio` のように指定する（ナレーションは音読さん側で導入動画と同じ1.2xにして作るので、取り込みでは変えない）。
+   - 速さを変えるときは `SPEED=0.9 npm run experience:import-audio` のように指定する（ナレーションも音読さん側の速度1.0xのまま取り込む）。
    - 分け方がずれた文は、その文だけ単独の音声で置き直す。
 5. `npm run experience:render` で動画を書き出す。アプリは書き出さなくても、そのまま声付きで再生できる。
 
