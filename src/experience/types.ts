@@ -28,28 +28,12 @@ export type AssetStatus =
   | 'awaiting-footage' // 実写素材待ち
   | 'awaiting-license'; // 許諾確認待ち
 
-// 写真（シーン画像）。public/experience/plates/<plateId>.jpg。生成・撮影したものを置くと使われる
-export type Plate = {
-  plateId: string;
-  scene: string; // 12シーン構成のどこで使うか
-  description: string;
-  people: string[];
-  sensorLayout: boolean; // センサ・反射板が写る（配置ルールの確認が必要）
-  file: string;
-  prompt: string; // 生成用プロンプト（文字・ロゴなし）
-  source: string;
-  status: 'awaiting' | 'generated' | 'review' | 'approved';
-  note?: string;
-};
-
-// 1つのクリップの中のショット：写真＋カメラの動き＋重ねる情報
+// 1つのクリップの中のショット：どの場面を、どのセリフから出すか（導入動画と同じ線画・パネルで描く）
 export type Shot = {
-  plate: string; // plateId
-  focus: {x: number; y: number; z0: number; z1: number}; // 写真の注視点（0〜1）とズーム（開始→終了）
-  overlay: string; // 重ねる情報の種類（remotion/v3/overlays.tsx）
-  header?: {no?: string; title: string}; // 黒帯の見出し（12シーンの番号）
+  overlay: string; // 場面の種類（remotion/v4/Scenes.tsx）
+  header?: {no?: string; title: string}; // 見出し（12シーンの番号とタイトル）
   atLine?: number; // このショットに切り替わるセリフ（0始まり）。なければ0秒から
-  card?: string; // 白いカードに出す短い一言
+  card?: string; // 会話の場面で、赤いカードに出す短い一言
 };
 
 export type Asset = {

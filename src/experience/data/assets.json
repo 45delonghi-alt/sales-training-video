@@ -3,43 +3,29 @@
   "assetId": "bridge",
   "shots": [
    {
-    "plate": "F01L",
-    "focus": {
-     "x": 0.5,
-     "y": 0.5,
-     "z0": 1.15,
-     "z1": 1.25
-    },
     "overlay": "title"
    }
   ],
   "seconds": 7,
   "dialogAt": 0.8,
-  "visualDescription": "ライン全景にYOUR MISSION。あなたはOPTEX-FAの営業担当",
-  "cameraDirection": "ゆっくり寄る",
+  "visualDescription": "YOUR MISSION。あなたはOPTEX-FAの営業担当",
+  "cameraDirection": "固定（導入動画と同じ）",
   "animationDirection": "タイトル→「あなたは、OPTEX-FAの営業担当です」",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
   "production": {
-   "method": "composite",
-   "prompt": "シーン画像：F01（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "method": "cg",
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p1-open",
   "shots": [
    {
-    "plate": "F01L",
-    "focus": {
-     "x": 0.5,
-     "y": 0.5,
-     "z0": 1.05,
-     "z1": 1.2
-    },
     "overlay": "miscount",
     "header": {
      "no": "01",
@@ -47,13 +33,6 @@
     }
    },
    {
-    "plate": "F02",
-    "focus": {
-     "x": 0.45,
-     "y": 0.45,
-     "z0": 1.0,
-     "z1": 1.06
-    },
     "overlay": "talk",
     "header": {
      "no": "02",
@@ -64,31 +43,24 @@
   ],
   "seconds": 10,
   "dialogAt": 0.8,
-  "visualDescription": "ライン全景で「実際よりも多くカウントされる…」。続いて佐藤さん・高橋さんが学生（営業）に相談",
-  "cameraDirection": "全景→相談の2人へカット",
+  "visualDescription": "線画のラインで「実際よりも多くカウントされる…」。続いて佐藤さん・高橋さんが学生（営業）に相談",
+  "cameraDirection": "固定（導入動画と同じ）",
   "animationDirection": "カウント表示が時々＋1。赤で「実際よりも多くカウントされる…」",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
   "production": {
-   "method": "composite",
-   "prompt": "シーン画像：F01・F02（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "method": "cg",
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p1-q1-a",
   "shots": [
    {
-    "plate": "F08",
-    "focus": {
-     "x": 0.5,
-     "y": 0.55,
-     "z0": 1.0,
-     "z1": 1.12
-    },
     "overlay": "sensor-existing",
     "header": {
      "no": "04",
@@ -99,17 +71,17 @@
   "seconds": 8,
   "dialogAt": 0.8,
   "visualDescription": "既設の他社製回帰反射型センサと反射板（型式は表示しない）",
-  "cameraDirection": "センサに寄る",
-  "animationDirection": "ラベル「センサ（投光・受光）」「反射板（リフレクタ）」。配置図を小窓で",
+  "cameraDirection": "固定（導入動画と同じ）",
+  "animationDirection": "ラベル「センサ（投光・受光）」「反射板（リフレクタ）」。線画のライン（導入動画と同じ）",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
   "production": {
-   "method": "composite",
-   "prompt": "シーン画像：F08（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "method": "cg",
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   },
   "sensorType": "他社製 回帰反射型光電センサ（透明体専用かは未確認）",
   "productName": "既設センサ（他社製）",
@@ -120,13 +92,6 @@
   "assetId": "p1-q1-b",
   "shots": [
    {
-    "plate": "F02",
-    "focus": {
-     "x": 0.45,
-     "y": 0.45,
-     "z0": 1.05,
-     "z1": 1.12
-    },
     "overlay": "talk",
     "header": {
      "no": "02",
@@ -134,13 +99,6 @@
     }
    },
    {
-    "plate": "F02",
-    "focus": {
-     "x": 0.45,
-     "y": 0.45,
-     "z0": 1.12,
-     "z1": 1.16
-    },
     "overlay": "figures",
     "header": {
      "no": "03",
@@ -152,30 +110,23 @@
   "seconds": 8,
   "dialogAt": 0.8,
   "visualDescription": "佐藤さんが数字で答える。通常＋0.5〜0.8%、最大＋3.0%のカードが出る",
-  "cameraDirection": "佐藤さんに寄る",
+  "cameraDirection": "固定（導入動画と同じ）",
   "animationDirection": "数字カード（研修用の架空データ）",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
   "production": {
-   "method": "composite",
-   "prompt": "シーン画像：F02（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "method": "cg",
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p1-q1-c",
   "shots": [
    {
-    "plate": "F04",
-    "focus": {
-     "x": 0.6,
-     "y": 0.4,
-     "z0": 1.0,
-     "z1": 1.08
-    },
     "overlay": "talk",
     "header": {
      "no": "02",
@@ -185,31 +136,24 @@
   ],
   "seconds": 8,
   "dialogAt": 0.8,
-  "visualDescription": "佐藤さんが迷う表情で答える",
-  "cameraDirection": "ゆっくり寄る",
-  "animationDirection": "表情のアップ",
+  "visualDescription": "佐藤さんが迷いながら答える",
+  "cameraDirection": "固定（導入動画と同じ）",
+  "animationDirection": "会話：話者（お客様／OPTEX-FA）と発言を画面中央に大きく表示（背景は線画のライン）",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
   "production": {
-   "method": "composite",
-   "prompt": "シーン画像：F04（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "method": "cg",
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p1-data",
   "shots": [
    {
-    "plate": "F06",
-    "focus": {
-     "x": 0.3,
-     "y": 0.45,
-     "z0": 1.0,
-     "z1": 1.05
-    },
     "overlay": "chart",
     "header": {
      "no": "03",
@@ -220,30 +164,23 @@
   "seconds": 12,
   "dialogAt": 0.8,
   "visualDescription": "高橋さんが記録を説明。右に4週間の推移グラフ（10,060／10,300／10,050／10,080）",
-  "cameraDirection": "高橋さん→グラフへ",
+  "cameraDirection": "固定（導入動画と同じ）",
   "animationDirection": "折れ線が描かれ、第2週だけ＋3.0%。「毎週3%ではない」",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
   "production": {
-   "method": "composite",
-   "prompt": "シーン画像：F06（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "method": "cg",
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p1-q2-a",
   "shots": [
    {
-    "plate": "F09",
-    "focus": {
-     "x": 0.45,
-     "y": 0.6,
-     "z0": 1.0,
-     "z1": 1.15
-    },
     "overlay": "line-walk",
     "header": {
      "no": "01",
@@ -254,30 +191,23 @@
   "seconds": 8,
   "dialogAt": 0.8,
   "visualDescription": "ラインを見せてもらう。センサはボトル下部を横から見ている",
-  "cameraDirection": "ラインに沿って横移動",
-  "animationDirection": "配置図（側面）を小窓で",
+  "cameraDirection": "固定（導入動画と同じ）",
+  "animationDirection": "線画のライン（導入動画と同じ）",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
   "production": {
-   "method": "composite",
-   "prompt": "シーン画像：F09（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "method": "cg",
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p1-q2-b",
   "shots": [
    {
-    "plate": "F05",
-    "focus": {
-     "x": 0.45,
-     "y": 0.4,
-     "z0": 1.0,
-     "z1": 1.08
-    },
     "overlay": "talk",
     "header": {
      "no": "02",
@@ -288,30 +218,23 @@
   "seconds": 8,
   "dialogAt": 0.8,
   "visualDescription": "佐藤さんが控えめに断る",
-  "cameraDirection": "固定",
-  "animationDirection": "—",
+  "cameraDirection": "固定（導入動画と同じ）",
+  "animationDirection": "会話：話者（お客様／OPTEX-FA）と発言を画面中央に大きく表示（背景は線画のライン）",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
   "production": {
-   "method": "composite",
-   "prompt": "シーン画像：F05（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "method": "cg",
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p1-q2-c",
   "shots": [
    {
-    "plate": "F05",
-    "focus": {
-     "x": 0.45,
-     "y": 0.4,
-     "z0": 1.08,
-     "z1": 1.0
-    },
     "overlay": "talk-card",
     "header": {
      "no": "02",
@@ -323,30 +246,23 @@
   "seconds": 8,
   "dialogAt": 0.8,
   "visualDescription": "佐藤さんが設備の年数を答える",
-  "cameraDirection": "ゆっくり引く",
-  "animationDirection": "白カード「導入して約3年・故障の記録なし」",
+  "cameraDirection": "固定（導入動画と同じ）",
+  "animationDirection": "赤いカード「導入して約3年・故障の記録なし」",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
   "production": {
-   "method": "composite",
-   "prompt": "シーン画像：F05（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "method": "cg",
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p2-open",
   "shots": [
    {
-    "plate": "F08",
-    "focus": {
-     "x": 0.5,
-     "y": 0.55,
-     "z0": 1.0,
-     "z1": 1.06
-    },
     "overlay": "sensor-existing",
     "header": {
      "no": "04",
@@ -354,13 +270,6 @@
     }
    },
    {
-    "plate": "F08",
-    "focus": {
-     "x": 0.5,
-     "y": 0.6,
-     "z0": 1.06,
-     "z1": 1.18
-    },
     "overlay": "beam",
     "header": {
      "no": "04",
@@ -372,30 +281,23 @@
   "seconds": 12,
   "dialogAt": 0.8,
   "visualDescription": "既設センサの確認。光の往復（センサ→ボトル下部→反射板→同じセンサ）を行き・戻りで分けてCG表示",
-  "cameraDirection": "センサ付近へ寄る",
+  "cameraDirection": "固定（導入動画と同じ）",
   "animationDirection": "行き／戻りの光（説明用の表現）",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
   "production": {
-   "method": "composite",
-   "prompt": "シーン画像：F08（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "method": "cg",
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p2-q1-a",
   "shots": [
    {
-    "plate": "F09",
-    "focus": {
-     "x": 0.6,
-     "y": 0.6,
-     "z0": 1.05,
-     "z1": 1.2
-    },
     "overlay": "cause-wobble",
     "header": {
      "no": "05",
@@ -403,13 +305,6 @@
     }
    },
    {
-    "plate": "F09",
-    "focus": {
-     "x": 0.45,
-     "y": 0.6,
-     "z0": 1.2,
-     "z1": 1.25
-    },
     "overlay": "cause-gap",
     "header": {
      "no": "06",
@@ -421,30 +316,23 @@
   "seconds": 8,
   "dialogAt": 0.8,
   "visualDescription": "ボトルの揺れと接近。原因の候補①②",
-  "cameraDirection": "揺れているボトルに寄る",
+  "cameraDirection": "固定（導入動画と同じ）",
   "animationDirection": "揺れの矢印→間隔の矢印",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
   "production": {
-   "method": "composite",
-   "prompt": "シーン画像：F09（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "method": "cg",
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p2-q1-b",
   "shots": [
    {
-    "plate": "F08",
-    "focus": {
-     "x": 0.55,
-     "y": 0.6,
-     "z0": 1.1,
-     "z1": 1.25
-    },
     "overlay": "sensor-check",
     "header": {
      "no": "04",
@@ -455,30 +343,23 @@
   "seconds": 8,
   "dialogAt": 0.8,
   "visualDescription": "センサと反射板の状態を確認（高さ・角度・汚れ・光の戻り）",
-  "cameraDirection": "反射板→センサへ",
+  "cameraDirection": "固定（導入動画と同じ）",
   "animationDirection": "チェックリストのカード",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
   "production": {
-   "method": "composite",
-   "prompt": "シーン画像：F08（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "method": "cg",
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p2-q1-c",
   "shots": [
    {
-    "plate": "F11",
-    "focus": {
-     "x": 0.4,
-     "y": 0.5,
-     "z0": 1.0,
-     "z1": 1.08
-    },
     "overlay": "control",
     "header": {
      "no": "08",
@@ -489,30 +370,23 @@
   "seconds": 8,
   "dialogAt": 0.8,
   "visualDescription": "制御盤（PLC）。数え方の設定は保全担当が把握",
-  "cameraDirection": "制御盤に寄る",
+  "cameraDirection": "固定（導入動画と同じ）",
   "animationDirection": "右の画面に「センサの出力」と「PLCのカウント」",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
   "production": {
-   "method": "composite",
-   "prompt": "シーン画像：F11（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "method": "cg",
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p2-signal",
   "shots": [
    {
-    "plate": "F10",
-    "focus": {
-     "x": 0.5,
-     "y": 0.55,
-     "z0": 1.0,
-     "z1": 1.1
-    },
     "overlay": "signal-double",
     "header": {
      "no": "07",
@@ -523,7 +397,7 @@
   "seconds": 14,
   "dialogAt": 0.8,
   "visualDescription": "研修用の仮想検証：ボトル1本の通過中に、出力が2回変化する。光の通り方の変化（仮説）",
-  "cameraDirection": "ボトル下部のマクロ",
+  "cameraDirection": "固定（導入動画と同じ）",
   "animationDirection": "出力波形が2回ON。「研修用シミュレーション」表示",
   "status": [
    "placeholder",
@@ -531,22 +405,15 @@
   ],
   "production": {
    "method": "cg",
-   "prompt": "シーン画像：F10（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p2-q2-a",
   "shots": [
    {
-    "plate": "F04",
-    "focus": {
-     "x": 0.6,
-     "y": 0.4,
-     "z0": 1.1,
-     "z1": 1.15
-    },
     "overlay": "talk",
     "header": {
      "no": "02",
@@ -557,30 +424,23 @@
   "seconds": 8,
   "dialogAt": 0.8,
   "visualDescription": "佐藤さんの不安",
-  "cameraDirection": "固定",
-  "animationDirection": "—",
+  "cameraDirection": "固定（導入動画と同じ）",
+  "animationDirection": "会話：話者（お客様／OPTEX-FA）と発言を画面中央に大きく表示（背景は線画のライン）",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
   "production": {
-   "method": "composite",
-   "prompt": "シーン画像：F04（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "method": "cg",
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p2-q2-b",
   "shots": [
    {
-    "plate": "F11",
-    "focus": {
-     "x": 0.55,
-     "y": 0.5,
-     "z0": 1.05,
-     "z1": 1.12
-    },
     "overlay": "compare-plc",
     "header": {
      "no": "08",
@@ -591,7 +451,7 @@
   "seconds": 8,
   "dialogAt": 0.8,
   "visualDescription": "センサの出力とPLCのカウントを同時に記録して比べる（例：実測ではない）",
-  "cameraDirection": "画面へ寄る",
+  "cameraDirection": "固定（導入動画と同じ）",
   "animationDirection": "1本ごとの記録表（例）",
   "status": [
    "placeholder",
@@ -599,22 +459,15 @@
   ],
   "production": {
    "method": "cg",
-   "prompt": "シーン画像：F11（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p2-q2-c",
   "shots": [
    {
-    "plate": "F05",
-    "focus": {
-     "x": 0.45,
-     "y": 0.4,
-     "z0": 1.0,
-     "z1": 1.06
-    },
     "overlay": "talk-card",
     "header": {
      "no": "02",
@@ -626,30 +479,23 @@
   "seconds": 8,
   "dialogAt": 0.8,
   "visualDescription": "速度は落とせない",
-  "cameraDirection": "固定",
-  "animationDirection": "白カード",
+  "cameraDirection": "固定（導入動画と同じ）",
+  "animationDirection": "赤いカード",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
   "production": {
-   "method": "composite",
-   "prompt": "シーン画像：F05（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "method": "cg",
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p2-isolation",
   "shots": [
    {
-    "plate": "F09",
-    "focus": {
-     "x": 0.5,
-     "y": 0.5,
-     "z0": 1.0,
-     "z1": 1.04
-    },
     "overlay": "isolation",
     "header": {
      "title": "原因の候補を整理する"
@@ -659,7 +505,7 @@
   "seconds": 10,
   "dialogAt": 0.8,
   "visualDescription": "原因の候補4つ（揺れ・接近・光の変化・制御側）を並べる",
-  "cameraDirection": "固定",
+  "cameraDirection": "固定（導入動画と同じ）",
   "animationDirection": "4枚のカードが順に",
   "status": [
    "placeholder",
@@ -667,22 +513,15 @@
   ],
   "production": {
    "method": "cg",
-   "prompt": "シーン画像：F09（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p3-open",
   "shots": [
    {
-    "plate": "F02",
-    "focus": {
-     "x": 0.55,
-     "y": 0.45,
-     "z0": 1.08,
-     "z1": 1.0
-    },
     "overlay": "talk",
     "header": {
      "title": "本当の困りごとは？"
@@ -692,30 +531,23 @@
   "seconds": 8,
   "dialogAt": 0.8,
   "visualDescription": "佐藤さん「何とか対応できてはいる」。高橋さんが照合を担当",
-  "cameraDirection": "ゆっくり引く",
-  "animationDirection": "—",
+  "cameraDirection": "固定（導入動画と同じ）",
+  "animationDirection": "会話：話者（お客様／OPTEX-FA）と発言を画面中央に大きく表示（背景は線画のライン）",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
   "production": {
-   "method": "composite",
-   "prompt": "シーン画像：F02（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "method": "cg",
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p3-q1-a",
   "shots": [
    {
-    "plate": "F12",
-    "focus": {
-     "x": 0.5,
-     "y": 0.5,
-     "z0": 1.0,
-     "z1": 1.08
-    },
     "overlay": "burden",
     "header": {
      "title": "数が合わないと、何が起きる？"
@@ -725,30 +557,23 @@
   "seconds": 8,
   "dialogAt": 0.8,
   "visualDescription": "ライン停止・人手で数え直す",
-  "cameraDirection": "作業者へ寄る",
-  "animationDirection": "赤い停止ランプ。カード「確認し直す」「ラインを止める」",
+  "cameraDirection": "固定（導入動画と同じ）",
+  "animationDirection": "影響の連鎖（白→黒→赤）",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
   "production": {
-   "method": "composite",
-   "prompt": "シーン画像：F12（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "method": "cg",
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p3-q1-b",
   "shots": [
    {
-    "plate": "F05",
-    "focus": {
-     "x": 0.45,
-     "y": 0.4,
-     "z0": 1.06,
-     "z1": 1.1
-    },
     "overlay": "talk",
     "header": {
      "title": "本当の困りごとは？"
@@ -758,30 +583,23 @@
   "seconds": 8,
   "dialogAt": 0.8,
   "visualDescription": "価格の前に原因を知りたい",
-  "cameraDirection": "固定",
-  "animationDirection": "—",
+  "cameraDirection": "固定（導入動画と同じ）",
+  "animationDirection": "会話：話者（お客様／OPTEX-FA）と発言を画面中央に大きく表示（背景は線画のライン）",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
   "production": {
-   "method": "composite",
-   "prompt": "シーン画像：F05（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "method": "cg",
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p3-q1-c",
   "shots": [
    {
-    "plate": "F07",
-    "focus": {
-     "x": 0.6,
-     "y": 0.4,
-     "z0": 1.0,
-     "z1": 1.08
-    },
     "overlay": "talk",
     "header": {
      "title": "本当の困りごとは？"
@@ -791,30 +609,23 @@
   "seconds": 8,
   "dialogAt": 0.8,
   "visualDescription": "高橋さん「うちの現場を見てほしい」",
-  "cameraDirection": "固定",
-  "animationDirection": "—",
+  "cameraDirection": "固定（導入動画と同じ）",
+  "animationDirection": "会話：話者（お客様／OPTEX-FA）と発言を画面中央に大きく表示（背景は線画のライン）",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
   "production": {
-   "method": "composite",
-   "prompt": "シーン画像：F07（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "method": "cg",
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p3-q2-a",
   "shots": [
    {
-    "plate": "F07",
-    "focus": {
-     "x": 0.6,
-     "y": 0.4,
-     "z0": 1.1,
-     "z1": 1.05
-    },
     "overlay": "talk-card",
     "header": {
      "title": "本当の困りごとは？"
@@ -825,43 +636,29 @@
   "seconds": 8,
   "dialogAt": 0.8,
   "visualDescription": "メーカーを原因と決めつけない",
-  "cameraDirection": "ゆっくり引く",
-  "animationDirection": "白カード",
+  "cameraDirection": "固定（導入動画と同じ）",
+  "animationDirection": "赤いカード",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
   "production": {
-   "method": "composite",
-   "prompt": "シーン画像：F07（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "method": "cg",
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p3-q2-b",
   "shots": [
    {
-    "plate": "F03",
-    "focus": {
-     "x": 0.35,
-     "y": 0.4,
-     "z0": 1.0,
-     "z1": 1.08
-    },
     "overlay": "talk",
     "header": {
      "title": "本当の困りごとは？"
     }
    },
    {
-    "plate": "F12",
-    "focus": {
-     "x": 0.5,
-     "y": 0.5,
-     "z0": 1.08,
-     "z1": 1.0
-    },
     "overlay": "chain",
     "header": {
      "title": "本当の困りごとは？"
@@ -872,30 +669,23 @@
   "seconds": 8,
   "dialogAt": 0.8,
   "visualDescription": "佐藤さんが同意。表面の問題→業務への影響→実現したいこと",
-  "cameraDirection": "佐藤さん→作業の様子へ",
+  "cameraDirection": "固定（導入動画と同じ）",
   "animationDirection": "連鎖のカード",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
   "production": {
-   "method": "composite",
-   "prompt": "シーン画像：F03・F12（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "method": "cg",
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p3-q2-c",
   "shots": [
    {
-    "plate": "F05",
-    "focus": {
-     "x": 0.45,
-     "y": 0.4,
-     "z0": 1.0,
-     "z1": 1.08
-    },
     "overlay": "talk-card",
     "header": {
      "title": "本当の困りごとは？"
@@ -906,30 +696,23 @@
   "seconds": 8,
   "dialogAt": 0.8,
   "visualDescription": "価格より安定生産",
-  "cameraDirection": "固定",
-  "animationDirection": "白カード",
+  "cameraDirection": "固定（導入動画と同じ）",
+  "animationDirection": "赤いカード",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
   "production": {
-   "method": "composite",
-   "prompt": "シーン画像：F05（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "method": "cg",
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p3-summary",
   "shots": [
    {
-    "plate": "F12",
-    "focus": {
-     "x": 0.5,
-     "y": 0.5,
-     "z0": 1.1,
-     "z1": 1.0
-    },
     "overlay": "issues3",
     "header": {
      "title": "見えてきた課題"
@@ -939,7 +722,7 @@
   "seconds": 12,
   "dialogAt": 0.8,
   "visualDescription": "課題3つ：正確な本数管理・確認の手戻り削減・安定した生産",
-  "cameraDirection": "ゆっくり引く",
+  "cameraDirection": "固定（導入動画と同じ）",
   "animationDirection": "3枚のカード→「欲しいのは安定した生産」",
   "status": [
    "placeholder",
@@ -947,22 +730,15 @@
   ],
   "production": {
    "method": "cg",
-   "prompt": "シーン画像：F12（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p4-open",
   "shots": [
    {
-    "plate": "F14",
-    "focus": {
-     "x": 0.65,
-     "y": 0.4,
-     "z0": 1.0,
-     "z1": 1.06
-    },
     "overlay": "talk",
     "header": {
      "no": "09",
@@ -973,30 +749,23 @@
   "seconds": 8,
   "dialogAt": 0.8,
   "visualDescription": "先輩の森さん「センサを提案してみましょう」",
-  "cameraDirection": "森さんに寄る",
-  "animationDirection": "—",
+  "cameraDirection": "固定（導入動画と同じ）",
+  "animationDirection": "会話：話者（お客様／OPTEX-FA）と発言を画面中央に大きく表示（背景は線画のライン）",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
   "production": {
-   "method": "composite",
-   "prompt": "シーン画像：F14（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "method": "cg",
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p4-q1-a",
   "shots": [
    {
-    "plate": "F04",
-    "focus": {
-     "x": 0.6,
-     "y": 0.4,
-     "z0": 1.0,
-     "z1": 1.04
-    },
     "overlay": "talk",
     "header": {
      "no": "09",
@@ -1007,30 +776,23 @@
   "seconds": 8,
   "dialogAt": 0.8,
   "visualDescription": "佐藤さん「何が違うんですか？」",
-  "cameraDirection": "固定",
-  "animationDirection": "—",
+  "cameraDirection": "固定（導入動画と同じ）",
+  "animationDirection": "会話：話者（お客様／OPTEX-FA）と発言を画面中央に大きく表示（背景は線画のライン）",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
   "production": {
-   "method": "composite",
-   "prompt": "シーン画像：F04（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "method": "cg",
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p4-q1-b",
   "shots": [
    {
-    "plate": "F13",
-    "focus": {
-     "x": 0.4,
-     "y": 0.45,
-     "z0": 1.0,
-     "z1": 1.05
-    },
     "overlay": "talk",
     "header": {
      "no": "09",
@@ -1038,13 +800,6 @@
     }
    },
    {
-    "plate": "F03",
-    "focus": {
-     "x": 0.35,
-     "y": 0.4,
-     "z0": 1.0,
-     "z1": 1.08
-    },
     "overlay": "talk",
     "header": {
      "no": "09",
@@ -1056,30 +811,23 @@
   "seconds": 8,
   "dialogAt": 0.8,
   "visualDescription": "実際のボトルで比較しようと提案→佐藤さんが前向き",
-  "cameraDirection": "打ち合わせ→佐藤さん",
-  "animationDirection": "—",
+  "cameraDirection": "固定（導入動画と同じ）",
+  "animationDirection": "会話：話者（お客様／OPTEX-FA）と発言を画面中央に大きく表示（背景は線画のライン）",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
   "production": {
-   "method": "composite",
-   "prompt": "シーン画像：F03・F13（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "method": "cg",
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p4-q1-c",
   "shots": [
    {
-    "plate": "F07",
-    "focus": {
-     "x": 0.6,
-     "y": 0.4,
-     "z0": 1.05,
-     "z1": 1.0
-    },
     "overlay": "talk",
     "header": {
      "no": "09",
@@ -1090,30 +838,23 @@
   "seconds": 8,
   "dialogAt": 0.8,
   "visualDescription": "高橋さん「人の作業は増やしたくない」",
-  "cameraDirection": "固定",
-  "animationDirection": "—",
+  "cameraDirection": "固定（導入動画と同じ）",
+  "animationDirection": "会話：話者（お客様／OPTEX-FA）と発言を画面中央に大きく表示（背景は線画のライン）",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
   "production": {
-   "method": "composite",
-   "prompt": "シーン画像：F07（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "method": "cg",
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p4-product",
   "shots": [
    {
-    "plate": "F15",
-    "focus": {
-     "x": 0.3,
-     "y": 0.45,
-     "z0": 1.0,
-     "z1": 1.04
-    },
     "overlay": "product",
     "header": {
      "no": "09",
@@ -1124,7 +865,7 @@
   "seconds": 12,
   "dialogAt": 0.8,
   "visualDescription": "KR-Qシリーズの紹介。製品画像は公式画像のみ（届くまでは枠）",
-  "cameraDirection": "中田さん＋製品カード",
+  "cameraDirection": "固定（導入動画と同じ）",
   "animationDirection": "「透明体検出タイプ・回帰反射型」「仕様は公式資料で確認」",
   "status": [
    "placeholder",
@@ -1132,10 +873,10 @@
    "awaiting-license"
   ],
   "production": {
-   "method": "composite",
-   "prompt": "シーン画像：F15（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "method": "cg",
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   },
   "imagePath": "experience/products/optex-fa/transparent-sensor.png",
   "productName": "OPTEX-FA KR-Qシリーズ（透明体検出タイプ）",
@@ -1148,13 +889,6 @@
   "assetId": "p4-setup",
   "shots": [
    {
-    "plate": "F16",
-    "focus": {
-     "x": 0.5,
-     "y": 0.5,
-     "z0": 1.0,
-     "z1": 1.08
-    },
     "overlay": "setup",
     "header": {
      "no": "10",
@@ -1165,30 +899,23 @@
   "seconds": 14,
   "dialogAt": 0.8,
   "visualDescription": "比較デモの準備。同じボトル・速度・高さで、既設センサとKR-Qシリーズを比べる",
-  "cameraDirection": "試験台全体→センサへ",
+  "cameraDirection": "固定（導入動画と同じ）",
   "animationDirection": "配置図（上から・横から）と測るもの",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
   "production": {
-   "method": "composite",
-   "prompt": "シーン画像：F16（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "method": "cg",
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p4-q2-a",
   "shots": [
    {
-    "plate": "F05",
-    "focus": {
-     "x": 0.45,
-     "y": 0.4,
-     "z0": 1.0,
-     "z1": 1.05
-    },
     "overlay": "talk",
     "header": {
      "no": "10",
@@ -1199,30 +926,23 @@
   "seconds": 8,
   "dialogAt": 0.8,
   "visualDescription": "見た目より、数えられるか",
-  "cameraDirection": "固定",
-  "animationDirection": "—",
+  "cameraDirection": "固定（導入動画と同じ）",
+  "animationDirection": "会話：話者（お客様／OPTEX-FA）と発言を画面中央に大きく表示（背景は線画のライン）",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
   "production": {
-   "method": "composite",
-   "prompt": "シーン画像：F05（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "method": "cg",
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p4-q2-b",
   "shots": [
    {
-    "plate": "F16",
-    "focus": {
-     "x": 0.5,
-     "y": 0.5,
-     "z0": 1.08,
-     "z1": 1.12
-    },
     "overlay": "criteria",
     "header": {
      "no": "10",
@@ -1233,30 +953,23 @@
   "seconds": 8,
   "dialogAt": 0.8,
   "visualDescription": "合格の基準：1本につき出力1回／通過本数＝出力回数＝PLCのカウント",
-  "cameraDirection": "固定",
+  "cameraDirection": "固定（導入動画と同じ）",
   "animationDirection": "基準カード",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
   "production": {
-   "method": "composite",
-   "prompt": "シーン画像：F16（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "method": "cg",
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p4-q2-c",
   "shots": [
    {
-    "plate": "F07",
-    "focus": {
-     "x": 0.6,
-     "y": 0.4,
-     "z0": 1.0,
-     "z1": 1.08
-    },
     "overlay": "talk-card",
     "header": {
      "no": "10",
@@ -1268,30 +981,23 @@
   "seconds": 8,
   "dialogAt": 0.8,
   "visualDescription": "カタログのページ数では判断できない",
-  "cameraDirection": "固定",
-  "animationDirection": "白カード",
+  "cameraDirection": "固定（導入動画と同じ）",
+  "animationDirection": "赤いカード",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
   "production": {
-   "method": "composite",
-   "prompt": "シーン画像：F07（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "method": "cg",
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p4-demo-normal",
   "shots": [
    {
-    "plate": "F16",
-    "focus": {
-     "x": 0.5,
-     "y": 0.55,
-     "z0": 1.05,
-     "z1": 1.15
-    },
     "overlay": "demo-normal",
     "header": {
      "no": "10",
@@ -1302,7 +1008,7 @@
   "seconds": 14,
   "dialogAt": 0.8,
   "visualDescription": "比較デモ（通常搬送）。シミュレーションは見方の説明だけ。結果は実機で記録",
-  "cameraDirection": "試験台のセンサ付近",
+  "cameraDirection": "固定（導入動画と同じ）",
   "animationDirection": "シミュレーション表示。既設／KR-Qの結果欄は「実機で記録」",
   "status": [
    "placeholder",
@@ -1310,22 +1016,15 @@
   ],
   "production": {
    "method": "cg",
-   "prompt": "シーン画像：F16（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p4-demo-wobble",
   "shots": [
    {
-    "plate": "F16",
-    "focus": {
-     "x": 0.5,
-     "y": 0.55,
-     "z0": 1.05,
-     "z1": 1.15
-    },
     "overlay": "demo-wobble",
     "header": {
      "no": "10",
@@ -1336,7 +1035,7 @@
   "seconds": 14,
   "dialogAt": 0.8,
   "visualDescription": "比較デモ（ボトルの揺れ）。シミュレーションは見方の説明だけ。結果は実機で記録",
-  "cameraDirection": "試験台のセンサ付近",
+  "cameraDirection": "固定（導入動画と同じ）",
   "animationDirection": "シミュレーション表示。既設／KR-Qの結果欄は「実機で記録」",
   "status": [
    "placeholder",
@@ -1344,22 +1043,15 @@
   ],
   "production": {
    "method": "cg",
-   "prompt": "シーン画像：F16（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p4-demo-gap",
   "shots": [
    {
-    "plate": "F16",
-    "focus": {
-     "x": 0.5,
-     "y": 0.55,
-     "z0": 1.05,
-     "z1": 1.15
-    },
     "overlay": "demo-gap",
     "header": {
      "no": "10",
@@ -1370,7 +1062,7 @@
   "seconds": 14,
   "dialogAt": 0.8,
   "visualDescription": "比較デモ（間隔の変化）。シミュレーションは見方の説明だけ。結果は実機で記録",
-  "cameraDirection": "試験台のセンサ付近",
+  "cameraDirection": "固定（導入動画と同じ）",
   "animationDirection": "シミュレーション表示。既設／KR-Qの結果欄は「実機で記録」",
   "status": [
    "placeholder",
@@ -1378,22 +1070,15 @@
   ],
   "production": {
    "method": "cg",
-   "prompt": "シーン画像：F16（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p4-demo-height",
   "shots": [
    {
-    "plate": "F16",
-    "focus": {
-     "x": 0.5,
-     "y": 0.55,
-     "z0": 1.05,
-     "z1": 1.15
-    },
     "overlay": "demo-height",
     "header": {
      "no": "10",
@@ -1404,7 +1089,7 @@
   "seconds": 14,
   "dialogAt": 0.8,
   "visualDescription": "比較デモ（検出高さの比較）。シミュレーションは見方の説明だけ。結果は実機で記録",
-  "cameraDirection": "試験台のセンサ付近",
+  "cameraDirection": "固定（導入動画と同じ）",
   "animationDirection": "シミュレーション表示。既設／KR-Qの結果欄は「実機で記録」",
   "status": [
    "placeholder",
@@ -1412,22 +1097,15 @@
   ],
   "production": {
    "method": "cg",
-   "prompt": "シーン画像：F16（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p4-result",
   "shots": [
    {
-    "plate": "F17",
-    "focus": {
-     "x": 0.5,
-     "y": 0.5,
-     "z0": 1.0,
-     "z1": 1.04
-    },
     "overlay": "result",
     "header": {
      "no": "11",
@@ -1438,7 +1116,7 @@
   "seconds": 12,
   "dialogAt": 0.8,
   "visualDescription": "結果の比較の見方：改善前（現状）は通常＋0.5〜0.8%・最大＋3.0%。改善後は実測が得られるまで未確定。実測・シミュレーション・期待効果を分ける",
-  "cameraDirection": "固定",
+  "cameraDirection": "固定（導入動画と同じ）",
   "animationDirection": "比較の枠（改善後は「未確定」）",
   "status": [
    "placeholder",
@@ -1446,22 +1124,15 @@
   ],
   "production": {
    "method": "cg",
-   "prompt": "シーン画像：F17（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p4-q3-a",
   "shots": [
    {
-    "plate": "F04",
-    "focus": {
-     "x": 0.6,
-     "y": 0.4,
-     "z0": 1.05,
-     "z1": 1.12
-    },
     "overlay": "talk",
     "header": {
      "no": "12",
@@ -1472,30 +1143,23 @@
   "seconds": 8,
   "dialogAt": 0.8,
   "visualDescription": "佐藤さん「実際のラインでも同じように？」",
-  "cameraDirection": "固定",
-  "animationDirection": "—",
+  "cameraDirection": "固定（導入動画と同じ）",
+  "animationDirection": "会話：話者（お客様／OPTEX-FA）と発言を画面中央に大きく表示（背景は線画のライン）",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
   "production": {
-   "method": "composite",
-   "prompt": "シーン画像：F04（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "method": "cg",
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p4-q3-b",
   "shots": [
    {
-    "plate": "F18",
-    "focus": {
-     "x": 0.4,
-     "y": 0.45,
-     "z0": 1.0,
-     "z1": 1.06
-    },
     "overlay": "next-actions",
     "header": {
      "no": "12",
@@ -1506,30 +1170,23 @@
   "seconds": 8,
   "dialogAt": 0.8,
   "visualDescription": "実ラインでの検証に合意。次のアクションのチェックリスト",
-  "cameraDirection": "握手に寄る",
+  "cameraDirection": "固定（導入動画と同じ）",
   "animationDirection": "チェックリスト",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
   "production": {
-   "method": "composite",
-   "prompt": "シーン画像：F18（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "method": "cg",
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p4-q3-c",
   "shots": [
    {
-    "plate": "F07",
-    "focus": {
-     "x": 0.6,
-     "y": 0.4,
-     "z0": 1.0,
-     "z1": 1.05
-    },
     "overlay": "talk-card",
     "header": {
      "no": "12",
@@ -1541,30 +1198,23 @@
   "seconds": 8,
   "dialogAt": 0.8,
   "visualDescription": "カタログだけでは判断が難しい",
-  "cameraDirection": "固定",
-  "animationDirection": "白カード",
+  "cameraDirection": "固定（導入動画と同じ）",
+  "animationDirection": "赤いカード",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
   "production": {
-   "method": "composite",
-   "prompt": "シーン画像：F07（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "method": "cg",
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p4-followup",
   "shots": [
    {
-    "plate": "F17",
-    "focus": {
-     "x": 0.5,
-     "y": 0.5,
-     "z0": 1.05,
-     "z1": 1.0
-    },
     "overlay": "followup",
     "header": {
      "title": "結果が基準に届かなかったとき"
@@ -1574,7 +1224,7 @@
   "seconds": 12,
   "dialogAt": 0.8,
   "visualDescription": "基準未達のときの次の一手（設置・感度・PLC・別方式）",
-  "cameraDirection": "ゆっくり引く",
+  "cameraDirection": "固定（導入動画と同じ）",
   "animationDirection": "4枚のカード",
   "status": [
    "placeholder",
@@ -1582,22 +1232,15 @@
   ],
   "production": {
    "method": "cg",
-   "prompt": "シーン画像：F17（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "p4-message",
   "shots": [
    {
-    "plate": "F18",
-    "focus": {
-     "x": 0.45,
-     "y": 0.45,
-     "z0": 1.0,
-     "z1": 1.08
-    },
     "overlay": "message",
     "header": {
      "no": "12",
@@ -1608,77 +1251,63 @@
   "seconds": 10,
   "dialogAt": 0.8,
   "visualDescription": "実機の比較で確かめた。次は実際のラインで、お客様と一緒に",
-  "cameraDirection": "握手に寄る",
+  "cameraDirection": "固定（導入動画と同じ）",
   "animationDirection": "「お客様と一緒に確かめる」",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
   "production": {
-   "method": "composite",
-   "prompt": "シーン画像：F18（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "method": "cg",
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "closing",
   "shots": [
    {
-    "plate": "F01L",
-    "focus": {
-     "x": 0.5,
-     "y": 0.5,
-     "z0": 1.2,
-     "z1": 1.3
-    },
     "overlay": "closing"
    }
   ],
   "seconds": 12,
   "dialogAt": 0.8,
   "visualDescription": "営業は、商品を売るだけの仕事ではない",
-  "cameraDirection": "ゆっくり寄る",
+  "cameraDirection": "固定（導入動画と同じ）",
   "animationDirection": "メッセージ",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
   "production": {
-   "method": "composite",
-   "prompt": "シーン画像：F01（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "method": "cg",
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  },
  {
   "assetId": "ending",
   "shots": [
    {
-    "plate": "F18",
-    "focus": {
-     "x": 0.45,
-     "y": 0.45,
-     "z0": 1.1,
-     "z1": 1.0
-    },
     "overlay": "ending"
    }
   ],
   "seconds": 16,
   "dialogAt": 0,
   "visualDescription": "聞く・考える・課題を見つける・提案する、そして確かめる",
-  "cameraDirection": "ゆっくり引く",
+  "cameraDirection": "固定（導入動画と同じ）",
   "animationDirection": "4ステップ→ブランド",
   "status": [
    "placeholder",
    "awaiting-footage"
   ],
   "production": {
-   "method": "composite",
-   "prompt": "シーン画像：F18（src/experience/data/plates.json のプロンプトで生成）",
-   "negativePrompt": "text, letters, logos, brand names, name tags, badges, sensor pointing the wrong way, reflector on the same side as the sensor, detection at bottle cap or shoulder, laser beams",
-   "note": "文字・グラフ・光の線は Remotion で重ねる（画像には入れない）"
+   "method": "cg",
+   "prompt": "",
+   "negativePrompt": "",
+   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   }
  }
 ]

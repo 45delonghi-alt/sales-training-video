@@ -20,18 +20,14 @@ import {
   scenes,
   videoPathFor,
 } from '../src/experience/data';
-import {OVERLAYS} from '../src/experience/remotion/v3/overlayNames';
-import platesJson from '../src/experience/data/plates.json';
+import {OVERLAYS} from '../src/experience/remotion/v4/overlayNames';
 import {writeTalk} from './talk-script';
-import type {Plate} from '../src/experience/types';
 import {allLines} from '../src/consulting/timeline';
 import {script as introScript} from '../src/consulting/script';
 import type {Line} from '../src/experience/types';
 
 const ROOT = join(__dirname, '..');
-const plates = platesJson as Plate[];
-const plateById = new Map(plates.map((p) => [p.plateId, p]));
-const shotsOf = (a: (typeof assets)[number]) => a.shots.map((s) => `${s.plate}:${s.overlay}`).join(' → ');
+const shotsOf = (a: (typeof assets)[number]) => a.shots.map((s) => s.overlay).join(' → ');
 const PUBLIC = join(ROOT, 'public');
 const DOCS = join(ROOT, 'docs', 'consulting-experience');
 
@@ -97,22 +93,12 @@ export const validate = (): Issue[] => {
     if (!a.shots.length) err(`素材 ${a.assetId}：ショットがない`);
     a.shots.forEach((sh, i) => {
       if (!(OVERLAYS as readonly string[]).includes(sh.overlay)) err(`素材 ${a.assetId}：描画できない overlay ${sh.overlay}`);
-      if (!plateById.has(sh.plate)) err(`素材 ${a.assetId}：シーン画像 ${sh.plate} が plates.json にない`);
       if (i > 0 && (sh.atLine === undefined || sh.atLine >= nLines)) err(`素材 ${a.assetId}：${i + 1}つ目のショットの切り替え位置（atLine）が範囲外`);
     });
     const vp = videoPathFor(a.assetId);
     if (paths.has(vp)) err(`素材 ${a.assetId}：映像の置き場所 ${vp} が重複`);
     paths.add(vp);
     if (a.imagePath && !existsSync(join(PUBLIC, a.imagePath))) warn(`素材 ${a.assetId}：正式な製品写真 ${a.imagePath} が未配置（仮表示で代用中）`);
-  }
-
-  // シーン画像（写真）
-  for (const p of plates) {
-    const placed = existsSync(join(PUBLIC, p.file));
-    if (p.status !== 'awaiting' && !placed) err(`シーン画像 ${p.plateId}：状態が ${p.status} なのに ${p.file} がない`);
-    if (p.status === 'awaiting') warn(`シーン画像 ${p.plateId}（${p.description}）：未生成（仮画像で代用中）`);
-    if (p.status === 'review') warn(`シーン画像 ${p.plateId}：要確認 — ${p.note ?? ''}`);
-    if (/\b(text|logo)\b/i.test(p.prompt) && !/no text/i.test(p.prompt)) err(`シーン画像 ${p.plateId}：プロンプトに「文字なし」の指定がない`);
   }
 
   // 映像の途中で止めるポイント
@@ -339,32 +325,6 @@ const demoScript = () => {
 };
 
 // 生成用プロンプト（素材の作り方）
-const promptsMd = () => {
-  const STATUS_P: Record<string, string> = {awaiting: '未生成', generated: '生成済み', review: '要確認', approved: '採用'};
-  const out = HEAD('シーン画像の生成プロンプト', 'src/experience/data/plates.json');
-  out.push(
-    '画像生成（ElevenLabs の無料枠は1日3枚まで）で作れない分は、お手持ちの画像生成ツールで下のプロンプトを使って作り、`public/experience/plates/<画像ID>.jpg` に置いてください。',
-    '置いたら `src/experience/data/plates.json` のその画像の `status` を `generated` にして、`npm run experience:validate` → `npm run experience:render`。届くまでは人物マスター（CAST）などの仮画像で動きます。',
-    '',
-    '## 共通のルール',
-    '',
-    '- **1920×1080（16:9）以上**。画像の中に**文字・ロゴ・名札・型式を入れない**（字幕・説明・グラフは動画側で重ねる）。',
-    '- 人物は**人物マスター（CAST.jpg）を参照画像として渡し**、顔・衛生帽・服装をそろえる（森さん・中田さん＝淡いブルーグレーの作業ジャンパー、佐藤さん・高橋さん＝白い衛生作業服、全員が白い衛生帽）。',
-    '- **センサ製品の外観を作らない。**写るセンサは、ロゴのない汎用の小さな箱（既設の他社製センサ、または比較用の汎用表現）に限る。OPTEX-FA 製品は公式画像だけを使う。',
-    '- センサが写る画像は**配置ルール**を必ず確認する：センサはコンベアの片側で横向き、反射板は反対側の同じ高さで正対、検出位置はボトルの下部。光の線は描かせない（動画側で描く）。合わない画像は使わない。',
-    '- 生成した画像は、生成元・日付を `plates.json` の `source` に書く。',
-    '',
-    '| 画像ID | 使う場面 | 内容 | 人物 | 状態 |',
-    '|---|---|---|---|---|',
-    ...plates.map((p) => `| ${p.plateId} | ${p.scene} | ${p.description} | ${p.people.join('・') || '—'} | ${STATUS_P[p.status]}${p.note ? `（${p.note}）` : ''} |`),
-    '',
-  );
-  for (const p of plates.filter((x) => x.status === 'awaiting')) {
-    out.push(`## ${p.plateId}　${p.description}`, '', `- 置き場所：\`public/${p.file}\``, `- 参照画像：${p.people.length ? 'CAST.jpg（人物マスター）' : 'なし'}${p.sensorLayout ? '／**センサ配置ルールを確認**' : ''}`, '', '```text', p.prompt, '```', '');
-  }
-  return out.join('\n');
-};
-
 const csvCell = (v: unknown) => `"${String(v ?? '').replace(/"/g, '""')}"`;
 
 const exportAll = () => {
@@ -378,7 +338,6 @@ const exportAll = () => {
     ['storyboard.md', storyboard()],
     ['asset-list.md', assetList()],
     ['demo-script.md', demoScript()],
-    ['generation-prompts.md', promptsMd()],
   ];
   for (const [f, body] of files) writeFileSync(join(DOCS, f), body + '\n');
   writeTalk();

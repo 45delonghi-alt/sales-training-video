@@ -1,7 +1,7 @@
-// 体験コンテンツの色（ブランドカラー：赤 #D7141E／白／黒 #141517）。線画のセンサUIで統一する。
+// 体験コンテンツの色。導入動画（src/consulting/theme.ts）と同じ：OPTEX-FA のコーポレートカラー 赤 #E60012／白／黒。
 export const X = {
-  red: '#D7141E',
-  redOnDark: '#FF4A55',
+  red: '#E60012',
+  redOnDark: '#FF4D57',
   black: '#141517',
   ink: '#141517',
   ink2: '#2B2D31',
@@ -13,7 +13,7 @@ export const X = {
   dark: '#101113',
   darkLine: 'rgba(255,255,255,0.08)',
   // 光（ビーム）・透明ボトル
-  beam: '#FF4A55',
+  beam: '#FF4D57',
   pet: 'rgba(160,210,240,0.35)',
   petLine: 'rgba(255,255,255,0.85)',
   petLineLight: 'rgba(20,21,23,0.75)',

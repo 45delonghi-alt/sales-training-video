@@ -10,7 +10,9 @@ export const Backdrop: React.FC<{
   label?: string;
   // 背景とラベルの間に描く装飾（赤い帯など）
   decor?: React.ReactNode;
-}> = ({tone, sceneNo, label = 'CONSULTING SALES EXPERIENCE', decor}) => {
+  // 右上の「NN / 総数」。null で表示しない（体験パートで、番号のない場面に使う）
+  total?: number | null;
+}> = ({tone, sceneNo, label = 'CONSULTING SALES EXPERIENCE', decor, total = 9}) => {
   const frame = useCurrentFrame();
   const dark = tone === 'dark';
   const grid = dark ? C.darkLine : 'rgba(17,18,20,0.045)';
@@ -39,20 +41,22 @@ export const Backdrop: React.FC<{
         <div style={{fontSize: 18, letterSpacing: 4, fontWeight: 700, color: text}}>{label}</div>
       </div>
       {/* 右上：シーン番号 */}
-      <div
-        style={{
-          position: 'absolute',
-          right: 72,
-          top: 52,
-          fontSize: 20,
-          letterSpacing: 3,
-          color: text,
-          fontWeight: 500,
-          fontVariantNumeric: 'tabular-nums',
-        }}
-      >
-        <span style={{color: C.red, fontWeight: 700}}>{String(sceneNo).padStart(2, '0')}</span> / 09
-      </div>
+      {total === null ? null : (
+        <div
+          style={{
+            position: 'absolute',
+            right: 72,
+            top: 52,
+            fontSize: 20,
+            letterSpacing: 3,
+            color: text,
+            fontWeight: 500,
+            fontVariantNumeric: 'tabular-nums',
+          }}
+        >
+          <span style={{color: C.red, fontWeight: 700}}>{String(sceneNo).padStart(2, '0')}</span> / {String(total).padStart(2, '0')}
+        </div>
+      )}
       {/* 四隅の目盛り */}
       <CornerMarks color={dark ? 'rgba(255,255,255,0.25)' : 'rgba(17,18,20,0.18)'} />
     </AbsoluteFill>

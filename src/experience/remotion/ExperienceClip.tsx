@@ -1,12 +1,13 @@
-// 素材ID → 映像（v3：写真ベース）。assets.json の shots（写真＋カメラの動き＋重ねる情報）を、セリフに合わせて切り替える。
+// 素材ID → 映像。導入動画（src/consulting）と同じ見た目：白・黒の背景、線画のライン、白いパネル、赤の強調、黒い字幕帯。
+// assets.json の shots（どの場面を、どのセリフから出すか）を、セリフに合わせて切り替える。
 // セリフ・字幕・音声は場面データ（phases.json）から取り、収録した音声の長さに合わせてタイミングが決まる。
 import React from 'react';
 import {AbsoluteFill, Audio, OffthreadVideo, Sequence, interpolate, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
-import {assetById, lineAudioPath, lineSchedule, linesForAsset, videoPathFor} from '../data';
+import {Backdrop} from '../../consulting/components/Backdrop';
 import {script as introScript} from '../../consulting/script';
-import {FONT} from './theme';
-import {Brand, Header, PlatePhoto, Subtitle, Tags, resolvePlate} from './v3/Frame';
-import {DIM, Overlay} from './v3/Overlays';
+import {assetById, lineAudioPath, lineSchedule, linesForAsset, videoPathFor} from '../data';
+import {FONT, Heading, Subtitle, Tags} from './v4/Kit';
+import {QUOTE, Scene, toneOf} from './v4/Scenes';
 
 export type ExperienceClipProps = {
   assetId: string;
@@ -22,9 +23,11 @@ export type ExperienceClipProps = {
 
 const XFADE = 8;
 
+const PHASE: Record<string, string> = {p1: '聞く', p2: '考える', p3: '課題を見つける', p4: '提案する'};
+
 const SIM = new Set(['signal-double', 'demo-normal', 'demo-wobble', 'demo-gap', 'demo-height']);
 const DATA = new Set(['figures', 'chart', 'result']);
-const BEAM = new Set(['sensor-existing', 'beam', 'sensor-check', 'line-walk', 'setup', 'signal-double', 'demo-normal', 'demo-wobble', 'demo-gap', 'demo-height']);
+const BEAM = new Set(['sensor-existing', 'beam', 'sensor-check', 'line-walk', 'setup', 'signal-double', 'cause-wobble', 'cause-gap', 'demo-normal', 'demo-wobble', 'demo-gap', 'demo-height']);
 
 export const ExperienceClip: React.FC<ExperienceClipProps> = ({assetId, showSubtitles, showStatus, useVideo, hasImage, hasAudio}) => {
   const frame = useCurrentFrame();
@@ -34,6 +37,9 @@ export const ExperienceClip: React.FC<ExperienceClipProps> = ({assetId, showSubt
   const sched = lineSchedule(linesForAsset(assetId), a.dialogAt ?? 0.8, assetId);
   const t = frame / fps;
   const current = sched.find((l) => t >= l.from && t < l.to);
+  // いちばん最近に話し始めたセリフ（会話の場面で、次のセリフまで出しておく）
+  const lastStarted = [...sched].reverse().find((l) => t >= l.from - 0.15);
+  const phase = PHASE[assetId.slice(0, 2)];
 
   // ショットの開始フレーム
   const starts = a.shots.map((s, i) => (i === 0 || s.atLine === undefined ? (i === 0 ? 0 : null) : Math.round((sched[s.atLine]?.from ?? 0) * fps) - 4));
@@ -41,11 +47,10 @@ export const ExperienceClip: React.FC<ExperienceClipProps> = ({assetId, showSubt
   const shotEnd = (i: number) => (i + 1 < a.shots.length ? shotStart(i + 1) : durationInFrames);
   const idx = a.shots.reduce((k, _, i) => (frame >= shotStart(i) ? i : k), 0);
   const shot = a.shots[idx];
-  const substitute = resolvePlate(shot).substitute;
+  const tone = toneOf(shot.overlay);
 
   const tags: string[] = [];
   if (showStatus && !useVideo) {
-    if (substitute) tags.push(`仮画像（${shot.plate} の画像待ち）`);
     if (SIM.has(shot.overlay)) tags.push('研修用シミュレーション');
     if (DATA.has(shot.overlay)) tags.push('研修用の架空データ');
     if (BEAM.has(shot.overlay)) tags.push('光の線は説明用の表現');
@@ -53,7 +58,7 @@ export const ExperienceClip: React.FC<ExperienceClipProps> = ({assetId, showSubt
   }
 
   return (
-    <AbsoluteFill style={{background: '#0E0F11', fontFamily: FONT}}>
+    <AbsoluteFill style={{background: '#0D0E10', fontFamily: FONT}}>
       {useVideo ? (
         <OffthreadVideo src={staticFile(videoPathFor(a.assetId))} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
       ) : (
@@ -62,25 +67,18 @@ export const ExperienceClip: React.FC<ExperienceClipProps> = ({assetId, showSubt
           const to = shotEnd(i);
           if (frame < from - 1 || frame > to + XFADE) return null;
           const o = i === 0 ? 1 : interpolate(frame, [from, from + XFADE], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
-          const p = interpolate(frame, [from, to], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+          const st = toneOf(s.overlay);
           return (
             <AbsoluteFill key={i} style={{opacity: o}}>
               <Sequence from={from} layout="none">
-                <PlatePhoto shot={s} progress={p} dim={DIM[s.overlay] ?? 0} />
-                {/* 下部の字幕を読みやすくするグラデーション */}
-                <AbsoluteFill style={{background: 'linear-gradient(180deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0) 22%, rgba(0,0,0,0) 70%, rgba(0,0,0,0.35) 100%)'}} />
-                <Overlay overlay={s.overlay} card={s.card} imagePath={hasImage ? a.imagePath : undefined} />
+                <Backdrop tone={st} sceneNo={Number(s.header?.no ?? 0)} total={s.header?.no ? 12 : null} />
+                <Scene overlay={s.overlay} card={s.card} imagePath={hasImage ? a.imagePath : undefined} quote={lastStarted ? {speaker: lastStarted.speaker, text: lastStarted.text, from: lastStarted.from - from / fps} : undefined} />
+                {s.header ? <Heading phase={phase} title={s.header.title} tone={st} frame={frame - from} /> : null}
               </Sequence>
             </AbsoluteFill>
           );
         })
       )}
-      {shot.header && !useVideo ? (
-        <Sequence key={`h${idx}`} from={shotStart(idx)} layout="none">
-          <HeaderAt no={shot.header.no} title={shot.header.title} />
-        </Sequence>
-      ) : null}
-      <Brand />
       {/* BGM：導入動画と同じ曲・同じ音量。セリフの間は下げる（導入動画の bgmVolume・bgmDuck と同じ値） */}
       {hasAudio !== false ? (
         <Audio
@@ -103,13 +101,9 @@ export const ExperienceClip: React.FC<ExperienceClipProps> = ({assetId, showSubt
               </Sequence>
             ))
         : null}
-      {showSubtitles && current ? <Subtitle speaker={current.speaker} text={current.text} from={Math.round(current.from * fps)} frame={frame} /> : null}
-      <Tags tags={tags} />
+      {/* 会話の場面はセリフを画面中央に大きく出すので、下の字幕は出さない */}
+      {showSubtitles && current && (useVideo || !QUOTE.has(shot.overlay)) ? <Subtitle speaker={current.speaker} text={current.text} from={Math.round(current.from * fps)} frame={frame} /> : null}
+      <Tags tags={tags} tone={useVideo ? 'dark' : tone} />
     </AbsoluteFill>
   );
-};
-
-const HeaderAt: React.FC<{no?: string; title: string}> = ({no, title}) => {
-  const frame = useCurrentFrame();
-  return <Header no={no} title={title} frame={frame} />;
 };

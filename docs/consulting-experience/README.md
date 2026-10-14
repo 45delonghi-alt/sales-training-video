@@ -16,12 +16,12 @@ npm run experience:serve      # http://localhost:4173/ で配信（会場PC）�
 - スマートフォン回答：進行役パネル「回答の受付を始める」→ 投影画面のURLとコード。
 - 操作は [app-manual.md](app-manual.md)、進め方は [facilitator-guide.md](facilitator-guide.md)。
 
-## 声と画像の差し替え（いちばん多い作業）
+## 声と映像の差し替え（いちばん多い作業）
 
 | 作業 | 手順 | 詳しく |
 |---|---|---|
 | 声（音読さん） | `ondoku/` の原稿を読み上げ → `audio_import/experience/` に置く → `npm run experience:import-audio` | [talk-script.md](talk-script.md)、[recording-guide.md](recording-guide.md) |
-| シーン画像 | プロンプトで生成 → `public/experience/plates/<画像ID>.jpg` → `plates.json` の status を更新 | [generation-prompts.md](generation-prompts.md) |
+| 映像の見た目 | 導入動画と同じ部品で Remotion が描く（`src/experience/remotion/v4/`）。写真は使わない | [recording-guide.md](recording-guide.md) |
 | 公式製品画像 | `public/experience/products/optex-fa/transparent-sensor.png` | 許諾確認後 |
 | 実写・実機の映像 | `public/experience/videos/<素材ID>.mp4` | [recording-guide.md](recording-guide.md) |
 
@@ -32,14 +32,13 @@ npm run experience:serve      # http://localhost:4173/ で配信（会場PC）�
 | 成果物 | 場所 | 状態 |
 |---|---|---|
 | 全体ストーリー・12シーン構成 | [concept.md](concept.md)、[complete-story.md](complete-story.md)、[schedule.md](schedule.md) | 実装済み |
-| トークスクリプト（音読さん用） | [talk-script.md](talk-script.md)、`ondoku/` | **完成**（133文・6話者）。収録待ち |
+| トークスクリプト（音読さん用） | [talk-script.md](talk-script.md)、`ondoku/` | **完成**（134文・6話者）。API の標準の声で生成済み。Beta の声への差し替え待ち |
 | 会話台本・問い一覧・分岐表 | [dialogue-script.md](dialogue-script.md)、[question-list.md](question-list.md)、`src/experience/data/visual-branches.json` | 実装済み（9問・27分岐） |
-| ビジュアルマスター（人物・工場・センサ配置） | `public/experience/plates/CAST.jpg`、`src/experience/remotion/v3/Layout.tsx`、[technical-rules.md](technical-rules.md) | 実装済み |
-| シーン画像（写真） | `public/experience/plates/`、[generation-prompts.md](generation-prompts.md) | **一部**：CAST・F01L・F09 の3点。残り15点は生成待ち（仮画像で動作） |
+| ビジュアル（導入動画と同じ見た目・センサ配置） | `src/experience/remotion/v4/`、`src/consulting/components/`、[technical-rules.md](technical-rules.md) | 実装済み |
 | ストーリーボード・素材リスト | [storyboard.md](storyboard.md)、[asset-list.md](asset-list.md)、[asset-manifest.csv](asset-manifest.csv) | 実装済み |
 | 実機比較デモ台本・チェックリスト・記録シート | [demo-script.md](demo-script.md)、[demo-checklist.md](demo-checklist.md)、[demo-record-sheet.md](demo-record-sheet.md) | 実装済み |
 | React アプリ（比較記録・結果の比較・スマホ回答） | `src/experience/app/` | **テスト済み** |
-| Remotion 動画（写真ベース・47本） | `src/experience/remotion/`、`out/experience/videos/` | 実装済み（**仮画像使用中**） |
+| Remotion 動画（導入動画と同じ見た目・47本） | `src/experience/remotion/`、`out/experience/videos/` | 実装済み |
 | マニュアル | [app-manual.md](app-manual.md)、[facilitator-guide.md](facilitator-guide.md)、[worksheet.md](worksheet.md) | 実装済み |
 | テスト結果・品質チェック | [qa-report.md](qa-report.md)、[qa-checklist.md](qa-checklist.md) | テスト済み |
 | ライセンス表 | [asset-license-check.md](asset-license-check.md) | 作成済み（許諾確認待ち） |
@@ -48,23 +47,22 @@ npm run experience:serve      # http://localhost:4173/ で配信（会場PC）�
 
 | # | 事項 | 選択肢 | 影響 |
 |---|---|---|---|
-| 1 | **シーン画像の残り15点** | (a) ElevenLabs を有料プランにする（1枚約0.12ドル、15点×2案で約4ドル＋月額）／(b) お手持ちの画像生成ツールで、こちらのプロンプトを使って作る／(c) 無料枠で1日3枚ずつ作る（約5日） | 届くまでは仮画像で動く |
-| 2 | 音読さんの声の割り当て | 話者6人ぶん（[talk-script.md](talk-script.md) の表に記入） | 届くまでは字幕で進行 |
-| 3 | OPTEX-FA 製品画像 | 社内から公式画像を入手（許諾） | 届くまでは「公式製品画像」の枠 |
-| 4 | KR-Qシリーズの型式・仕様の確定 | 公式ページで照合（この環境からは公式サイトに接続できない） | 画面は「型式・仕様は公式資料で確認」と表示 |
-| 5 | 既設センサ（他社製）の扱い | メーカー・型式を表示しない（現状）／OMRON・KEYENCE の公式画像を許諾を得て使う | 現状は表示しない |
-| 6 | Remotion の会社ライセンス | 利用条件の確認 | — |
+| 1 | 音読さん Beta の音声 | 話者6人ぶんの設定は決定済み（[talk-script.md](talk-script.md)）。Beta で作った11ファイルを送る | 届くまでは API の標準の声 |
+| 2 | OPTEX-FA 製品画像 | 社内から公式画像を入手（許諾） | 届くまでは「公式製品画像」の枠 |
+| 3 | KR-Qシリーズの型式・仕様の確定 | 公式ページで照合（この環境からは公式サイトに接続できない） | 画面は「型式・仕様は公式資料で確認」と表示 |
+| 4 | 既設センサ（他社製）の扱い | メーカー・型式を表示しない（現状）／OMRON・KEYENCE の公式画像を許諾を得て使う | 現状は表示しない |
+| 5 | Remotion の会社ライセンス | 利用条件の確認 | — |
 
 ## 仕組み
 
 ```
 src/experience/
-  data/        phases.json（台本の元データ）・assets.json（映像47本＝ショットの並び）・plates.json（シーン画像）
+  data/        phases.json（台本の元データ）・assets.json（映像47本＝場面の並び）
                characters.json・glossary.json・audioTiming.json（収録した声の長さ）・visual-branches.json（自動生成）
-  remotion/    ExperienceClip.tsx（写真＋カメラの動き＋重ねる情報）、v3/（枠・配置図・重ねる情報）
+  remotion/    ExperienceClip.tsx（場面の切り替え・声・BGM・字幕）、v4/（導入動画と同じ枠・配置図・場面）
   app/         体験アプリ（進行・分岐・比較記録・結果の比較・投影同期・スマートフォン回答）
 scripts/
-  experience.ts          検証・書き出し（台本・問い一覧・ストーリーボード・素材リスト・デモ台本・画像プロンプト）
+  experience.ts          検証・書き出し（台本・問い一覧・ストーリーボード・素材リスト・デモ台本）
   talk-script.ts         トークスクリプト・音読さん原稿の書き出し、音声の取り込み
   experience-app.ts      アプリのビルド・配信・回答API
   experience-render.ts   クリップの静止画・MP4 の書き出し

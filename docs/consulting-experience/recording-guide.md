@@ -14,18 +14,17 @@
 
 問いの読み上げ（`q-…`）・先輩のヒント（`hint-…`）・振り返りの問い（`r-…`）も、収録すればアプリで再生される。
 
-## 2. シーン画像（写真）
+## 2. 映像の見た目
 
-一覧とプロンプトは [generation-prompts.md](generation-prompts.md)、データは `src/experience/data/plates.json`。
+後半（体験パート）の映像は、導入動画と同じ部品（背景・線画のライン・字幕）で Remotion が描きます。写真や画像生成は使いません。
 
-| 手順 | 内容 |
+| 変えたいもの | 場所 |
 |---|---|
-| 1 | プロンプトで画像を作る（1920×1080以上・文字なし）。人物は `public/experience/plates/CAST.jpg` を参照画像にする |
-| 2 | センサが写る画像（F08・F16 など）は、配置ルール（[technical-rules.md](technical-rules.md)）に合うか確認する。合わなければ使わない |
-| 3 | `public/experience/plates/<画像ID>.jpg` に置き、`plates.json` の `status` を `generated`（確認済みなら `approved`）にする |
-| 4 | `npm run experience:validate` → `npm run experience:stills`（静止画で確認）→ `npm run experience:render` |
+| 場面の並び・見出し | `src/experience/data/assets.json`（`shots`） |
+| 場面の中身（図・パネル） | `src/experience/remotion/v4/Scenes.tsx` |
+| 枠・字幕・配色 | `src/experience/remotion/v4/Kit.tsx`（導入動画の `src/consulting/theme.ts` と同じ色） |
 
-画像が届くまでは、人物マスター（CAST）やライン（F01L・F09）を寄り・引きで使った**仮画像**で動く（画面左下に「仮画像」と表示）。
+変えたら `npm run experience:validate` → `npm run experience:stills`（静止画で確認）→ `npm run experience:render`。
 
 ## 3. 実写・実機の映像
 
