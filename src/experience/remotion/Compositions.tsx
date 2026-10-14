@@ -10,7 +10,7 @@ import {FPS, H, W} from './theme';
 export const clipFrames = (assetId: string) => {
   const a = assets.find((x) => x.assetId === assetId);
   if (!a) return FPS * 5;
-  return Math.ceil(clipSeconds(a.seconds, linesForAsset(assetId), a.dialogAt ?? 0.8) * FPS);
+  return Math.ceil(clipSeconds(a.seconds, linesForAsset(assetId), a.dialogAt ?? 0.8, assetId) * FPS);
 };
 
 export const ExperienceCompositions: React.FC = () => (

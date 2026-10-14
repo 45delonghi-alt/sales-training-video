@@ -3,7 +3,7 @@ import React from 'react';
 import {AbsoluteFill, Audio, Sequence, interpolate, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {BrandMark} from '../../consulting/components/BrandMark';
 import type {AssetStatus} from '../types';
-import {lineSchedule} from '../data';
+import {lineAudioPath, lineSchedule} from '../data';
 import {FONT, X} from './theme';
 import {progress} from '../../consulting/components/anim';
 import {Bust, isPerson, type Mood} from './Person';
@@ -27,8 +27,8 @@ export type ClipProps = {
   responderMood?: Mood;
   // この映像に人物として映っている人（その人が話すときは小窓を出さない）
   onScreen?: string[];
-  // お客様の声・ナレーションの音声（配置されていれば dialogAt から再生）
-  audioPath?: string;
+  // 声を流すか（収録済みの文だけ、その文の開始時刻から再生）
+  withAudio?: boolean;
 };
 
 export {clipSeconds, lineSchedule} from '../data';
@@ -39,7 +39,7 @@ export const ClipShell: React.FC<ClipProps & {children: React.ReactNode}> = (p) 
   const dark = p.tone === 'dark';
   const grid = dark ? X.darkLine : 'rgba(20,21,23,0.045)';
   const text = dark ? 'rgba(255,255,255,0.6)' : X.gray;
-  const sched = lineSchedule(p.lines, p.dialogAt);
+  const sched = lineSchedule(p.lines, p.dialogAt, p.assetId);
   const t = frame / fps;
   const current = sched.find((l) => t >= l.from && t < l.to);
   return (
@@ -71,11 +71,15 @@ export const ClipShell: React.FC<ClipProps & {children: React.ReactNode}> = (p) 
           fromFrame={Math.round(current.from * fps)}
         />
       ) : null}
-      {p.audioPath ? (
-        <Sequence from={Math.round(p.dialogAt * fps)} layout="none">
-          <Audio src={staticFile(p.audioPath)} />
-        </Sequence>
-      ) : null}
+      {p.withAudio
+        ? sched
+            .filter((l) => l.recorded && l.lineId)
+            .map((l) => (
+              <Sequence key={l.lineId} from={Math.round(l.from * fps)} layout="none">
+                <Audio src={staticFile(lineAudioPath(l.lineId!))} />
+              </Sequence>
+            ))
+        : null}
       {p.showSubtitles && current ? <Subtitle line={current} frame={frame} fromFrame={Math.round(current.from * fps)} /> : null}
     </AbsoluteFill>
   );

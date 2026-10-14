@@ -15,7 +15,7 @@ export type Phase = {
 
 export type Speaker = 'sales' | 'sato' | 'takahashi' | 'mori' | 'nakata' | 'narration';
 
-export type Character = {id: Speaker; role: 'sales' | 'customer' | 'senior' | 'narration'; name: string; title: string; gender: string; voice: string};
+export type Character = {id: Speaker; role: 'sales' | 'customer' | 'senior' | 'narration'; name: string; title: string; gender: string; voice: string; appearance?: string};
 
 export type GlossaryItem = {key: string; term: string; short: string};
 
@@ -103,11 +103,15 @@ export type DemoScene = Base & {
   checks: string[];
   predictPrompt?: string; // 結果を見る前に予想させる問い
   record: boolean;
+  compare?: boolean; // 既設センサと提案センサを、同じ条件で比べて記録する
 };
+
+// 比較結果（記録した実測値だけを表示する）
+export type ResultScene = Base & {type: 'result'; videoAsset: string; lines: Line[]};
 
 export type ReflectionScene = Base & {type: 'reflection'; question: string; minutes: number; videoAsset?: string};
 
-export type Scene = VideoScene | ClipScene | QuestionScene | DemoScene | ReflectionScene;
+export type Scene = VideoScene | ClipScene | QuestionScene | DemoScene | ResultScene | ReflectionScene;
 
 // phases.json の形（フェーズの中に場面を持つ）
 export type PhaseFile = (Phase & {scenes: Omit<Scene, 'phaseId'>[]})[];

@@ -22,7 +22,7 @@ const useSteps = (variant: string) => {
   const {fps} = useVideoConfig();
   const id = ASSET[variant];
   const a = assetById.get(id);
-  return lineSchedule(linesForAsset(id), a?.dialogAt ?? 0.8).map((l) => Math.round(l.from * fps));
+  return lineSchedule(linesForAsset(id), a?.dialogAt ?? 0.8, id).map((l) => Math.round(l.from * fps));
 };
 
 export const TechScene: React.FC<{variant: string}> = ({variant}) => {

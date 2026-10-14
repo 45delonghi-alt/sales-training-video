@@ -3,6 +3,7 @@ import phasesJson from './phases.json';
 import assetsJson from './assets.json';
 import charactersJson from './characters.json';
 import glossaryJson from './glossary.json';
+import audioTimingJson from './audioTiming.json';
 
 const phaseFile = phasesJson as unknown as PhaseFile;
 
@@ -33,20 +34,44 @@ const splitLong = (speaker: Speaker, text: string): Line[] => {
   return parts.map((t) => ({speaker, text: t.trim()})).filter((l) => l.text);
 };
 
-// 素材を使っている場面のセリフ（字幕・音声・台本の書き出し用）
+const splitAll = (lines: Line[]) => lines.flatMap((l) => splitLong(l.speaker, l.text));
+
+// 素材を使っている場面のセリフ（字幕・音声・台本の書き出し用）。1要素＝1文＝音声1ファイル
 export const linesForAsset = (assetId: string): Line[] => {
   for (const s of scenes) {
-    if (s.type === 'clip' && s.videoAsset === assetId) return s.lines;
+    if ((s.type === 'clip' || s.type === 'result') && s.videoAsset === assetId) return splitAll(s.lines);
     if (s.type === 'question') {
       const c = s.choices.find((ch) => ch.videoAsset === assetId);
       if (c) {
         const sales = salesLineOf(c);
-        return [...(sales ? [{speaker: 'sales' as Speaker, text: sales}] : []), ...splitLong(c.responder, c.customerResponse), ...(c.extraLines ?? [])];
+        return splitAll([...(sales ? [{speaker: 'sales' as Speaker, text: sales}] : []), {speaker: c.responder, text: c.customerResponse}, ...(c.extraLines ?? [])]);
       }
     }
   }
   return [];
 };
+
+// セリフのID（音声ファイル名）：<素材ID>_<2桁の連番>。例 p1-q1-b_02 → public/experience/audio/p1-q1-b_02.mp3
+export const lineIdOf = (assetId: string, index: number) => `${assetId}_${String(index + 1).padStart(2, '0')}`;
+export const lineAudioPath = (lineId: string) => `experience/audio/${lineId}.mp3`;
+
+// 音読さん等で読み上げるときの表記（字幕はそのまま。読み間違えやすい語だけ読み方に置き換える）
+const READINGS: [RegExp, string][] = [
+  [/OPTEX-FA/g, 'オプテックス・エフエー'],
+  [/KR-Q/g, 'ケーアール・キュー'],
+  [/PLC/g, 'ピーエルシー'],
+  [/PET/g, 'ペット'],
+  [/(\d+(?:\.\d+)?)〜(\d+(?:\.\d+)?)%/g, '$1から$2パーセント'],
+  [/(\d+(?:\.\d+)?)〜(\d+(?:\.\d+)?)/g, '$1から$2'],
+  [/(\d+(?:\.\d+)?)%/g, '$1パーセント'],
+  [/1万本/g, 'いちまんぼん'],
+  [/……/g, '…'],
+];
+export const speechOf = (text: string) => READINGS.reduce((t, [re, to]) => t.replace(re, to), text);
+
+// 収録した音声の長さ（秒）。npm run experience:import-audio が書き込む。なければ文字数から見積もる
+const audioTiming = audioTimingJson as Record<string, number>;
+export const recordedSeconds = (lineId: string): number | undefined => audioTiming[lineId];
 
 // 素材で話すお客様と表情（反応の小窓用）
 export const responderFor = (assetId: string): {speaker: Speaker; mood: Choice['mood']} | undefined => {
@@ -65,8 +90,6 @@ export const compositionIdFor = (assetId: string) => `XP-${assetId}`;
 // 実写・実機の映像の置き場所（assets.json に videoPath がなければ、素材IDと同じ名前の MP4）
 export const videoPathFor = (assetId: string) => assetById.get(assetId)?.videoPath ?? `experience/videos/${assetId}.mp4`;
 
-// 声の音声の置き場所（素材ごとに1ファイル。セリフの開始時刻から再生）
-export const audioPathFor = (assetId: string) => `experience/audio/${assetId}.mp3`;
 
 // 選択肢 → 映像の対応表（visual-branches.json）。1つの選択肢に、専用の映像が1本だけ対応する
 export const branches = () =>
@@ -107,21 +130,25 @@ export const branches = () =>
 export const readSeconds = (text: string) => Math.max(2.2, [...text].length * 0.17 + 0.8);
 
 // セリフの表示タイミング（秒）とクリップの長さ。映像・アプリ・台本書き出しで共通に使う
-export type TimedLine = Line & {from: number; to: number};
-export const lineSchedule = (lines: Line[], dialogAt: number): TimedLine[] => {
+// 収録済みの文は、音声の長さ＋間（0.45秒）で並べる。未収録の文は文字数からの見積もり
+export const LINE_GAP = 0.45;
+export type TimedLine = Line & {from: number; to: number; lineId?: string; recorded?: boolean};
+export const lineSchedule = (lines: Line[], dialogAt: number, assetId?: string): TimedLine[] => {
   let t = dialogAt;
-  return lines.map((l) => {
+  return lines.map((l, i) => {
+    const lineId = assetId ? lineIdOf(assetId, i) : undefined;
+    const rec = lineId ? recordedSeconds(lineId) : undefined;
     const from = t;
-    t += readSeconds(l.text);
-    return {...l, from, to: t};
+    t += rec !== undefined ? rec + LINE_GAP : readSeconds(l.text);
+    return {...l, from, to: t, lineId, recorded: rec !== undefined};
   });
 };
-export const clipSeconds = (seconds: number, lines: Line[], dialogAt: number) => {
-  const sched = lineSchedule(lines, dialogAt);
+export const clipSeconds = (seconds: number, lines: Line[], dialogAt: number, assetId?: string) => {
+  const sched = lineSchedule(lines, dialogAt, assetId);
   const end = sched.length ? sched[sched.length - 1].to + 0.8 : 0;
   return Math.max(seconds, end);
 };
 export const assetSeconds = (assetId: string) => {
   const a = assetById.get(assetId);
-  return a ? clipSeconds(a.seconds, linesForAsset(assetId), a.dialogAt ?? 0.8) : 0;
+  return a ? clipSeconds(a.seconds, linesForAsset(assetId), a.dialogAt ?? 0.8, assetId) : 0;
 };

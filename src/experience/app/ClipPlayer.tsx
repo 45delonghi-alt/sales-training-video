@@ -4,7 +4,7 @@ import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {Player, type PlayerRef} from '@remotion/player';
 import {ExperienceClip} from '../remotion/ExperienceClip';
 import {clipFrames} from '../remotion/Compositions';
-import {assetById, audioPathFor, linesForAsset, lineSchedule, sceneById, videoPathFor} from '../data';
+import {assetById, linesForAsset, lineSchedule, sceneById, videoPathFor} from '../data';
 import type {Pause} from '../types';
 import {ConsultingSales} from '../../consulting/ConsultingSales';
 import {buildTimeline} from '../../consulting/timeline';
@@ -29,7 +29,7 @@ export const pauseFrames = (sceneId: string, assetId: string, fps = 30): {frame:
     }
     if (p.beforeLine !== undefined) {
       const a = assetById.get(assetId);
-      const sched = lineSchedule(linesForAsset(assetId), a?.dialogAt ?? 0.8);
+      const sched = lineSchedule(linesForAsset(assetId), a?.dialogAt ?? 0.8, assetId);
       const l = sched[p.beforeLine];
       return l ? [{frame: Math.max(0, Math.round(l.from * fps) - 4), prompt: p.prompt, hint: p.hint}] : [];
     }
@@ -76,7 +76,7 @@ export const ClipPlayer: React.FC<{
     () =>
       intro
         ? {timeline, hasBgm: available.has(introScript.meta.bgmFile)}
-        : {assetId, showSubtitles, showStatus, useVideo, hasImage, hasAudio: available.has(audioPathFor(assetId))},
+        : {assetId, showSubtitles, showStatus, useVideo, hasImage, hasAudio: true},
     [intro, timeline, available, assetId, showSubtitles, showStatus, useVideo, hasImage],
   );
 

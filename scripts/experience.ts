@@ -256,7 +256,7 @@ const storyboard = () => {
     '',
   );
   for (const a of assets) {
-    const lines = lineSchedule(linesForAsset(a.assetId), a.dialogAt ?? 0.8);
+    const lines = lineSchedule(linesForAsset(a.assetId), a.dialogAt ?? 0.8, a.assetId);
     const used = scenes.filter((s) => assetOfScene(s).includes(a.assetId)).map((s) => {
       if (s.type === 'question') {
         const c = s.choices.find((x) => x.videoAsset === a.assetId);

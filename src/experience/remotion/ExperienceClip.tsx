@@ -1,7 +1,7 @@
 // 素材ID → 映像。assets.json の kind / variant で描き分け、セリフは場面データから取る。
 import React from 'react';
 import {AbsoluteFill, OffthreadVideo, staticFile} from 'remotion';
-import {assetById, audioPathFor, linesForAsset, phases, responderFor, scenes, videoPathFor} from '../data';
+import {assetById, linesForAsset, phases, responderFor, scenes, videoPathFor} from '../data';
 import {ClipShell} from './ClipShell';
 import {FactoryScene} from './scenes/FactoryScene';
 import {SensorScene, BottleScene} from './scenes/CloseupScenes';
@@ -59,7 +59,7 @@ export const ExperienceClip: React.FC<ExperienceClipProps> = ({assetId, showSubt
       simulation={simulation && !useVideo}
       responderMood={responderFor(assetId)?.mood}
       onScreen={useVideo ? ['sato', 'takahashi', 'mori', 'nakata'] : onScreen}
-      audioPath={hasAudio ? audioPathFor(assetId) : undefined}
+      withAudio={hasAudio !== false}
     >
       {useVideo ? (
         <AbsoluteFill>
