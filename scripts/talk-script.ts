@@ -87,7 +87,7 @@ export const writeTalk = () => {
     '',
     '音読さんでは、日本語の声を選び、下の「設定のめやす」から始めて耳で調整してください（声の名前は音読さんの一覧から選んで、右の欄に記入）。',
     '',
-    '| 話者 | 役割 | 声のイメージ | 設定のめやす（速度／ピッチ／読み上げスタイル） | 音読さんの声（記入） |',
+    '| 話者 | 役割 | 声のイメージ | 設定のめやす（速度／ピッチ／読み上げスタイル） | 決めた声（見本） |',
     '|---|---|---|---|---|',
   ];
   const SETTING: Record<string, string> = {
@@ -101,7 +101,8 @@ export const writeTalk = () => {
   for (const sp of SPEAKER_ORDER) {
     const c = characterById.get(sp);
     const n = lines.filter((l) => l.speaker === sp).length;
-    if (c && n) md.push(`| ${c.name} | ${c.title || '—'} | ${c.voice}（${n}文） | ${SETTING[sp] ?? ''} | |`);
+    const sample = existsSync(`assets-src/v3/voice-samples/${sp}.mp3`) ? `[見本](../../assets-src/v3/voice-samples/${sp}.mp3)` : sp === 'narration' ? '導入動画と同じ声' : '';
+    if (c && n) md.push(`| ${c.name} | ${c.title || '—'} | ${c.voice}（${n}文） | ${SETTING[sp] ?? ''} | ${sample} |`);
   }
   md.push('', '- 男性：佐藤さん・中田さん。女性：高橋さん・森さん。お客様（佐藤さん・高橋さん）と営業（あなた）は、必ず別の声にする。', '- 「…」で終わる文は、少し間をとって言いよどむ感じに。');
   md.push('', '## 原稿ファイル（音読さんに貼るもの）', '', '| ファイル | 話者 | 文の数 | 文字数 | 最初のセリフID |', '|---|---|---|---|---|');
