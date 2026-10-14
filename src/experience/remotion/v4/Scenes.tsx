@@ -7,7 +7,7 @@ import {BrandMark} from '../../../consulting/components/BrandMark';
 import {Conveyor} from '../../../consulting/components/Conveyor';
 import {progress} from '../../../consulting/components/anim';
 import {CountHud} from '../../../consulting/scenes/Scene03Mission';
-import type {Speaker} from '../../types';
+import type {Scene as StoryScene, Speaker} from '../../types';
 import {FrontView, LayoutCard, TopView} from './Layout';
 import {C, Emph, InkLabel, Panel, Red, RedLabel, type Tone, ap, speakerInfo, useSec} from './Kit';
 
@@ -20,10 +20,10 @@ export const WEEKS = [
 const pct = (w: (typeof WEEKS)[number]) => ((w.count - w.actual) / w.actual) * 100;
 
 // 黒い背景の場面（それ以外は白）
-const DARK = new Set(['title', 'miscount', 'talk', 'talk-card', 'sensor-existing', 'beam', 'line-walk', 'message', 'closing', 'ending']);
+const DARK = new Set(['question', 'hint', 'reflection', 'title', 'miscount', 'talk', 'talk-card', 'sensor-existing', 'beam', 'line-walk', 'message', 'closing', 'ending']);
 export const toneOf = (overlay: string): Tone => (DARK.has(overlay) ? 'dark' : 'light');
 // 画面中央に大きくセリフを出す場面（下の字幕は出さない）
-export const QUOTE = new Set(['talk', 'talk-card']);
+export const QUOTE = new Set(['talk', 'talk-card', 'question', 'hint', 'reflection']);
 
 const HUD = {line: 'LINE 03 ｜ PET BOTTLE COUNT', actualLabel: '実際の本数', countLabel: 'センサのカウント', alert: '誤カウント発生'};
 
@@ -739,8 +739,53 @@ const Ending: React.FC = () => {
   );
 };
 
-export const Scene: React.FC<{overlay: string; card?: string; imagePath?: string; quote?: QuoteLine}> = ({overlay, card, imagePath, quote}) => {
+// ------------------------------------------------------------------ 問い・先輩のヒント・振り返り（導入動画の「問い」と同じ形）
+const Question: React.FC<{scene?: StoryScene}> = ({scene}) => {
+  const {frame, fps} = useSec();
+  if (!scene || scene.type !== 'question') return null;
+  return (
+    <AbsoluteFill>
+      <Line faint />
+      <div style={{position: 'absolute', left: 160, right: 160, top: 220, textAlign: 'center', ...ap(frame, 0.2, fps)}}>
+        <div style={{fontSize: 30, fontWeight: 900, letterSpacing: 6, color: C.redOnDark}}>QUESTION</div>
+        <div style={{fontSize: 76, fontWeight: 900, color: C.white, lineHeight: 1.3, marginTop: 12}}>{scene.questionText}</div>
+      </div>
+      <div style={{position: 'absolute', left: 140, right: 140, top: 520, display: 'flex', gap: 30}}>
+        {scene.choices.map((c, i) => (
+          <div key={c.choiceId} style={{flex: 1, minHeight: 230, background: 'rgba(13,14,16,0.82)', border: '2px solid rgba(255,255,255,0.35)', padding: '24px 30px', color: C.white, ...ap(frame, 0.9 + i * 0.4, fps)}}>
+            <RedLabel size={30}>{c.choiceId}</RedLabel>
+            <div style={{fontSize: 40, fontWeight: 800, lineHeight: 1.4, marginTop: 18}}>{c.choiceText}</div>
+          </div>
+        ))}
+      </div>
+    </AbsoluteFill>
+  );
+};
+
+const Reflection: React.FC<{scene?: StoryScene}> = ({scene}) => {
+  const {frame, fps} = useSec();
+  if (!scene || scene.type !== 'reflection') return null;
+  return (
+    <AbsoluteFill>
+      <RedSlash progress={progress(frame, 0, 20)} left={1560} width={200} opacity={0.9} />
+      <RedSlash progress={progress(frame, 4, 20)} left={1800} width={60} opacity={0.55} />
+      <div style={{position: 'absolute', left: 160, right: 520, top: 330}}>
+        <div style={{fontSize: 30, fontWeight: 900, letterSpacing: 6, color: C.redOnDark, ...ap(frame, 0.1, fps)}}>REFLECTION</div>
+        <div style={{fontSize: 84, fontWeight: 900, color: C.white, lineHeight: 1.3, marginTop: 16, ...ap(frame, 0.3, fps, {dx: -40, dy: 0})}}>{scene.question}</div>
+        <div style={{fontSize: 36, fontWeight: 700, color: 'rgba(255,255,255,0.75)', marginTop: 30, ...ap(frame, 1.2, fps)}}>ワークシートに、自分の言葉で書いてみよう</div>
+      </div>
+    </AbsoluteFill>
+  );
+};
+
+export const Scene: React.FC<{overlay: string; card?: string; imagePath?: string; quote?: QuoteLine; cardScene?: StoryScene}> = ({overlay, card, imagePath, quote, cardScene}) => {
   switch (overlay) {
+    case 'question':
+      return <Question scene={cardScene} />;
+    case 'hint':
+      return <Talk line={quote} />;
+    case 'reflection':
+      return <Reflection scene={cardScene} />;
     case 'title':
       return <Title />;
     case 'miscount':

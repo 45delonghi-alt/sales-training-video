@@ -90,7 +90,7 @@ export const Emph: React.FC<{text: string; color?: string}> = ({text, color = C.
 export const speakerInfo = (sp: Speaker) => {
   const c = characterById.get(sp);
   if (!c || sp === 'narration') return null;
-  const unit = c.title.replace(/（.*）/, '');
+  const unit = c.title.replace(/（.*）/, '').replace(/^OPTEX-FA\s*/, '');
   const side = c.role === 'customer' ? 'お客様' : 'OPTEX-FA';
   return {name: c.name, unit, side, customer: c.role === 'customer'};
 };

@@ -225,7 +225,8 @@ const split = (file: string, texts: string[]) => {
   const sil = silences(file, 0.15);
   const head = sil.length && sil[0][0] < 0.05 ? sil[0][1] : 0;
   const tail = sil.length && sil[sil.length - 1][1] > total - 0.05 ? sil[sil.length - 1][0] : total;
-  if (n === 1) return [{start: Math.max(0, head - 0.05), end: Math.min(total, tail + 0.12)}];
+  // 1文の音声は、話し始め・話し終わりを切らないよう前後に余裕を残す（語尾の弱い音を切らない）
+  if (n === 1) return [{start: Math.max(0, head - 0.08), end: Math.min(total, tail + 0.25)}];
   const cand = sil.filter(([a, b]) => a > head + 0.05 && b < tail - 0.05).map(([a, b]) => ({mid: (a + b) / 2, len: b - a, a, b}));
   if (cand.length < n - 1) throw new Error(`${file}：文の間の無音が足りません（必要 ${n - 1}／検出 ${cand.length}）。1文ずつの音声で置いてください`);
   const w = texts.map((t) => [...t.replace(/[「」『』\s]/g, '')].length);

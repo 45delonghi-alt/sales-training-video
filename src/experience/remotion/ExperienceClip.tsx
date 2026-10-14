@@ -5,7 +5,7 @@ import React from 'react';
 import {AbsoluteFill, Audio, OffthreadVideo, Sequence, interpolate, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {Backdrop} from '../../consulting/components/Backdrop';
 import {script as introScript} from '../../consulting/script';
-import {assetById, lineAudioPath, lineSchedule, linesForAsset, videoPathFor} from '../data';
+import {cardByKey, clipById, lineAudioPath, lineSchedule, linesForAsset, videoPathFor} from '../data';
 import {FONT, Heading, Subtitle, Tags} from './v4/Kit';
 import {QUOTE, Scene, toneOf} from './v4/Scenes';
 
@@ -32,14 +32,15 @@ const BEAM = new Set(['sensor-existing', 'beam', 'sensor-check', 'line-walk', 's
 export const ExperienceClip: React.FC<ExperienceClipProps> = ({assetId, showSubtitles, showStatus, useVideo, hasImage, hasAudio}) => {
   const frame = useCurrentFrame();
   const {fps, durationInFrames} = useVideoConfig();
-  const a = assetById.get(assetId);
+  const a = clipById.get(assetId);
   if (!a) return <AbsoluteFill style={{background: '#000', color: '#fff', fontSize: 40}}>素材 {assetId} がありません</AbsoluteFill>;
   const sched = lineSchedule(linesForAsset(assetId), a.dialogAt ?? 0.8, assetId);
   const t = frame / fps;
   const current = sched.find((l) => t >= l.from && t < l.to);
   // いちばん最近に話し始めたセリフ（会話の場面で、次のセリフまで出しておく）
   const lastStarted = [...sched].reverse().find((l) => t >= l.from - 0.15);
-  const phase = PHASE[assetId.slice(0, 2)];
+  const card = cardByKey.get(assetId);
+  const phase = card ? (card.kind === 'reflection' ? '振り返り' : PHASE[card.scene.phaseId]) : PHASE[assetId.slice(0, 2)];
 
   // ショットの開始フレーム
   const starts = a.shots.map((s, i) => (i === 0 || s.atLine === undefined ? (i === 0 ? 0 : null) : Math.round((sched[s.atLine]?.from ?? 0) * fps) - 4));
@@ -72,7 +73,7 @@ export const ExperienceClip: React.FC<ExperienceClipProps> = ({assetId, showSubt
             <AbsoluteFill key={i} style={{opacity: o}}>
               <Sequence from={from} layout="none">
                 <Backdrop tone={st} sceneNo={Number(s.header?.no ?? 0)} total={s.header?.no ? 12 : null} />
-                <Scene overlay={s.overlay} card={s.card} imagePath={hasImage ? a.imagePath : undefined} quote={lastStarted ? {speaker: lastStarted.speaker, text: lastStarted.text, from: lastStarted.from - from / fps} : undefined} />
+                <Scene overlay={s.overlay} card={s.card} cardScene={card?.scene} imagePath={hasImage ? a.imagePath : undefined} quote={lastStarted ? {speaker: lastStarted.speaker, text: lastStarted.text, from: lastStarted.from - from / fps} : undefined} />
                 {s.header ? <Heading phase={phase} title={s.header.title} tone={st} frame={frame - from} /> : null}
               </Sequence>
             </AbsoluteFill>

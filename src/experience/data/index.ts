@@ -37,7 +37,43 @@ const splitLong = (speaker: Speaker, text: string): Line[] => {
 const splitAll = (lines: Line[]) => lines.flatMap((l) => splitLong(l.speaker, l.text));
 
 // 素材を使っている場面のセリフ（字幕・音声・台本の書き出し用）。1要素＝1文＝音声1ファイル
+// 問い・先輩のヒント・振り返りの画面（アプリでは画面に表示するだけだが、動画にも書き出す）。
+//   キーは音声ファイル名と同じ：q-<問いID>／hint-<問いID>／r-<場面ID>
+export type CardKind = 'question' | 'hint' | 'reflection';
+type Card = {key: string; kind: CardKind; scene: Scene};
+export const cards: Card[] = scenes.flatMap((s): Card[] => {
+  if (s.type === 'question') return [{key: `q-${s.questionId}`, kind: 'question', scene: s}, ...(s.hint ? [{key: `hint-${s.questionId}`, kind: 'hint' as const, scene: s}] : [])];
+  if (s.type === 'reflection') return [{key: `r-${s.sceneId}`, kind: 'reflection', scene: s}];
+  return [];
+});
+export const cardByKey = new Map(cards.map((c) => [c.key, c]));
+const cardLines = (key: string): Line[] | undefined => {
+  const c = cardByKey.get(key);
+  if (!c) return undefined;
+  const s = c.scene;
+  if (c.kind === 'question' && s.type === 'question') return [{speaker: 'narration', text: s.questionText}];
+  if (c.kind === 'hint' && s.type === 'question' && s.hint) return [s.hint];
+  if (c.kind === 'reflection' && s.type === 'reflection') return [{speaker: 'narration', text: s.question}];
+  return [];
+};
+const cardAsset = (key: string, kind: CardKind): Asset => ({
+  assetId: key,
+  shots: [{overlay: kind, header: {title: kind === 'question' ? `問い ${key.slice(2)}` : kind === 'hint' ? `先輩のヒント（${key.slice(5)}）` : '振り返り'}}],
+  seconds: kind === 'question' ? 6 : 4,
+  dialogAt: 0.6,
+  visualDescription: kind === 'question' ? '問いと選択肢' : kind === 'hint' ? '先輩のヒント' : '振り返りの問い',
+  cameraDirection: '固定（導入動画と同じ）',
+  animationDirection: '—',
+  status: [],
+  production: {method: 'cg', prompt: '', negativePrompt: '', note: '問い・ヒント・振り返りの画面'},
+});
+// 映像になるものすべて（場面の映像47本＋問い・ヒント・振り返りの画面）
+export const allClips: Asset[] = [...assetsJson as Asset[], ...cards.map((c) => cardAsset(c.key, c.kind))];
+export const clipById = new Map(allClips.map((a) => [a.assetId, a]));
+
 export const linesForAsset = (assetId: string): Line[] => {
+  const card = cardLines(assetId);
+  if (card) return card;
   for (const s of scenes) {
     if ((s.type === 'clip' || s.type === 'result') && s.videoAsset === assetId) return splitAll(s.lines);
     if (s.type === 'question') {
@@ -131,7 +167,11 @@ export const readSeconds = (text: string) => Math.max(2.2, [...text].length * 0.
 
 // セリフの表示タイミング（秒）とクリップの長さ。映像・アプリ・台本書き出しで共通に使う
 // 収録済みの文は、音声の長さ＋間（0.45秒）で並べる。未収録の文は文字数からの見積もり
-export const LINE_GAP = 0.45;
+// 会話の間：同じ人が続けて話すときは短く、話し手が替わるときは少し長く（自然な受け答えの間）
+export const GAP_SAME = 0.3;
+export const GAP_TURN = 0.6;
+// 字幕は話し終わりから少しだけ残す（次の字幕までのちらつきを防ぎつつ、音声とずらさない）
+export const SUB_HOLD = 0.15;
 export type TimedLine = Line & {from: number; to: number; lineId?: string; recorded?: boolean};
 export const lineSchedule = (lines: Line[], dialogAt: number, assetId?: string): TimedLine[] => {
   let t = dialogAt;
@@ -139,8 +179,13 @@ export const lineSchedule = (lines: Line[], dialogAt: number, assetId?: string):
     const lineId = assetId ? lineIdOf(assetId, i) : undefined;
     const rec = lineId ? recordedSeconds(lineId) : undefined;
     const from = t;
-    t += rec !== undefined ? rec + LINE_GAP : readSeconds(l.text);
-    return {...l, from, to: t, lineId, recorded: rec !== undefined};
+    if (rec === undefined) {
+      t += readSeconds(l.text);
+      return {...l, from, to: t, lineId, recorded: false};
+    }
+    const next = lines[i + 1];
+    t += rec + (next && next.speaker === l.speaker ? GAP_SAME : GAP_TURN);
+    return {...l, from, to: from + rec + SUB_HOLD, lineId, recorded: true};
   });
 };
 export const clipSeconds = (seconds: number, lines: Line[], dialogAt: number, assetId?: string) => {
