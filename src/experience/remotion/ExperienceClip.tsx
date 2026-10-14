@@ -3,6 +3,7 @@
 import React from 'react';
 import {AbsoluteFill, Audio, OffthreadVideo, Sequence, interpolate, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {assetById, lineAudioPath, lineSchedule, linesForAsset, videoPathFor} from '../data';
+import {script as introScript} from '../../consulting/script';
 import {FONT} from './theme';
 import {Brand, Header, PlatePhoto, Subtitle, Tags, resolvePlate} from './v3/Frame';
 import {DIM, Overlay} from './v3/Overlays';
@@ -80,6 +81,19 @@ export const ExperienceClip: React.FC<ExperienceClipProps> = ({assetId, showSubt
         </Sequence>
       ) : null}
       <Brand />
+      {/* BGM：導入動画と同じ曲・同じ音量。セリフの間は下げる（導入動画の bgmVolume・bgmDuck と同じ値） */}
+      {hasAudio !== false ? (
+        <Audio
+          src={staticFile(introScript.meta.bgmFile)}
+          loop
+          volume={(f) => {
+            const sec = f / fps;
+            const talking = sched.some((l) => sec >= l.from - 0.2 && sec < l.to + 0.1);
+            const fade = Math.min(1, f / (0.6 * fps), (durationInFrames - f) / (0.6 * fps));
+            return introScript.meta.bgmVolume * (talking ? introScript.meta.bgmDuck : 1) * Math.max(0, fade);
+          }}
+        />
+      ) : null}
       {hasAudio !== false
         ? sched
             .filter((l) => l.recorded && l.lineId)

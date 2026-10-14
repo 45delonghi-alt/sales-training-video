@@ -266,7 +266,15 @@ const NavBar: React.FC<{ctx: Ctx}> = ({ctx}) => {
 const SceneView: React.FC<{scene: Scene; ctx: Ctx}> = ({scene, ctx}) => {
   switch (scene.type) {
     case 'video':
-      return <ClipView ctx={ctx} assetId="intro" title={scene.title} sceneId={scene.sceneId} />;
+      return (
+        <ClipView
+          ctx={ctx}
+          assetId="intro"
+          title={scene.title}
+          sceneId={scene.sceneId}
+          videoFile={scene.videoFile && ctx.available.has(scene.videoFile) ? scene.videoFile : undefined}
+        />
+      );
     case 'clip':
       return <ClipView ctx={ctx} assetId={scene.videoAsset} title={scene.title} sceneId={scene.sceneId} last={scene.nextSceneId === null} />;
     case 'question':
@@ -292,7 +300,7 @@ const playerProps = (ctx: Ctx) => ({
   controlRef: ctx.controlRef,
 });
 
-const ClipView: React.FC<{ctx: Ctx; assetId: string; title: string; sceneId: string; last?: boolean}> = ({ctx, assetId, title, sceneId, last}) => {
+const ClipView: React.FC<{ctx: Ctx; assetId: string; title: string; sceneId: string; last?: boolean; videoFile?: string}> = ({ctx, assetId, title, sceneId, last, videoFile}) => {
   const {state, dispatch} = ctx;
   const pauses = useMemo(() => pauseFrames(sceneId, assetId), [sceneId, assetId]);
   if (last && state.step === 'done') return <EndScreen ctx={ctx} />;
@@ -303,6 +311,7 @@ const ClipView: React.FC<{ctx: Ctx; assetId: string; title: string; sceneId: str
         autoPlay={state.step === 'playing'}
         playToken={state.playToken}
         onEnded={() => !ctx.projector && dispatch({type: 'step', step: 'done'})}
+        overrideVideoUrl={videoFile}
         pauses={pauses}
         readOnly={ctx.projector}
         onResume={() => ctx.projectorOpen && ctx.sendCmd('play')}

@@ -19,6 +19,7 @@ export const pauseFrames = (sceneId: string, assetId: string, fps = 30): {frame:
   const s = sceneById.get(sceneId);
   const pauses: Pause[] = s && (s.type === 'clip' || s.type === 'video') ? s.pauses ?? [] : [];
   return pauses.flatMap((p) => {
+    if (p.atSeconds !== undefined) return [{frame: Math.round(p.atSeconds * fps), prompt: p.prompt, hint: p.hint}];
     if (p.atLineId && assetId === 'intro') {
       const tl = buildTimeline(introScript, narrationTiming as NarrationTiming);
       for (const sc of tl.scenes) {
@@ -94,6 +95,8 @@ export const ClipPlayer: React.FC<{
       }
     };
     if (v) {
+      done.current.clear();
+      setThinking(null);
       v.currentTime = 0;
       if (autoPlay) start(() => v.play());
       return;
@@ -119,8 +122,23 @@ export const ClipPlayer: React.FC<{
     return () => p.removeEventListener('ended', onEnd);
   }, [assetId, overrideVideoUrl]);
 
-  // 止めるポイントに来たら一時停止して「考えよう」を出す
+  // 止めるポイントに来たら一時停止して「考えよう」を出す（動画ファイルの場合は秒で判定）
   const pauseKey = pauses.map((x) => x.frame).join(',');
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v || !pauses.length) return;
+    const onTime = () => {
+      const f = v.currentTime * 30;
+      const hit = pauses.find((x) => !done.current.has(x.frame) && f >= x.frame && f < x.frame + 30);
+      if (hit) {
+        done.current.add(hit.frame);
+        v.pause();
+        setThinking({prompt: hit.prompt, hint: hit.hint});
+      }
+    };
+    v.addEventListener('timeupdate', onTime);
+    return () => v.removeEventListener('timeupdate', onTime);
+  }, [assetId, pauseKey, overrideVideoUrl]);
   useEffect(() => {
     const p = ref.current;
     if (!p || !pauses.length) return;
@@ -182,7 +200,8 @@ export const ClipPlayer: React.FC<{
               className="primary"
               onClick={() => {
                 setThinking(null);
-                ref.current?.play();
+                if (videoRef.current) videoRef.current.play().catch(() => setBlocked(true));
+                else ref.current?.play();
                 onResume?.();
               }}
             >

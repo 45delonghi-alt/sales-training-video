@@ -12,26 +12,27 @@
         "type": "video",
         "title": "導入動画：コンサルティング営業とは",
         "compositionId": "ConsultingSales",
-        "description": "既存の導入動画（約4分30秒・9シーン）。最後の「聞く・考える・課題を見つける・提案する」が、この体験の4フェーズになる。",
+        "description": "導入動画（完成版・約3分58秒）。最後の「聞く・考える・課題を見つける・提案する」が、この体験の4フェーズになる。",
         "pauses": [
           {
-            "atLineId": "S04_02",
+            "atSeconds": 54.9,
             "prompt": "営業である皆さんは、お客様に何を確認しますか？",
             "hint": "15秒でワークシートに1つ書こう"
           },
           {
-            "atLineId": "S06_02",
+            "atSeconds": 83.8,
             "prompt": "誤カウントを放っておくと、現場では何が起きると思う？",
             "hint": "15秒、となりの人と話してみよう"
           },
           {
-            "atLineId": "PS_15",
-            "prompt": "今回のお客様のボトルは「透明」。どの方式が気になる？",
+            "atSeconds": 212.8,
+            "prompt": "今回のお客様のボトルは「透明」。どの方式が合いそう？",
             "hint": "15秒で、理由を1つ考えよう"
           }
         ],
-        "facilitatorNote": "導入動画は3か所で止まる（各15秒程度）。答えは言わせっぱなしでよい（正解はこのあとの体験で見つける）。",
-        "nextSceneId": "bridge"
+        "facilitatorNote": "完成版の導入動画（public/consulting/video/intro-final.mp4）を再生する。3か所で止まる（各15秒程度）。答えは言わせっぱなしでよい。",
+        "nextSceneId": "bridge",
+        "videoFile": "consulting/video/intro-final.mp4"
       },
       {
         "sceneId": "bridge",

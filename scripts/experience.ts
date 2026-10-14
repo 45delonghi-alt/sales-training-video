@@ -120,6 +120,7 @@ export const validate = (): Issue[] => {
   for (const s of scenes) {
     if (s.type !== 'clip' && s.type !== 'video') continue;
     for (const p of s.pauses ?? []) {
+      if (s.type === 'video' && s.videoFile && !existsSync(join(PUBLIC, s.videoFile))) err(`${s.sceneId}：導入動画のファイル ${s.videoFile} がない`);
       if (p.atLineId && !introIds.has(p.atLineId)) err(`${s.sceneId}：止めるポイントの文ID ${p.atLineId} が導入動画にない`);
       if (p.beforeLine !== undefined && (s.type !== 'clip' || p.beforeLine >= s.lines.length)) err(`${s.sceneId}：止めるポイントが範囲外`);
     }

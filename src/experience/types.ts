@@ -91,7 +91,7 @@ export type Choice = {
 };
 
 // 映像の途中で止めて考えさせるポイント
-export type Pause = {beforeLine?: number; atLineId?: string; prompt: string; hint?: string};
+export type Pause = {beforeLine?: number; atLineId?: string; atSeconds?: number; prompt: string; hint?: string};
 
 type Base = {
   sceneId: string;
@@ -102,7 +102,7 @@ type Base = {
   glossary?: string[]; // この場面で表示する用語メモ（glossary.json の key）
 };
 
-export type VideoScene = Base & {type: 'video'; compositionId: string; description: string; pauses?: Pause[]};
+export type VideoScene = Base & {type: 'video'; compositionId: string; videoFile?: string; description: string; pauses?: Pause[]};
 
 export type ClipScene = Base & {type: 'clip'; videoAsset: string; lines: Line[]; pauses?: Pause[]};
 

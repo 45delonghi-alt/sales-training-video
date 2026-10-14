@@ -14,8 +14,9 @@ const ONDOKU = join(DOCS, 'ondoku');
 const IMPORT_DIR = join(ROOT, 'audio_import', 'experience');
 const AUDIO_DIR = join(ROOT, 'public', 'experience', 'audio');
 const TIMING = join(ROOT, 'src', 'experience', 'data', 'audioTiming.json');
-// 読み上げ速度（音読さんで標準速度に作り、ここで微調整する。導入動画は 0.85 倍）
+// 読み上げ速度：ナレーションは導入動画と同じ 0.85 倍（同じ声・同じ速さでつながるように）。ほかの話者は音読さんの設定のまま
 const SPEED = Number(process.env.SPEED || 1);
+const speedOf = (sp: Speaker) => (sp === 'narration' ? Number(process.env.NARRATION_SPEED || 0.85) : SPEED);
 
 export type TalkLine = Line & {lineId: string; where: string; sceneId: string; phaseId: string};
 
@@ -90,7 +91,7 @@ export const writeTalk = () => {
     '|---|---|---|---|---|',
   ];
   const SETTING: Record<string, string> = {
-    narration: '1.0／0／ナレーション（落ち着いて、はっきり）',
+    narration: '導入動画と同じ声・同じ設定で生成（速度1.0。取り込み時に導入動画と同じ0.85倍にそろえる）',
     sales: '1.0／やや高い（+0.5）／ビジネス（明るく丁寧に）',
     sato: '0.95／やや低い（-0.5）／ビジネス（現場の担当者らしく、率直に）',
     takahashi: '1.0／0／ビジネス（はきはきと）',
@@ -215,9 +216,10 @@ const split = (file: string, texts: string[]) => {
 const EXTS = ['mp3', 'wav', 'm4a'];
 const findInput = (stem: string) => EXTS.map((e) => join(IMPORT_DIR, `${stem}.${e}`)).find((f) => existsSync(f));
 
-const writeLine = (src: string, lineId: string, from: number, to: number) => {
+// 音量は導入動画（完成版：全体で -16.8 LUFS）に合わせる
+const writeLine = (src: string, lineId: string, from: number, to: number, speed = SPEED) => {
   const out = join(AUDIO_DIR, `${lineId}.mp3`);
-  const af = [`atempo=${SPEED}`, 'loudnorm=I=-16:TP=-1.5:LRA=11', 'aresample=44100'].join(',');
+  const af = [`atempo=${speed}`, 'loudnorm=I=-17:TP=-1.5:LRA=11', 'aresample=44100'].join(',');
   execFileSync('ffmpeg', ['-v', 'error', '-y', '-ss', from.toFixed(3), '-to', to.toFixed(3), '-i', src, '-af', af, '-ac', '1', '-b:a', '128k', out]);
   return probe(out);
 };
@@ -240,16 +242,16 @@ const importAudio = () => {
       const single = findInput(l.lineId);
       if (single) {
         const [r] = split(single, [l.text]);
-        timing[l.lineId] = writeLine(single, l.lineId, r.start, r.end);
+        timing[l.lineId] = writeLine(single, l.lineId, r.start, r.end, speedOf(l.speaker));
       } else if (whole) {
-        timing[l.lineId] = writeLine(whole, l.lineId, ranges[k].start, ranges[k].end);
+        timing[l.lineId] = writeLine(whole, l.lineId, ranges[k].start, ranges[k].end, speedOf(l.speaker));
       }
     });
     const got = ls.filter((l) => timing[l.lineId] !== undefined).length;
     if (got) console.log(`${g}：${got}/${ls.length}文`);
   }
   writeFileSync(TIMING, JSON.stringify(timing, null, 1) + '\n');
-  console.log(`完了：${Object.keys(timing).length}/${lines.length}文を取り込みました（${SPEED}倍速）。未収録の文は字幕だけで進みます。`);
+  console.log(`完了：${Object.keys(timing).length}/${lines.length}文を取り込みました（ナレーション ${speedOf('narration')}倍速・ほか ${SPEED}倍速）。未収録の文は字幕だけで進みます。`);
 };
 
 if (process.argv[1]?.endsWith('talk-script.ts')) {

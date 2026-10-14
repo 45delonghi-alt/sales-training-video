@@ -52,6 +52,32 @@ ok('進行役モードに切り替わる', await page.locator('.fac').isVisible(
 ok('最初の場面は導入動画', (await title()) === scenes[0].title);
 await page.waitForSelector('.player-box');
 await shot('01-intro');
+// 導入動画（完成版の MP4）：指定の秒で「考えよう」が出て止まる
+{
+  await page.getByRole('button', {name: /▶ 導入動画/}).click();
+  const v = page.locator('.player-box video');
+  ok('導入動画は完成版の MP4 を再生する', (await v.count()) === 1 && (await v.getAttribute('src')).includes('intro-final.mp4'));
+  // （テスト用 WebM は scripts の外で作成：ffmpeg -t 70 -i intro-final.mp4 … dist/experience/consulting/video/intro-final-test.webm）
+  // テスト用の Chromium は H.264 を再生できないため、同じ映像の WebM（テスト用・dist にだけ置く）に差し替えて確かめる
+  await v.evaluate(async (el) => {
+    if (!el.canPlayType('video/mp4; codecs="avc1.640028"')) {
+      el.src = 'consulting/video/intro-final-test.webm';
+      await new Promise((r) => el.addEventListener('loadedmetadata', r, {once: true}));
+    }
+    el.muted = true;
+    el.currentTime = 54.2;
+    return el.play();
+  });
+  let p1 = false;
+  try {
+    await page.waitForSelector('.think-pause', {timeout: 8000});
+    p1 = true;
+  } catch {}
+  ok('導入動画：54.9秒で「考えよう」が出て止まる', p1 && (await page.locator('.tp-prompt').innerText()).includes('何を確認しますか') && (await v.evaluate((el) => el.paused)));
+  await page.getByRole('button', {name: '続きを見る ▶'}).click();
+  ok('導入動画：「続きを見る」で再開する', !(await v.evaluate((el) => el.paused)));
+  await v.evaluate((el) => el.pause());
+}
 
 const byId = Object.fromEntries(scenes.map((s) => [s.sceneId, s]));
 const order = [];
