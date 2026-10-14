@@ -15,7 +15,7 @@ export type Phase = {
 
 export type Speaker = 'sales' | 'sato' | 'takahashi' | 'mori' | 'nakata' | 'narration';
 
-export type Character = {id: Speaker; role: 'sales' | 'customer' | 'senior' | 'narration'; name: string; title: string; gender: string; voice: string; appearance?: string};
+export type Character = {id: Speaker; role: 'sales' | 'customer' | 'senior' | 'narration'; name: string; title: string; gender: string; voice: string; appearance?: string; ondokuVoice?: string; ondokuPitch?: number};
 
 export type GlossaryItem = {key: string; term: string; short: string};
 

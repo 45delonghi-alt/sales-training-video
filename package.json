@@ -22,7 +22,8 @@
     "experience:stills": "tsx scripts/experience-render.ts stills",
     "experience:render": "tsx scripts/experience-render.ts videos",
     "experience:talk": "tsx scripts/talk-script.ts talk",
-    "experience:import-audio": "tsx scripts/talk-script.ts import"
+    "experience:import-audio": "tsx scripts/talk-script.ts import",
+    "experience:ondoku": "tsx scripts/ondoku-generate.ts"
   },
   "dependencies": {
     "@fontsource/noto-sans-jp": "5.3.0",
