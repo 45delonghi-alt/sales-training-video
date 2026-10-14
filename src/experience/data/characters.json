@@ -6,7 +6,8 @@
     "title": "OPTEX-FA 新人営業（学生）",
     "gender": "any",
     "voice": "明るく丁寧な20代の声（新人営業。学生が自分を重ねられる、素直で落ち着いた話し方）",
-    "appearance": "画面には映らない（一人称）"
+    "appearance": "画面には映らない（一人称）",
+    "ondokuVoice": "ja-JP-KeitaNeural"
   },
   {
     "id": "sato",
@@ -15,7 +16,8 @@
     "title": "飲料工場 設備課（30代後半・男性）",
     "gender": "male",
     "voice": "落ち着いた30代後半の男性。現場をよく知る実務担当。丁寧だが率直",
-    "appearance": "白い衛生作業服・白い衛生帽。短い黒髪。実直な表情"
+    "appearance": "白い衛生作業服・白い衛生帽。短い黒髪。実直な表情",
+    "ondokuVoice": "ja-JP-NaokiNeural"
   },
   {
     "id": "takahashi",
@@ -24,7 +26,8 @@
     "title": "飲料工場 品質管理課（30代前半・女性）",
     "gender": "female",
     "voice": "はきはきした30代前半の女性。数字と品質に厳しい",
-    "appearance": "白い衛生作業服・白い衛生帽（髪はすべて帽子の中）。きびきびした表情"
+    "appearance": "白い衛生作業服・白い衛生帽（髪はすべて帽子の中）。きびきびした表情",
+    "ondokuVoice": "ja-JP-Mizuki"
   },
   {
     "id": "mori",
@@ -33,7 +36,8 @@
     "title": "OPTEX-FA 営業（先輩社員・女性）",
     "gender": "female",
     "voice": "温かく頼れる30代の女性。学生の判断を奪わず、問いかける口調",
-    "appearance": "淡いブルーグレーの作業ジャンパー・水色のシャツ・白い衛生帽（低い位置のポニーテール）。親しみやすく知的"
+    "appearance": "淡いブルーグレーの作業ジャンパー・水色のシャツ・白い衛生帽（低い位置のポニーテール）。親しみやすく知的",
+    "ondokuVoice": "ja-JP-NanamiNeural"
   },
   {
     "id": "nakata",
@@ -42,7 +46,8 @@
     "title": "OPTEX-FA アプリケーションエンジニア（男性）",
     "gender": "male",
     "voice": "穏やかな40代の男性。技術を短く分かりやすく話す",
-    "appearance": "淡いブルーグレーの作業ジャンパー・水色のシャツ・紺のネクタイ・白い衛生帽。落ち着いた表情"
+    "appearance": "淡いブルーグレーの作業ジャンパー・水色のシャツ・紺のネクタイ・白い衛生帽。落ち着いた表情",
+    "ondokuVoice": "ja-JP-Takumi-NTTS"
   },
   {
     "id": "narration",
@@ -51,6 +56,7 @@
     "title": "",
     "gender": "any",
     "voice": "既存の導入動画と同じナレーター（音読さん Beta「Yann（ヤン）」・速度1.2x・ビジネス）",
-    "appearance": ""
+    "appearance": "",
+    "ondokuVoice": "ja-JP-DaichiNeural"
   }
 ]

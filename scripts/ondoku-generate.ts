@@ -5,6 +5,7 @@
 // 声は characters.json の ondokuVoice。できた音声は audio_import/experience/<セリフID>.mp3 に置き、
 // そのあと npm run experience:import-audio で取り込む（速度・音量・映像の長さがそろう）。
 // トークンはこの環境のネットワークシークレットとして登録しておく（プログラムからは扱わない）。
+import {execFileSync} from 'node:child_process';
 import {existsSync, mkdirSync, writeFileSync} from 'node:fs';
 import {join} from 'node:path';
 import {characterById, speechOf} from '../src/experience/data';
@@ -17,18 +18,24 @@ const only = process.argv.find((a) => a.startsWith('--only='))?.slice(7);
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
+// 通信は curl で行う（この環境のプロキシ設定をそのまま使えるため）
+const curl = (args: string[]) => execFileSync('curl', ['-sS', '--fail-with-body', '--max-time', '120', ...args], {maxBuffer: 64 * 1024 * 1024});
+
 const tts = async (text: string, voice: string, pitch: number) => {
+  let last = '';
   for (let i = 0; i < 4; i++) {
-    const res = await fetch(API, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({text, voice, speed: 1, pitch})});
-    const body = (await res.json().catch(() => ({}))) as {url?: string; error?: string};
-    if (body.url) {
-      const mp3 = await fetch(body.url);
-      if (mp3.ok) return Buffer.from(await mp3.arrayBuffer());
+    try {
+      const out = curl(['-X', 'POST', API, '-H', 'Content-Type: application/json', '-d', JSON.stringify({text, voice, speed: 1, pitch})]).toString();
+      const body = JSON.parse(out) as {url?: string; error?: string};
+      if (body.url) return curl([body.url]);
+      last = body.error ?? out.slice(0, 200);
+      if (/voice|token|credit|文字/i.test(last)) break;
+    } catch (e) {
+      last = String((e as {stdout?: Buffer}).stdout ?? e).slice(0, 200);
     }
-    if (body.error && !/busy|limit|timeout/i.test(body.error)) throw new Error(body.error);
     await sleep(2000 * 2 ** i);
   }
-  throw new Error('音読さんから音声を受け取れませんでした');
+  throw new Error(`音読さんから音声を受け取れませんでした：${last}`);
 };
 
 const main = async () => {
