@@ -1,8 +1,9 @@
 // WEB参加（学生1〜5名）の通信。状態はサーバーから SSE で届き、操作は POST で送る。
 // 接続が切れても EventSource が自動で再接続し、最新の状態を受け取り直す。
 import {useEffect, useState} from 'react';
-import {scenes, sceneById} from '../data';
-import type {Scene} from '../types';
+import {QUESTION_HOLD, scenes, sceneById} from '../data';
+import {clipFrames} from '../remotion/Compositions';
+import type {QuestionScene, Scene} from '../types';
 
 export type Stage = 'play' | 'answer' | 'branch' | 'explain' | 'write' | 'share';
 export type Answer = {choiceId: 'A' | 'B' | 'C'; reason: string; at: number};
@@ -151,3 +152,10 @@ export const rate = (m?: Measure) => {
   return `${r >= 0 ? '+' : ''}${r.toFixed(1)}%`;
 };
 export const pass = (m?: Measure) => !!m?.passed && m.passed === m.outputs && m.passed === m.counted;
+
+// 問いの画面：問いの映像（q-<設問ID>）が、問いとA/B/Cの選択肢を出しきった時点で自動で止まり、そこから考える時間（約60秒）が始まる。
+// 映像の最後の5秒（出しきった画面を保つ部分）は、止めずに再生したときのためのもの。進行役と学生で同じ時刻を使う
+export const questionAsset = (q: QuestionScene) => `q-${q.questionId}`;
+export const thinkPauseFrame = (q: QuestionScene) => Math.max(0, clipFrames(questionAsset(q)) - QUESTION_HOLD * 30);
+export const thinkStart = (stageAt: number, q: QuestionScene) => stageAt + (thinkPauseFrame(q) / 30) * 1000;
+export const thinkLeft = (stageAt: number, q: QuestionScene, thinkSeconds: number, now: number) => Math.max(0, Math.ceil((thinkStart(stageAt, q) + thinkSeconds * 1000 - now) / 1000));

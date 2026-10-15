@@ -13,21 +13,49 @@ const OUT = join(ROOT, 'out', 'experience', 'final');
 const FPS = 30;
 const mode = process.argv[2] === 'recommended' ? 'recommended' : 'all';
 
-// 再生順のクリップ
+// 再生順のクリップ（と、その場面。フェーズナビゲーションの表示に使う）
+const sceneOfClip = new Map<string, string>();
 const order = (): string[] => {
   const ids: string[] = [];
+  const add = (id: string, sceneId: string) => {
+    ids.push(id);
+    sceneOfClip.set(id, sceneId);
+  };
   for (const s of scenes) {
-    if (s.type === 'clip' || s.type === 'result' || s.type === 'demo') ids.push(s.videoAsset);
+    if (s.type === 'clip' || s.type === 'result' || s.type === 'demo') add(s.videoAsset, s.sceneId);
     if (s.type === 'question') {
-      ids.push(`q-${s.questionId}`);
-      if (cardByKey.has(`hint-${s.questionId}`)) ids.push(`hint-${s.questionId}`);
+      add(`q-${s.questionId}`, s.sceneId);
+      if (cardByKey.has(`hint-${s.questionId}`)) add(`hint-${s.questionId}`, s.sceneId);
       const picks = mode === 'all' ? s.choices : s.choices.filter((c) => c.choiceId === (s.recommendedChoice ?? 'A'));
-      ids.push(...picks.map((c) => c.videoAsset));
+      for (const c of picks) add(c.videoAsset, s.sceneId);
     }
-    if (s.type === 'reflection') ids.push(`r-${s.sceneId}`);
+    if (s.type === 'reflection') add(`r-${s.sceneId}`, s.sceneId);
   }
   // 推奨ルートでは「基準未達のときの次の一手」は通らない
   return mode === 'recommended' ? ids.filter((id) => id !== 'p4-followup') : ids;
+};
+
+// 単独再生用なので、フェーズナビゲーション（上部）とチャプタータイトル（フェーズの最初のクリップの頭 2.6秒）を焼き込む。
+// 画像は scripts/web-experience/nav-overlays.ts で書き出したもの（ない場合は重ねない）
+const NAV = join(ROOT, 'out', 'experience', 'nav');
+const CHAPTER_SEC = 2.6;
+const navFilter = (navPng?: string, chapterPng?: string): {inputs: string[]; filter: string} => {
+  const inputs: string[] = [];
+  const steps: string[] = ['[0:v]scale=1920:1080,fps=30,format=yuva420p[v0]'];
+  let last = 'v0';
+  if (navPng && existsSync(navPng)) {
+    inputs.push('-i', navPng);
+    steps.push(`[${last}][1:v]overlay=0:0[v1]`);
+    last = 'v1';
+  }
+  if (chapterPng && existsSync(chapterPng)) {
+    const k = inputs.length / 2 + 1;
+    inputs.push('-loop', '1', '-t', String(CHAPTER_SEC), '-i', chapterPng);
+    steps.push(`[${k}:v]format=rgba,fade=t=in:st=0:d=0.3:alpha=1,fade=t=out:st=${CHAPTER_SEC - 0.4}:d=0.4:alpha=1[ch]`, `[${last}][ch]overlay=0:0:eof_action=pass[v2]`);
+    last = 'v2';
+  }
+  steps.push(`[${last}]format=yuv420p[vout]`);
+  return {inputs, filter: steps.join(';')};
 };
 
 const sh = (cmd: string, args: string[]) => execFileSync(cmd, args, {stdio: ['ignore', 'pipe', 'pipe'], maxBuffer: 1 << 26}).toString();
@@ -36,9 +64,10 @@ const probe = (f: string, stream?: 'v' | 'a') =>
 
 // 映像と音声を別々に用意し、音声は映像の長さぴったりに切りそろえて（サンプル単位で）つなぐ。
 // クリップごとに音声が映像より少し長い（約16ミリ秒）ので、そのままつなぐと後ろへ行くほど音声が遅れるため。
-const piece = (src: string, base: string) => {
+const piece = (src: string, base: string, navPng?: string, chapterPng?: string) => {
   const v = probe(src, 'v');
-  sh('ffmpeg', ['-nostdin', '-y', '-loglevel', 'error', '-i', src, '-an', '-vf', 'scale=1920:1080,fps=30,format=yuv420p', '-c:v', 'libx264', '-crf', '20', '-preset', 'veryfast', '-t', v.toFixed(4), '-f', 'mpegts', `${base}.ts`]);
+  const nav = navFilter(navPng, chapterPng);
+  sh('ffmpeg', ['-nostdin', '-y', '-loglevel', 'error', '-i', src, ...nav.inputs, '-an', '-filter_complex', nav.filter, '-map', '[vout]', '-c:v', 'libx264', '-crf', '20', '-preset', 'veryfast', '-t', v.toFixed(4), '-f', 'mpegts', `${base}.ts`]);
   sh('ffmpeg', ['-nostdin', '-y', '-loglevel', 'error', '-i', src, '-vn', '-ac', '2', '-ar', '48000', '-af', `apad,atrim=end=${v.toFixed(4)}`, '-c:a', 'pcm_s16le', `${base}.wav`]);
   return v;
 };
@@ -59,14 +88,19 @@ const main = () => {
     manifest.push({id: 'intro', start: t, duration: d, lines: []});
     t += d;
   }
+  let lastPhase = 'intro';
   ids.forEach((id, k) => {
     const src = join(VIDEOS, `${id}.mp4`);
+    const sceneId = sceneOfClip.get(id)!;
+    const phaseId = scenes.find((x) => x.sceneId === sceneId)?.phaseId ?? 'intro';
+    const chapter = phaseId !== lastPhase && /^p[1-4]$/.test(phaseId) ? join(NAV, `chapter-${phaseId}.png`) : undefined;
+    lastPhase = phaseId;
     if (!existsSync(src)) throw new Error(`クリップがありません：${src}`);
     const a = clipById.get(id)!;
     const lines = linesForAsset(id);
     const expect = Math.ceil(clipSeconds(a.seconds, lines, a.dialogAt ?? 0.8, id) * FPS) / FPS;
     const base = join(seg, `${String(k + 1).padStart(3, '0')}-${id}`);
-    const d = piece(src, base);
+    const d = piece(src, base, join(NAV, `${sceneId}.png`), chapter);
     bases.push(base);
     if (Math.abs(d - expect) > 0.05) throw new Error(`${id}：クリップの長さ ${d.toFixed(2)}秒が想定 ${expect.toFixed(2)}秒と違います（書き出しが古い可能性）`);
     const sched = lineSchedule(lines, a.dialogAt ?? 0.8, id).filter((l) => l.recorded);

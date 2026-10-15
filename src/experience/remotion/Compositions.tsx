@@ -4,6 +4,7 @@ import React from 'react';
 import {Composition, Folder} from 'remotion';
 import {allClips, clipSeconds, compositionIdFor, linesForAsset} from '../data';
 import {CharacterSheet} from './CharacterSheet';
+import {PhaseNavOverlay} from './PhaseNavOverlay';
 import {ExperienceClip} from './ExperienceClip';
 import {IntroFix, introFixFrames} from './IntroFix';
 import {FPS, H, W} from './theme';
@@ -16,6 +17,7 @@ export const clipFrames = (assetId: string) => {
 
 export const ExperienceCompositions: React.FC = () => (
   <Folder name="Experience">
+    <Composition id="PhaseNavOverlay" component={PhaseNavOverlay as React.FC<Record<string, unknown>>} fps={FPS} width={W} height={H} durationInFrames={1} defaultProps={{sceneId: 'p1-open', chapter: false}} />
     <Composition id="CharacterSheet" component={CharacterSheet} fps={FPS} width={W} height={H} durationInFrames={1} />
     <Composition id="IntroP6Fix" component={IntroFix} fps={FPS} width={W} height={H} durationInFrames={introFixFrames} />
     {allClips.map((a) => (

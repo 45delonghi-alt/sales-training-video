@@ -70,7 +70,7 @@ await students[0].p.getByText('ここからは、あなたが営業担当です'
 ok('導入動画のあと、全員の端末が「YOUR MISSION　ここからは、あなたが営業担当です。」に切り替わる', true);
 
 await goTo('最初に何を確認する？');
-for (const s of students) await s.p.getByText('最初に、何を確認しますか？').waitFor();
+for (const s of students) await s.p.getByRole('heading', {name: '最初に、何を確認しますか？'}).waitFor();
 const before = await text(students[0].p);
 ok('回答前の学生の画面に、推奨・解説・他の人の回答が出ない', !/おすすめ|解説|みんなの回答/.test(before));
 await shot(students[0].p, '03-student-question');

@@ -4,14 +4,8 @@ import React, {useEffect, useMemo, useState} from 'react';
 import {ClipPlayer, pauseFrames} from '../app/ClipPlayer';
 import {characterById, phases, salesLineOf, sceneById} from '../data';
 import type {Choice, PitchScene, QuestionScene, ReflectionScene, Scene} from '../types';
-import {api, demoOf, pass, rate, savePid, savedPid, type StudentState, useAvailable, useLiveState, useNow} from './client';
-
-const STEPS = [
-  {id: 'p1', label: '聞く'},
-  {id: 'p2', label: '考える'},
-  {id: 'p3', label: '課題を見つける'},
-  {id: 'p4', label: '提案する'},
-];
+import {api, demoOf, pass, questionAsset, rate, savePid, savedPid, type StudentState, thinkLeft, thinkPauseFrame, thinkStart, useAvailable, useLiveState, useNow} from './client';
+import {PhaseNavigation} from './PhaseNavigation';
 
 const nameOf = (s: string) => characterById.get(s as never)?.name ?? '';
 
@@ -69,26 +63,15 @@ const Join: React.FC<{sessionId: string; onJoined: (pid: string) => void; again?
 
 const Live: React.FC<{s: StudentState; online: boolean}> = ({s, online}) => {
   const scene = sceneById.get(s.sceneId);
-  const phase = scene?.phaseId;
   return (
     <div className="lv">
       <header className="lv-top">
         <div className="lv-brand">
           <span className="lv-slash">/</span> OPTEX FA
         </div>
-        <ol className="lv-steps">
-          {STEPS.map((x, i) => {
-            const idx = STEPS.findIndex((y) => y.id === phase);
-            return (
-              <li key={x.id} className={x.id === phase ? 'now' : idx > i || phase === 'reflection' ? 'done' : ''}>
-                <b>{i + 1}</b>
-                {x.label}
-              </li>
-            );
-          })}
-        </ol>
         <div className={`lv-conn ${online ? 'on' : ''}`}>{online ? `${s.me?.name ?? ''}・参加中（${s.count}名）` : '再接続しています…'}</div>
       </header>
+      <PhaseNavigation sceneId={s.sceneId} />
       <main className="lv-main">{scene ? <SceneView s={s} scene={scene} /> : null}</main>
     </div>
   );
@@ -160,10 +143,49 @@ const Watch: React.FC<{s: StudentState; sceneId: string; assetId: string; title:
   );
 };
 
-const Think: React.FC<{s: StudentState}> = ({s}) => {
+// 考える時間（約60秒）。問いの映像が止まってから数え始める（進行役の画面と同じ時刻）
+const Think: React.FC<{s: StudentState; q: QuestionScene}> = ({s, q}) => {
   const now = useNow();
-  const left = Math.max(0, Math.ceil((s.stageAt + s.thinkSeconds * 1000 - now) / 1000));
+  if (now < thinkStart(s.stageAt, q)) return <div className="lv-timer">問いを確認しています</div>;
+  const left = thinkLeft(s.stageAt, q, s.thinkSeconds, now);
   return <div className={`lv-timer ${left === 0 ? 'over' : ''}`}>{left > 0 ? `考える時間 ${left}秒` : '回答してください'}</div>;
+};
+
+// 問いの映像。問いと選択肢が出そろったところで自動で止め、右上に「THINK TIME｜考えてみよう」を出す（問いと選択肢は隠さない）
+const QuestionClip: React.FC<{s: StudentState; q: QuestionScene}> = ({s, q}) => {
+  const available = useAvailable();
+  const asset = questionAsset(q);
+  const rendered = `experience/rendered/${asset}.mp4`;
+  const pauses = useMemo(() => [{frame: thinkPauseFrame(q), prompt: 'THINK TIME｜考えてみよう'}], [q]);
+  return (
+    <div className="lv-watch lv-qclip">
+      <ClipPlayer
+        assetId={asset}
+        autoPlay
+        playToken={s.stageAt}
+        volume={0.9}
+        showSubtitles
+        showStatus
+        available={available}
+        overrideVideoUrl={available.has(rendered) ? rendered : undefined}
+        pauses={pauses}
+        readOnly
+        thinkBadge={<ThinkBadge s={s} q={q} />}
+      />
+    </div>
+  );
+};
+
+const ThinkBadge: React.FC<{s: StudentState; q: QuestionScene}> = ({s, q}) => {
+  const now = useNow();
+  const left = thinkLeft(s.stageAt, q, s.thinkSeconds, now);
+  return (
+    <>
+      <span className="tt-label">THINK TIME｜考えてみよう</span>
+      <span className="tt-left">{left > 0 ? `${left}秒` : '回答してください'}</span>
+      <span className="tt-note">止まっている間に、下で A/B/C を選んで送信</span>
+    </>
+  );
 };
 
 const QuestionView: React.FC<{s: StudentState; q: QuestionScene}> = ({s, q}) => {
@@ -185,8 +207,9 @@ const QuestionView: React.FC<{s: StudentState; q: QuestionScene}> = ({s, q}) => 
       <section className="lv-q">
         <div className="lv-qhead">
           <span className="lv-tag">QUESTION</span>
-          <Think s={s} />
+          <Think s={s} q={q} />
         </div>
+        <QuestionClip s={s} q={q} />
         {q.situation ? (
           <p className="lv-situ">
             <b>{nameOf(q.situation.speaker)}</b>「{q.situation.text}」

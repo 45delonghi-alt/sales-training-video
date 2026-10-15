@@ -103,7 +103,7 @@
           "text": "最近、実際より多くカウントされることがあるんです。"
         },
         "questionText": "最初に、何を確認しますか？",
-        "thinkSeconds": 45,
+        "thinkSeconds": 60,
         "hint": {
           "speaker": "mori",
           "text": "専門知識がなくても大丈夫。お客様の困りごとを、もっと具体的にするには？"
@@ -188,7 +188,7 @@
         "title": "どんなときに起きる？",
         "backdropAsset": "p1-data",
         "questionText": "どんなときに発生するか、もう少し確認しますか？",
-        "thinkSeconds": 45,
+        "thinkSeconds": 60,
         "hint": {
           "speaker": "mori",
           "text": "数字は分かりました。どんな場面で起きるかが分かると、原因の手がかりになりそうです。"
@@ -298,7 +298,7 @@
         "title": "どこから調べる？",
         "backdropAsset": "p2-open",
         "questionText": "どこから調べますか？",
-        "thinkSeconds": 45,
+        "thinkSeconds": 60,
         "hint": {
           "speaker": "nakata",
           "text": "数が増える場所は、1つとは限りません。ボトル・センサ・数える装置、どこで起きていそうですか？"
@@ -415,7 +415,7 @@
         "title": "どうやって確かめる？",
         "backdropAsset": "p2-signal",
         "questionText": "次に、どう確認しますか？",
-        "thinkSeconds": 45,
+        "thinkSeconds": 60,
         "hint": {
           "speaker": "nakata",
           "text": "「どこで数が増えているか」が分かる方法は、どれでしょう？"
@@ -550,7 +550,7 @@
           "text": "数字が合わないんですが、何とか対応できています。"
         },
         "questionText": "何を詳しく聞きますか？",
-        "thinkSeconds": 45,
+        "thinkSeconds": 60,
         "hint": {
           "speaker": "mori",
           "text": "「何とか対応できている」の裏に、困りごとが隠れていそうです。"
@@ -605,7 +605,7 @@
         "title": "本当に困っていることは？",
         "backdropAsset": "p3-open",
         "questionText": "お客様が本当に解決したいことは何でしょうか？",
-        "thinkSeconds": 45,
+        "thinkSeconds": 60,
         "hint": {
           "speaker": "mori",
           "text": "表に見えている問題と、その先で困っていることを、分けて考えてみましょう。"
@@ -721,7 +721,7 @@
         "title": "どの方式を提案する？",
         "backdropAsset": "p4-open",
         "questionText": "今回のお客様には、どの方式が合いそうですか？",
-        "thinkSeconds": 45,
+        "thinkSeconds": 60,
         "hint": {
           "speaker": "mori",
           "text": "導入で見た方式の中に、透明なボトルに向いたものがありましたね。"
@@ -961,7 +961,7 @@
         "requiresDemoPass": true,
         "fallbackSceneId": "p4-followup",
         "questionText": "実機で良い結果が出れば、すぐ採用を決めてもよいでしょうか？",
-        "thinkSeconds": 30,
+        "thinkSeconds": 60,
         "hint": {
           "speaker": "mori",
           "text": "デモの条件と、実際のラインの条件。同じでしょうか？"

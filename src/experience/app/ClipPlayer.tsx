@@ -58,14 +58,28 @@ export const ClipPlayer: React.FC<{
   // 投影用ウィンドウでは「続きを見る」を出さない（進行役の再生で再開）
   readOnly?: boolean;
   onResume?: () => void;
-}> = ({assetId, autoPlay, playToken, loop, muted, controls = true, volume, showSubtitles, showStatus, available, overrideVideoUrl, onEnded, controlRef, pauses = [], readOnly, onResume}) => {
+  // 止めたとき、中央の「考えよう」の代わりに、映像のすぐ下に出す表示（問いの画面：問いと選択肢を隠さない）
+  thinkBadge?: React.ReactNode;
+}> = ({assetId, autoPlay, playToken, loop, muted, controls = true, volume, showSubtitles, showStatus, available, overrideVideoUrl, onEnded, controlRef, pauses = [], readOnly, onResume, thinkBadge}) => {
   const ref = useRef<PlayerRef>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [blocked, setBlocked] = useState(false);
+  // 書き出し済みの動画が再生できない端末（対応していない形式など）では、その場で描画する再生に切り替える
+  const [videoFailed, setVideoFailed] = useState(false);
+  useEffect(() => setVideoFailed(false), [overrideVideoUrl]);
+  const videoUrl = videoFailed ? undefined : overrideVideoUrl;
   const ended = useRef(onEnded);
   ended.current = onEnded;
   const [thinking, setThinking] = useState<{prompt: string; hint?: string} | null>(null);
   const done = useRef(new Set<number>());
+
+  // 止めるポイントより前に映像が終わった（書き出しが短い等）ときも、止める表示は出す
+  const lateThink = () => {
+    const late = pauses.find((x) => !done.current.has(x.frame));
+    if (!late) return;
+    done.current.add(late.frame);
+    setThinking({prompt: late.prompt, hint: late.hint});
+  };
 
   const intro = assetId === 'intro';
   const asset = assetById.get(assetId);
@@ -107,7 +121,7 @@ export const ClipPlayer: React.FC<{
     p.seekTo(0);
     if (autoPlay) start(() => p.play());
     else p.pause();
-  }, [playToken, autoPlay, assetId, overrideVideoUrl]);
+  }, [playToken, autoPlay, assetId, videoUrl]);
 
   useEffect(() => {
     ref.current?.setVolume(volume);
@@ -117,10 +131,13 @@ export const ClipPlayer: React.FC<{
   useEffect(() => {
     const p = ref.current;
     if (!p) return;
-    const onEnd = () => ended.current?.();
+    const onEnd = () => {
+      lateThink();
+      ended.current?.();
+    };
     p.addEventListener('ended', onEnd);
     return () => p.removeEventListener('ended', onEnd);
-  }, [assetId, overrideVideoUrl]);
+  }, [assetId, videoUrl]);
 
   // 止めるポイントに来たら一時停止して「考えよう」を出す（動画ファイルの場合は秒で判定）
   const pauseKey = pauses.map((x) => x.frame).join(',');
@@ -138,7 +155,7 @@ export const ClipPlayer: React.FC<{
     };
     v.addEventListener('timeupdate', onTime);
     return () => v.removeEventListener('timeupdate', onTime);
-  }, [assetId, pauseKey, overrideVideoUrl]);
+  }, [assetId, pauseKey, videoUrl]);
   useEffect(() => {
     const p = ref.current;
     if (!p || !pauses.length) return;
@@ -152,7 +169,7 @@ export const ClipPlayer: React.FC<{
     };
     p.addEventListener('frameupdate', onFrame);
     return () => p.removeEventListener('frameupdate', onFrame);
-  }, [assetId, pauseKey]);
+  }, [assetId, pauseKey, videoUrl]);
 
   if (controlRef) {
     controlRef.current = {
@@ -168,8 +185,8 @@ export const ClipPlayer: React.FC<{
 
   return (
     <div className="player-box">
-      {overrideVideoUrl ? (
-        <video ref={videoRef} src={overrideVideoUrl} className="player" controls muted={muted} loop={loop} onEnded={() => ended.current?.()} />
+      {videoUrl ? (
+        <video ref={videoRef} src={videoUrl} className="player" controls muted={muted} loop={loop} onEnded={() => (lateThink(), ended.current?.())} onError={() => setVideoFailed(true)} />
       ) : (
         <Player
           ref={ref}
@@ -190,7 +207,8 @@ export const ClipPlayer: React.FC<{
           numberOfSharedAudioTags={8}
         />
       )}
-      {thinking ? (
+      {thinking && thinkBadge ? <div className="tt-badge">{thinkBadge}</div> : null}
+      {thinking && !thinkBadge ? (
         <div className="think-pause">
           <div className="tp-label">考えよう</div>
           <div className="tp-prompt">{thinking.prompt}</div>

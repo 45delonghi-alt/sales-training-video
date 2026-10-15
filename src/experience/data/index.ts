@@ -190,10 +190,14 @@ export const lineSchedule = (lines: Line[], dialogAt: number, assetId?: string):
     return {...l, from, to: from + rec + SUB_HOLD, lineId, recorded: true};
   });
 };
+// 学生への問い（q-<設問ID>）の画面は、通常の長さより5秒長くする。問いとA/B/Cが出そろった画面をそのまま保つ
+// （進行役が止めやすく、止めずに再生しても読める）。学生の考える時間（約60秒）は、WEBアプリ側で一時停止して取る
+export const QUESTION_HOLD = 5;
+export const questionHold = (assetId?: string) => (assetId?.startsWith('q-') ? QUESTION_HOLD : 0);
 export const clipSeconds = (seconds: number, lines: Line[], dialogAt: number, assetId?: string) => {
   const sched = lineSchedule(lines, dialogAt, assetId);
   const end = sched.length ? sched[sched.length - 1].to + 0.8 : 0;
-  return Math.max(seconds, end);
+  return Math.max(seconds, end) + questionHold(assetId);
 };
 export const assetSeconds = (assetId: string) => {
   const a = assetById.get(assetId);

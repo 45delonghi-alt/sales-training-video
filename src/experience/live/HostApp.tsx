@@ -5,7 +5,8 @@ import React, {useEffect, useMemo, useState} from 'react';
 import {ClipPlayer} from '../app/ClipPlayer';
 import {phases, sceneById, scenes} from '../data';
 import type {DemoScene, QuestionScene, Scene} from '../types';
-import {api, demoOf, firstStage, type HostState, mainOrder, pass, rate, type Stage, useAvailable, useLiveState, useNow} from './client';
+import {api, demoOf, firstStage, type HostState, mainOrder, pass, rate, type Stage, thinkLeft, thinkStart, useAvailable, useLiveState, useNow} from './client';
+import {PhaseNavigation} from './PhaseNavigation';
 
 const KEY = 'optexfa-live-host';
 type Saved = {sessionId: string; hostKey: string};
@@ -74,6 +75,8 @@ const Host: React.FC<{s: HostState; saved: Saved; online: boolean; onNew: () => 
         <Clock s={s} />
         <div className={`lv-conn ${online ? 'on' : ''}`}>{online ? '接続中' : '再接続しています…'}</div>
       </header>
+      {/* 学生の画面と同じフェーズ表示（セッションの場面から決まる） */}
+      <PhaseNavigation sceneId={s.sceneId} compact />
       <div className="lv-hgrid">
         <aside className="lv-list">
           {phases.map((p) => (
@@ -251,12 +254,17 @@ const QuestionControl: React.FC<{s: HostState; q: QuestionScene; stage: (s: Stag
   Object.values(ans).forEach((a) => counts[a.choiceId]++);
   const n = Object.keys(ans).length;
   const now = useNow();
-  const left = Math.max(0, Math.ceil((s.stageAt + s.thinkSeconds * 1000 - now) / 1000));
+  const left = thinkLeft(s.stageAt, q, s.thinkSeconds, now);
+  const watching = now < thinkStart(s.stageAt, q);
   return (
     <div>
       <p className="lv-q2">{q.questionText}</p>
       <Steps now={s.stage} steps={[['answer', '回答を受付'], ['branch', '締め切り → 各自の選択の映像'], ['explain', '解説・全員の回答を表示']]} onPick={stage} />
-      {s.stage === 'answer' ? <p className="lv-note">考える時間：残り {left}秒（{n}/{s.students.length}名が回答）。全員の回答がそろったら締め切る。</p> : null}
+      {s.stage === 'answer' ? (
+        <p className="lv-note">
+          {watching ? '学生が問いの映像を見ています（問いと選択肢が出そろうと自動で止まり、THINK TIME になります）。' : `THINK TIME：残り ${left}秒（目安60秒）`}（{n}/{s.students.length}名が回答）。いつでも締め切れます。締め切ると各自の選択の映像に進みます。
+        </p>
+      ) : null}
       <table className="lv-htable">
         <tbody>
           {q.choices.map((c) => (

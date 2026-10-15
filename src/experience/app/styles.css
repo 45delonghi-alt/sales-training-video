@@ -422,3 +422,51 @@ button.big { font-size: 22px; padding: 14px 28px; }
   .lv-side { border-left: 0; }
 }
 .lv-watch .player-box { max-width: 880px; }
+
+/* ───── チャプター型フェーズナビゲーション（PhaseNavigation）。画面上部にコンパクトに（高さは画面の約6〜9%） */
+.pn { --pn-red: #D7141E; position: sticky; top: 0; z-index: 6; display: flex; align-items: stretch; gap: 10px; padding: 6px 14px 9px; background: #141518; border-bottom: 1px solid var(--line); }
+.pn-steps { display: flex; gap: 6px; list-style: none; margin: 0; padding: 0; flex: 1; min-width: 0; }
+.pn-step { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0; padding: 4px 10px; background: #2A2D33; color: #8C929A; transition: background .4s ease, color .4s ease; }
+.pn-step .pn-no { font-size: 10px; font-weight: 800; letter-spacing: 1.5px; }
+.pn-step .pn-name { font-size: 15px; font-weight: 900; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pn-step .pn-sub { font-size: 10.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: .85; }
+.pn-step.now { background: var(--pn-red); color: #fff; }
+.pn-step.done { color: #E6E8EB; }
+.pn-check { display: inline-block; margin-right: 5px; font-weight: 900; color: #fff; }
+.pn-short { display: none; }
+.pn-where { flex: none; display: flex; flex-direction: column; justify-content: center; align-items: flex-end; min-width: 120px; font-size: 12px; font-weight: 800; letter-spacing: 1px; color: #C9CED4; }
+.pn-where b { font-size: 16px; color: #fff; letter-spacing: 0; }
+.pn-where .pn-done { color: #fff; font-size: 15px; letter-spacing: 2px; }
+.pn-bar { position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: #2A2D33; }
+.pn-bar i { display: block; height: 100%; background: var(--pn-red); transition: width .6s ease; }
+.pn-intro .pn-step { opacity: .55; }
+.pn-chapter { position: fixed; left: 50%; top: 42%; transform: translate(-50%, -50%); z-index: 40; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 22px 40px 24px; background: rgba(13,14,16,.88); border-top: 5px solid #D7141E; color: #fff; text-align: center; pointer-events: none; animation: pn-in 2.6s ease both; }
+.pn-chapter-no { font-size: 14px; font-weight: 800; letter-spacing: 3px; color: #FF5A63; }
+.pn-chapter b { font-size: 34px; font-weight: 900; }
+.pn-chapter-msg { font-size: 18px; font-weight: 700; color: #E6E8EB; }
+@keyframes pn-in { 0% { opacity: 0; transform: translate(-50%, -46%); } 12% { opacity: 1; transform: translate(-50%, -50%); } 85% { opacity: 1; } 100% { opacity: 0; } }
+/* タブレット：説明文を省略 */
+@media (max-width: 900px) { .pn-step .pn-sub { display: none; } }
+/* スマートフォン：短い名称（1 聞く／2 考える／3 課題発見／4 提案） */
+@media (max-width: 600px) {
+  .pn { padding: 6px 8px 10px; gap: 6px; }
+  .pn-steps { gap: 3px; }
+  .pn-step { padding: 5px 4px; align-items: center; }
+  .pn-step .pn-no { display: none; }
+  .pn-long { display: none; }
+  .pn-short { display: inline; }
+  .pn-step .pn-name { font-size: 13px; }
+  .pn-step.done .pn-name::before { content: '✓ '; }
+  .pn-where { min-width: 0; max-width: 72px; font-size: 10px; text-align: right; }
+  .pn-where b { font-size: 12px; }
+  .pn-where .pn-done { font-size: 10px; letter-spacing: .5px; line-height: 1.2; }
+  .pn-chapter b { font-size: 26px; }
+}
+@media (prefers-reduced-motion: reduce) { .pn-chapter { animation: none; } .pn-step, .pn-bar i { transition: none; } }
+
+/* 問いの画面の一時停止（THINK TIME）。問いと選択肢を隠さないよう、映像の外（すぐ下）に帯で出す */
+.tt-badge { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 6px; padding: 10px 16px; background: #141518; border-left: 6px solid #D7141E; color: #fff; }
+.tt-badge .tt-label { font-size: 17px; font-weight: 900; letter-spacing: 1.5px; }
+.tt-badge .tt-left { font-size: 26px; font-weight: 900; font-variant-numeric: tabular-nums; color: #FF5A63; }
+.tt-badge .tt-note { font-size: 13px; color: #C9CED4; }
+@media (max-width: 600px) { .tt-badge { gap: 4px 12px; padding: 8px 12px; } .tt-badge .tt-label { font-size: 14px; } .tt-badge .tt-left { font-size: 20px; } }
