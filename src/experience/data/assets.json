@@ -23,6 +23,28 @@
     }
   },
   {
+    "assetId": "cast",
+    "shots": [
+      {
+        "overlay": "cast"
+      }
+    ],
+    "seconds": 15,
+    "dialogAt": 0.8,
+    "visualDescription": "登場する名前と役割（お客様から受領した一覧画像）。5人を左から順に1人ずつ明るくして紹介し、最後に全員",
+    "cameraDirection": "固定",
+    "animationDirection": "フェードイン → あなた・森さん・中田さん・佐藤さん・高橋さんの順に1人ずつ強調（各2.2秒）→ 全員",
+    "status": [
+      "implemented"
+    ],
+    "production": {
+      "method": "composite",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "受領画像 assets-src/characters/source-cast-intro.webp を public/experience/people/cast-intro.jpg（1920×1080）にして Remotion で表示。ナレーションなし（BGMのみ）"
+    }
+  },
+  {
     "assetId": "p1-open",
     "shots": [
       {

@@ -57,8 +57,17 @@
             "text": "まずは、どんなことに困っているのか、確認してみましょう。"
           }
         ],
-        "nextSceneId": "p1-open",
+        "nextSceneId": "cast",
         "facilitatorNote": "導入P23「FIRST STEP：まずはお客様に現状を確認」を受けて始める。センサの方式やOPTEX-FA製品の説明はしない。"
+      },
+      {
+        "sceneId": "cast",
+        "type": "clip",
+        "title": "登場する名前と役割",
+        "videoAsset": "cast",
+        "lines": [],
+        "facilitatorNote": "この5人と一緒に、飲料工場の課題解決に取り組む。OPTEX-FA（赤）はあなた・森さん・中田さん、お客様（青）は佐藤さん・高橋さん。以後、話している人は顔ワイプ（OPTEX-FA＝左・お客様＝右）で示す。",
+        "nextSceneId": "p1-open"
       }
     ]
   },

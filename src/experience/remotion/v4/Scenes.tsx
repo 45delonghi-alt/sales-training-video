@@ -8,7 +8,7 @@ import {Conveyor} from '../../../consulting/components/Conveyor';
 import {progress} from '../../../consulting/components/anim';
 import {CountHud} from '../../../consulting/scenes/Scene03Mission';
 import type {Scene as StoryScene, Speaker} from '../../types';
-import {Bridge, Clear, type ClearInfo, IssuePhoto, WhyClear, photoFile} from './Connect';
+import {Bridge, Cast, Clear, type ClearInfo, IssuePhoto, WhyClear, photoFile} from './Connect';
 import {FrontView, LayoutCard, TopView} from './Layout';
 import {C, Emph, InkLabel, Panel, Red, RedLabel, type Tone, ap, useSec} from './Kit';
 
@@ -21,7 +21,7 @@ export const WEEKS = [
 const pct = (w: (typeof WEEKS)[number]) => ((w.count - w.actual) / w.actual) * 100;
 
 // 黒い背景の場面（それ以外は白）
-const DARK = new Set(['bridge', 'clear', 'issue-photo', 'question', 'hint', 'reflection', 'title', 'miscount', 'talk', 'talk-card', 'sensor-existing', 'beam', 'line-walk', 'message', 'closing', 'ending']);
+const DARK = new Set(['bridge', 'cast', 'clear', 'issue-photo', 'question', 'hint', 'reflection', 'title', 'miscount', 'talk', 'talk-card', 'sensor-existing', 'beam', 'line-walk', 'message', 'closing', 'ending']);
 export const toneOf = (overlay: string): Tone => (DARK.has(overlay) ? 'dark' : 'light');
 // 画面中央に大きくセリフを出す場面（下の字幕は出さない）
 export const QUOTE = new Set(['talk', 'talk-card', 'question', 'hint', 'reflection']);
@@ -777,6 +777,8 @@ export const Scene: React.FC<{overlay: string; card?: string; imagePath?: string
   switch (overlay) {
     case 'bridge':
       return <Bridge />;
+    case 'cast':
+      return <Cast />;
     case 'clear':
       return <Clear info={clear} />;
     case 'why-clear':
