@@ -34,6 +34,7 @@ export type Shot = {
   header?: {no?: string; title: string}; // 見出し（12シーンの番号とタイトル）
   atLine?: number; // このショットに切り替わるセリフ（0始まり）。なければ0秒から
   card?: string; // 会話の場面で、赤いカードに出す短い一言
+  photo?: string; // 実写風の写真の枠（data/photos.json の slot）。ファイルが ready なら背景に使う
 };
 
 export type Asset = {
@@ -88,7 +89,10 @@ type Base = {
 
 export type VideoScene = Base & {type: 'video'; compositionId: string; videoFile?: string; description: string; pauses?: Pause[]};
 
-export type ClipScene = Base & {type: 'clip'; videoAsset: string; lines: Line[]; pauses?: Pause[]};
+export type ClipScene = Base & {type: 'clip'; videoAsset: string; lines: Line[]; pauses?: Pause[]; clear?: {head: string; message: string; next: string}};
+
+// 30秒の提案づくり（4つの要素を組み合わせる。学生ごとに入力）
+export type PitchScene = Base & {type: 'pitch'; prompt: string; parts: {key: string; label: string; placeholder: string; options: string[]}[]; seconds: number; minutes: number};
 
 export type QuestionScene = Base & {
   type: 'question';
@@ -122,7 +126,7 @@ export type ResultScene = Base & {type: 'result'; videoAsset: string; lines: Lin
 
 export type ReflectionScene = Base & {type: 'reflection'; question: string; minutes: number; videoAsset?: string};
 
-export type Scene = VideoScene | ClipScene | QuestionScene | DemoScene | ResultScene | ReflectionScene;
+export type Scene = VideoScene | ClipScene | QuestionScene | DemoScene | ResultScene | ReflectionScene | PitchScene;
 
 // phases.json の形（フェーズの中に場面を持つ）
 export type PhaseFile = (Phase & {scenes: Omit<Scene, 'phaseId'>[]})[];

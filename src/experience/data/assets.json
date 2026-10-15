@@ -1,1313 +1,1353 @@
 [
- {
-  "assetId": "bridge",
-  "shots": [
-   {
-    "overlay": "title"
-   }
-  ],
-  "seconds": 7,
-  "dialogAt": 0.8,
-  "visualDescription": "YOUR MISSION。あなたはOPTEX-FAの営業担当",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "タイトル→「あなたは、OPTEX-FAの営業担当です」",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p1-open",
-  "shots": [
-   {
-    "overlay": "miscount",
-    "header": {
-     "no": "01",
-     "title": "オープニング・課題発生"
+  {
+    "assetId": "bridge",
+    "shots": [
+      {
+        "overlay": "bridge"
+      }
+    ],
+    "seconds": 12,
+    "dialogAt": 0.8,
+    "visualDescription": "黒背景・赤のアクセント。YOUR MISSION「ここからは、あなたが営業担当です。」導入P23と同じ4ステップを表示し、1つめ「聞く」を点灯",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "タイトル→「あなたは、OPTEX-FAの営業担当です」",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
     }
-   },
-   {
-    "overlay": "talk",
-    "header": {
-     "no": "02",
-     "title": "お客様からの相談"
-    },
-    "atLine": 1
-   }
-  ],
-  "seconds": 10,
-  "dialogAt": 0.8,
-  "visualDescription": "線画のラインで「実際よりも多くカウントされる…」。続いて佐藤さん・高橋さんが学生（営業）に相談",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "カウント表示が時々＋1。赤で「実際よりも多くカウントされる…」",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p1-q1-a",
-  "shots": [
-   {
-    "overlay": "sensor-existing",
-    "header": {
-     "no": "04",
-     "title": "既設センサの確認"
-    }
-   }
-  ],
-  "seconds": 8,
-  "dialogAt": 0.8,
-  "visualDescription": "既設の他社製回帰反射型センサと反射板（型式は表示しない）",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "ラベル「センサ（投光・受光）」「反射板（リフレクタ）」。線画のライン（導入動画と同じ）",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   },
-  "sensorType": "他社製 回帰反射型光電センサ（透明体専用かは未確認）",
-  "productName": "既設センサ（他社製）",
-  "productModel": "未確定（表示しない）",
-  "verificationStatus": "型式・用途は未確認。メーカー名は出さない"
- },
- {
-  "assetId": "p1-q1-b",
-  "shots": [
-   {
-    "overlay": "talk",
-    "header": {
-     "no": "02",
-     "title": "お客様からの相談"
+  {
+    "assetId": "p1-open",
+    "shots": [
+      {
+        "overlay": "miscount",
+        "header": {
+          "no": "01",
+          "title": "オープニング・課題発生"
+        }
+      },
+      {
+        "overlay": "talk",
+        "header": {
+          "no": "02",
+          "title": "お客様からの相談"
+        },
+        "atLine": 1,
+        "photo": "sato"
+      }
+    ],
+    "seconds": 10,
+    "dialogAt": 0.8,
+    "visualDescription": "線画のラインで「実際よりも多くカウントされる…」。続いて佐藤さん・高橋さんが学生（営業）に相談",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "カウント表示が時々＋1。赤で「実際よりも多くカウントされる…」",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
     }
-   },
-   {
-    "overlay": "figures",
-    "header": {
-     "no": "03",
-     "title": "現状データの確認"
-    },
-    "atLine": 1
-   }
-  ],
-  "seconds": 8,
-  "dialogAt": 0.8,
-  "visualDescription": "佐藤さんが数字で答える。通常＋0.5〜0.8%、最大＋3.0%のカードが出る",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "数字カード（研修用の架空データ）",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p1-q1-c",
-  "shots": [
-   {
-    "overlay": "talk",
-    "header": {
-     "no": "02",
-     "title": "お客様からの相談"
-    }
-   }
-  ],
-  "seconds": 8,
-  "dialogAt": 0.8,
-  "visualDescription": "佐藤さんが迷いながら答える",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "会話：話者（お客様／OPTEX-FA）と発言を画面中央に大きく表示（背景は線画のライン）",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p1-data",
-  "shots": [
-   {
-    "overlay": "chart",
-    "header": {
-     "no": "03",
-     "title": "現状データの確認"
-    }
-   }
-  ],
-  "seconds": 12,
-  "dialogAt": 0.8,
-  "visualDescription": "高橋さんが記録を説明。右に4週間の推移グラフ（10,060／10,300／10,050／10,080）",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "折れ線が描かれ、第2週だけ＋3.0%。「毎週3%ではない」",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p1-q2-a",
-  "shots": [
-   {
-    "overlay": "line-walk",
-    "header": {
-     "no": "01",
-     "title": "オープニング・課題発生"
-    }
-   }
-  ],
-  "seconds": 8,
-  "dialogAt": 0.8,
-  "visualDescription": "ラインを見せてもらう。センサはボトル下部を横から見ている",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "線画のライン（導入動画と同じ）",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p1-q2-b",
-  "shots": [
-   {
-    "overlay": "talk",
-    "header": {
-     "no": "02",
-     "title": "お客様からの相談"
-    }
-   }
-  ],
-  "seconds": 8,
-  "dialogAt": 0.8,
-  "visualDescription": "佐藤さんが控えめに断る",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "会話：話者（お客様／OPTEX-FA）と発言を画面中央に大きく表示（背景は線画のライン）",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p1-q2-c",
-  "shots": [
-   {
-    "overlay": "talk-card",
-    "header": {
-     "no": "02",
-     "title": "お客様からの相談"
-    },
-    "card": "導入して約3年・故障の記録なし"
-   }
-  ],
-  "seconds": 8,
-  "dialogAt": 0.8,
-  "visualDescription": "佐藤さんが設備の年数を答える",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "赤いカード「導入して約3年・故障の記録なし」",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p2-open",
-  "shots": [
-   {
-    "overlay": "sensor-existing",
-    "header": {
-     "no": "04",
-     "title": "既設センサの確認"
-    }
-   },
-   {
-    "overlay": "beam",
-    "header": {
-     "no": "04",
-     "title": "既設センサの確認"
-    },
-    "atLine": 2
-   }
-  ],
-  "seconds": 12,
-  "dialogAt": 0.8,
-  "visualDescription": "既設センサの確認。光の往復（センサ→ボトル下部→反射板→同じセンサ）を行き・戻りで分けてCG表示",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "行き／戻りの光（説明用の表現）",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p2-q1-a",
-  "shots": [
-   {
-    "overlay": "cause-wobble",
-    "header": {
-     "no": "05",
-     "title": "原因の候補① ボトルの揺れ"
-    }
-   },
-   {
-    "overlay": "cause-gap",
-    "header": {
-     "no": "06",
-     "title": "原因の候補② ボトルの接近"
-    },
-    "atLine": 2
-   }
-  ],
-  "seconds": 8,
-  "dialogAt": 0.8,
-  "visualDescription": "ボトルの揺れと接近。原因の候補①②",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "揺れの矢印→間隔の矢印",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p2-q1-b",
-  "shots": [
-   {
-    "overlay": "sensor-check",
-    "header": {
-     "no": "04",
-     "title": "既設センサの確認"
-    }
-   }
-  ],
-  "seconds": 8,
-  "dialogAt": 0.8,
-  "visualDescription": "センサと反射板の状態を確認（高さ・角度・汚れ・光の戻り）",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "チェックリストのカード",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p2-q1-c",
-  "shots": [
-   {
-    "overlay": "control",
-    "header": {
-     "no": "08",
-     "title": "原因の候補④ 制御側の条件"
-    }
-   }
-  ],
-  "seconds": 8,
-  "dialogAt": 0.8,
-  "visualDescription": "制御盤（PLC）。数え方の設定は保全担当が把握",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "右の画面に「センサの出力」と「PLCのカウント」",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p2-signal",
-  "shots": [
-   {
-    "overlay": "signal-double",
-    "header": {
-     "no": "07",
-     "title": "原因の候補③ 透明ボトルの光の変化"
-    }
-   }
-  ],
-  "seconds": 14,
-  "dialogAt": 0.8,
-  "visualDescription": "研修用の仮想検証：ボトル1本の通過中に、出力が2回変化する。光の通り方の変化（仮説）",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "出力波形が2回ON。「研修用シミュレーション」表示",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p2-q2-a",
-  "shots": [
-   {
-    "overlay": "talk",
-    "header": {
-     "no": "02",
-     "title": "お客様からの相談"
-    }
-   }
-  ],
-  "seconds": 8,
-  "dialogAt": 0.8,
-  "visualDescription": "佐藤さんの不安",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "会話：話者（お客様／OPTEX-FA）と発言を画面中央に大きく表示（背景は線画のライン）",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p2-q2-b",
-  "shots": [
-   {
-    "overlay": "compare-plc",
-    "header": {
-     "no": "08",
-     "title": "原因の候補④ 制御側の条件"
-    }
-   }
-  ],
-  "seconds": 8,
-  "dialogAt": 0.8,
-  "visualDescription": "センサの出力とPLCのカウントを同時に記録して比べる（例：実測ではない）",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "1本ごとの記録表（例）",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p2-q2-c",
-  "shots": [
-   {
-    "overlay": "talk-card",
-    "header": {
-     "no": "02",
-     "title": "お客様からの相談"
-    },
-    "card": "ラインの速度は落とせない"
-   }
-  ],
-  "seconds": 8,
-  "dialogAt": 0.8,
-  "visualDescription": "速度は落とせない",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "赤いカード",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p2-isolation",
-  "shots": [
-   {
-    "overlay": "isolation",
-    "header": {
-     "title": "原因の候補を整理する"
-    }
-   }
-  ],
-  "seconds": 10,
-  "dialogAt": 0.8,
-  "visualDescription": "原因の候補4つ（揺れ・接近・光の変化・制御側）を並べる",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "4枚のカードが順に",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p3-open",
-  "shots": [
-   {
-    "overlay": "talk",
-    "header": {
-     "title": "本当の困りごとは？"
-    }
-   }
-  ],
-  "seconds": 8,
-  "dialogAt": 0.8,
-  "visualDescription": "佐藤さん「何とか対応できてはいる」。高橋さんが照合を担当",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "会話：話者（お客様／OPTEX-FA）と発言を画面中央に大きく表示（背景は線画のライン）",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p3-q1-a",
-  "shots": [
-   {
-    "overlay": "burden",
-    "header": {
-     "title": "数が合わないと、何が起きる？"
-    }
-   }
-  ],
-  "seconds": 8,
-  "dialogAt": 0.8,
-  "visualDescription": "ライン停止・人手で数え直す",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "影響の連鎖（白→黒→赤）",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p3-q1-b",
-  "shots": [
-   {
-    "overlay": "talk",
-    "header": {
-     "title": "本当の困りごとは？"
-    }
-   }
-  ],
-  "seconds": 8,
-  "dialogAt": 0.8,
-  "visualDescription": "価格の前に原因を知りたい",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "会話：話者（お客様／OPTEX-FA）と発言を画面中央に大きく表示（背景は線画のライン）",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p3-q1-c",
-  "shots": [
-   {
-    "overlay": "talk",
-    "header": {
-     "title": "本当の困りごとは？"
-    }
-   }
-  ],
-  "seconds": 8,
-  "dialogAt": 0.8,
-  "visualDescription": "高橋さん「うちの現場を見てほしい」",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "会話：話者（お客様／OPTEX-FA）と発言を画面中央に大きく表示（背景は線画のライン）",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p3-q2-a",
-  "shots": [
-   {
-    "overlay": "talk-card",
-    "header": {
-     "title": "本当の困りごとは？"
-    },
-    "card": "メーカーが原因とは決まっていない"
-   }
-  ],
-  "seconds": 8,
-  "dialogAt": 0.8,
-  "visualDescription": "メーカーを原因と決めつけない",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "赤いカード",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p3-q2-b",
-  "shots": [
-   {
-    "overlay": "talk",
-    "header": {
-     "title": "本当の困りごとは？"
-    }
-   },
-   {
-    "overlay": "chain",
-    "header": {
-     "title": "本当の困りごとは？"
-    },
-    "atLine": 1
-   }
-  ],
-  "seconds": 8,
-  "dialogAt": 0.8,
-  "visualDescription": "佐藤さんが同意。表面の問題→業務への影響→実現したいこと",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "連鎖のカード",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p3-q2-c",
-  "shots": [
-   {
-    "overlay": "talk-card",
-    "header": {
-     "title": "本当の困りごとは？"
-    },
-    "card": "価格より、安定した生産"
-   }
-  ],
-  "seconds": 8,
-  "dialogAt": 0.8,
-  "visualDescription": "価格より安定生産",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "赤いカード",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p3-summary",
-  "shots": [
-   {
-    "overlay": "issues3",
-    "header": {
-     "title": "見えてきた課題"
-    }
-   }
-  ],
-  "seconds": 12,
-  "dialogAt": 0.8,
-  "visualDescription": "課題3つ：正確な本数管理・確認の手戻り削減・安定した生産",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "3枚のカード→「欲しいのは安定した生産」",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p4-open",
-  "shots": [
-   {
-    "overlay": "talk",
-    "header": {
-     "no": "09",
-     "title": "解決提案（OPTEX-FA KR-Qシリーズ）"
-    }
-   }
-  ],
-  "seconds": 8,
-  "dialogAt": 0.8,
-  "visualDescription": "先輩の森さん「センサを提案してみましょう」",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "会話：話者（お客様／OPTEX-FA）と発言を画面中央に大きく表示（背景は線画のライン）",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p4-q1-a",
-  "shots": [
-   {
-    "overlay": "talk",
-    "header": {
-     "no": "09",
-     "title": "解決提案（OPTEX-FA KR-Qシリーズ）"
-    }
-   }
-  ],
-  "seconds": 8,
-  "dialogAt": 0.8,
-  "visualDescription": "佐藤さん「何が違うんですか？」",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "会話：話者（お客様／OPTEX-FA）と発言を画面中央に大きく表示（背景は線画のライン）",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p4-q1-b",
-  "shots": [
-   {
-    "overlay": "talk",
-    "header": {
-     "no": "09",
-     "title": "解決提案（OPTEX-FA KR-Qシリーズ）"
-    }
-   },
-   {
-    "overlay": "talk",
-    "header": {
-     "no": "09",
-     "title": "解決提案（OPTEX-FA KR-Qシリーズ）"
-    },
-    "atLine": 2
-   }
-  ],
-  "seconds": 8,
-  "dialogAt": 0.8,
-  "visualDescription": "実際のボトルで比較しようと提案→佐藤さんが前向き",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "会話：話者（お客様／OPTEX-FA）と発言を画面中央に大きく表示（背景は線画のライン）",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p4-q1-c",
-  "shots": [
-   {
-    "overlay": "talk",
-    "header": {
-     "no": "09",
-     "title": "解決提案（OPTEX-FA KR-Qシリーズ）"
-    }
-   }
-  ],
-  "seconds": 8,
-  "dialogAt": 0.8,
-  "visualDescription": "高橋さん「人の作業は増やしたくない」",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "会話：話者（お客様／OPTEX-FA）と発言を画面中央に大きく表示（背景は線画のライン）",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p4-product",
-  "shots": [
-   {
-    "overlay": "product",
-    "header": {
-     "no": "09",
-     "title": "解決提案（OPTEX-FA KR-Qシリーズ）"
-    }
-   }
-  ],
-  "seconds": 12,
-  "dialogAt": 0.8,
-  "visualDescription": "KR-Qシリーズの紹介。製品画像は公式画像のみ（届くまでは枠）",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "「透明体検出タイプ・回帰反射型」「仕様は公式資料で確認」",
-  "status": [
-   "placeholder",
-   "awaiting-footage",
-   "awaiting-license"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
   },
-  "imagePath": "experience/products/optex-fa/transparent-sensor.png",
-  "productName": "OPTEX-FA KR-Qシリーズ（透明体検出タイプ）",
-  "productModel": "候補：KR-Q50N／KR-Q150NW／KR-Q300NW 等（公式資料で確認中）",
-  "sensorType": "回帰反射型（反射ミラー使用）",
-  "assetLicenseStatus": "公式製品画像：許諾確認待ち",
-  "verificationStatus": "現行品・仕様は公式ページで照合待ち（検索抜粋では製品ページ公開中）"
- },
- {
-  "assetId": "p4-setup",
-  "shots": [
-   {
-    "overlay": "setup",
-    "header": {
-     "no": "10",
-     "title": "設置と比較デモ"
-    }
-   }
-  ],
-  "seconds": 14,
-  "dialogAt": 0.8,
-  "visualDescription": "比較デモの準備。同じボトル・速度・高さで、既設センサとKR-Qシリーズを比べる",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "配置図（上から・横から）と測るもの",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p4-q2-a",
-  "shots": [
-   {
-    "overlay": "talk",
-    "header": {
-     "no": "10",
-     "title": "設置と比較デモ"
-    }
-   }
-  ],
-  "seconds": 8,
-  "dialogAt": 0.8,
-  "visualDescription": "見た目より、数えられるか",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "会話：話者（お客様／OPTEX-FA）と発言を画面中央に大きく表示（背景は線画のライン）",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p4-q2-b",
-  "shots": [
-   {
-    "overlay": "criteria",
-    "header": {
-     "no": "10",
-     "title": "設置と比較デモ"
-    }
-   }
-  ],
-  "seconds": 8,
-  "dialogAt": 0.8,
-  "visualDescription": "合格の基準：1本につき出力1回／通過本数＝出力回数＝PLCのカウント",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "基準カード",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p4-q2-c",
-  "shots": [
-   {
-    "overlay": "talk-card",
-    "header": {
-     "no": "10",
-     "title": "設置と比較デモ"
+  {
+    "assetId": "p1-q1-a",
+    "shots": [
+      {
+        "overlay": "sensor-existing",
+        "header": {
+          "no": "04",
+          "title": "既設センサの確認"
+        }
+      }
+    ],
+    "seconds": 8,
+    "dialogAt": 0.8,
+    "visualDescription": "既設の他社製回帰反射型センサと反射板（型式は表示しない）",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "ラベル「センサ（投光・受光）」「反射板（リフレクタ）」。線画のライン（導入動画と同じ）",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
     },
-    "card": "ページ数では判断できない"
-   }
-  ],
-  "seconds": 8,
-  "dialogAt": 0.8,
-  "visualDescription": "カタログのページ数では判断できない",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "赤いカード",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p4-demo-normal",
-  "shots": [
-   {
-    "overlay": "demo-normal",
-    "header": {
-     "no": "10",
-     "title": "設置と比較デモ"
+    "sensorType": "他社製 回帰反射型光電センサ（透明体専用かは未確認）",
+    "productName": "既設センサ（他社製）",
+    "productModel": "未確定（表示しない）",
+    "verificationStatus": "型式・用途は未確認。メーカー名は出さない"
+  },
+  {
+    "assetId": "p1-q1-b",
+    "shots": [
+      {
+        "overlay": "talk",
+        "header": {
+          "no": "02",
+          "title": "お客様からの相談"
+        },
+        "photo": "sato"
+      },
+      {
+        "overlay": "figures",
+        "header": {
+          "no": "03",
+          "title": "現状データの確認"
+        },
+        "atLine": 1
+      }
+    ],
+    "seconds": 8,
+    "dialogAt": 0.8,
+    "visualDescription": "佐藤さんが数字で答える。通常＋0.5〜0.8%、最大＋3.0%のカードが出る",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "数字カード（研修用の架空データ）",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
     }
-   }
-  ],
-  "seconds": 14,
-  "dialogAt": 0.8,
-  "visualDescription": "比較デモ（通常搬送）。シミュレーションは見方の説明だけ。結果は実機で記録",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "シミュレーション表示。既設／KR-Qの結果欄は「実機で記録」",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p4-demo-wobble",
-  "shots": [
-   {
-    "overlay": "demo-wobble",
-    "header": {
-     "no": "10",
-     "title": "設置と比較デモ"
+  },
+  {
+    "assetId": "p1-q1-c",
+    "shots": [
+      {
+        "overlay": "talk",
+        "header": {
+          "no": "02",
+          "title": "お客様からの相談"
+        },
+        "photo": "sato"
+      }
+    ],
+    "seconds": 8,
+    "dialogAt": 0.8,
+    "visualDescription": "佐藤さんが迷いながら答える",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "会話：話者（お客様／OPTEX-FA）と発言を画面中央に大きく表示（背景は線画のライン）",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
     }
-   }
-  ],
-  "seconds": 14,
-  "dialogAt": 0.8,
-  "visualDescription": "比較デモ（ボトルの揺れ）。シミュレーションは見方の説明だけ。結果は実機で記録",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "シミュレーション表示。既設／KR-Qの結果欄は「実機で記録」",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p4-demo-gap",
-  "shots": [
-   {
-    "overlay": "demo-gap",
-    "header": {
-     "no": "10",
-     "title": "設置と比較デモ"
+  },
+  {
+    "assetId": "p1-data",
+    "shots": [
+      {
+        "overlay": "chart",
+        "header": {
+          "no": "03",
+          "title": "現状データの確認"
+        }
+      }
+    ],
+    "seconds": 12,
+    "dialogAt": 0.8,
+    "visualDescription": "高橋さんが記録を説明。右に4週間の推移グラフ（10,060／10,300／10,050／10,080）",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "折れ線が描かれ、第2週だけ＋3.0%。「毎週3%ではない」",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
     }
-   }
-  ],
-  "seconds": 14,
-  "dialogAt": 0.8,
-  "visualDescription": "比較デモ（間隔の変化）。シミュレーションは見方の説明だけ。結果は実機で記録",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "シミュレーション表示。既設／KR-Qの結果欄は「実機で記録」",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p4-demo-height",
-  "shots": [
-   {
-    "overlay": "demo-height",
-    "header": {
-     "no": "10",
-     "title": "設置と比較デモ"
+  },
+  {
+    "assetId": "p1-q2-a",
+    "shots": [
+      {
+        "overlay": "talk",
+        "header": {
+          "no": "2",
+          "title": "お客様からの相談"
+        },
+        "card": "流れが乱れるときに多い？",
+        "photo": "sato"
+      }
+    ],
+    "seconds": 6,
+    "dialogAt": 0.8,
+    "visualDescription": "佐藤さんが「ボトルの流れが乱れるときに多く数える気がします」と答える。背景にラインの乱れ",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "線画のライン（導入動画と同じ）",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
     }
-   }
-  ],
-  "seconds": 14,
-  "dialogAt": 0.8,
-  "visualDescription": "比較デモ（検出高さの比較）。シミュレーションは見方の説明だけ。結果は実機で記録",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "シミュレーション表示。既設／KR-Qの結果欄は「実機で記録」",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p4-result",
-  "shots": [
-   {
-    "overlay": "result",
-    "header": {
-     "no": "11",
-     "title": "結果の比較"
+  },
+  {
+    "assetId": "p1-q2-b",
+    "shots": [
+      {
+        "overlay": "talk",
+        "header": {
+          "no": "02",
+          "title": "お客様からの相談"
+        },
+        "photo": "sato"
+      }
+    ],
+    "seconds": 8,
+    "dialogAt": 0.8,
+    "visualDescription": "佐藤さんが控えめに断る",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "会話：話者（お客様／OPTEX-FA）と発言を画面中央に大きく表示（背景は線画のライン）",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
     }
-   }
-  ],
-  "seconds": 12,
-  "dialogAt": 0.8,
-  "visualDescription": "結果の比較の見方：改善前（現状）は通常＋0.5〜0.8%・最大＋3.0%。改善後は実測が得られるまで未確定。実測・シミュレーション・期待効果を分ける",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "比較の枠（改善後は「未確定」）",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p4-q3-a",
-  "shots": [
-   {
-    "overlay": "talk",
-    "header": {
-     "no": "12",
-     "title": "お客様の評価・次のアクション"
+  },
+  {
+    "assetId": "p1-q2-c",
+    "shots": [
+      {
+        "overlay": "talk-card",
+        "header": {
+          "no": "02",
+          "title": "お客様からの相談"
+        },
+        "card": "導入して約3年・故障の記録なし",
+        "photo": "sato"
+      }
+    ],
+    "seconds": 8,
+    "dialogAt": 0.8,
+    "visualDescription": "佐藤さんが設備の年数を答える",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "赤いカード「導入して約3年・故障の記録なし」",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
     }
-   }
-  ],
-  "seconds": 8,
-  "dialogAt": 0.8,
-  "visualDescription": "佐藤さん「実際のラインでも同じように？」",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "会話：話者（お客様／OPTEX-FA）と発言を画面中央に大きく表示（背景は線画のライン）",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p4-q3-b",
-  "shots": [
-   {
-    "overlay": "next-actions",
-    "header": {
-     "no": "12",
-     "title": "お客様の評価・次のアクション"
+  },
+  {
+    "assetId": "p2-open",
+    "shots": [
+      {
+        "overlay": "talk",
+        "header": {
+          "no": "4",
+          "title": "センサの設置位置（現状）"
+        },
+        "photo": "sato"
+      },
+      {
+        "overlay": "sensor-existing",
+        "atLine": 1,
+        "header": {
+          "no": "4",
+          "title": "センサの設置位置（現状）"
+        }
+      },
+      {
+        "overlay": "beam",
+        "atLine": 2,
+        "header": {
+          "no": "4",
+          "title": "センサの設置位置（現状）"
+        }
+      }
+    ],
+    "seconds": 12,
+    "dialogAt": 0.8,
+    "visualDescription": "既設センサの確認。光の往復（センサ→ボトル下部→反射板→同じセンサ）を行き・戻りで分けてCG表示",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "行き／戻りの光（説明用の表現）",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
     }
-   }
-  ],
-  "seconds": 8,
-  "dialogAt": 0.8,
-  "visualDescription": "実ラインでの検証に合意。次のアクションのチェックリスト",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "チェックリスト",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p4-q3-c",
-  "shots": [
-   {
-    "overlay": "talk-card",
-    "header": {
-     "no": "12",
-     "title": "お客様の評価・次のアクション"
+  },
+  {
+    "assetId": "p2-q1-a",
+    "shots": [
+      {
+        "overlay": "cause-wobble",
+        "header": {
+          "no": "05",
+          "title": "原因の候補① ボトルの揺れ"
+        }
+      },
+      {
+        "overlay": "cause-gap",
+        "header": {
+          "no": "06",
+          "title": "原因の候補② ボトルの接近"
+        },
+        "atLine": 2
+      }
+    ],
+    "seconds": 8,
+    "dialogAt": 0.8,
+    "visualDescription": "ボトルの揺れと接近。原因の候補①②",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "揺れの矢印→間隔の矢印",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
+    }
+  },
+  {
+    "assetId": "p2-q1-b",
+    "shots": [
+      {
+        "overlay": "sensor-check",
+        "header": {
+          "no": "04",
+          "title": "既設センサの確認"
+        }
+      }
+    ],
+    "seconds": 8,
+    "dialogAt": 0.8,
+    "visualDescription": "センサと反射板の状態を確認（高さ・角度・汚れ・光の戻り）",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "チェックリストのカード",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
+    }
+  },
+  {
+    "assetId": "p2-q1-c",
+    "shots": [
+      {
+        "overlay": "control",
+        "header": {
+          "no": "08",
+          "title": "原因の候補④ 制御側の条件"
+        }
+      }
+    ],
+    "seconds": 8,
+    "dialogAt": 0.8,
+    "visualDescription": "制御盤（PLC）。数え方の設定は保全担当が把握",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "右の画面に「センサの出力」と「PLCのカウント」",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
+    }
+  },
+  {
+    "assetId": "p2-signal",
+    "shots": [
+      {
+        "overlay": "signal-double",
+        "header": {
+          "no": "07",
+          "title": "原因の候補③ 透明ボトルの光の変化"
+        }
+      }
+    ],
+    "seconds": 14,
+    "dialogAt": 0.8,
+    "visualDescription": "研修用の仮想検証：ボトル1本の通過中に、出力が2回変化する。光の通り方の変化（仮説）",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "出力波形が2回ON。「研修用シミュレーション」表示",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
+    }
+  },
+  {
+    "assetId": "p2-q2-a",
+    "shots": [
+      {
+        "overlay": "talk",
+        "header": {
+          "no": "02",
+          "title": "お客様からの相談"
+        },
+        "photo": "sato"
+      }
+    ],
+    "seconds": 8,
+    "dialogAt": 0.8,
+    "visualDescription": "佐藤さんの不安",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "会話：話者（お客様／OPTEX-FA）と発言を画面中央に大きく表示（背景は線画のライン）",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
+    }
+  },
+  {
+    "assetId": "p2-q2-b",
+    "shots": [
+      {
+        "overlay": "compare-plc",
+        "header": {
+          "no": "08",
+          "title": "原因の候補④ 制御側の条件"
+        }
+      }
+    ],
+    "seconds": 8,
+    "dialogAt": 0.8,
+    "visualDescription": "センサの出力とPLCのカウントを同時に記録して比べる（例：実測ではない）",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "1本ごとの記録表（例）",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
+    }
+  },
+  {
+    "assetId": "p2-q2-c",
+    "shots": [
+      {
+        "overlay": "talk-card",
+        "header": {
+          "no": "02",
+          "title": "お客様からの相談"
+        },
+        "card": "ラインの速度は落とせない",
+        "photo": "sato"
+      }
+    ],
+    "seconds": 8,
+    "dialogAt": 0.8,
+    "visualDescription": "速度は落とせない",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "赤いカード",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
+    }
+  },
+  {
+    "assetId": "p2-isolation",
+    "shots": [
+      {
+        "overlay": "isolation",
+        "header": {
+          "title": "原因の候補を整理する"
+        }
+      }
+    ],
+    "seconds": 10,
+    "dialogAt": 0.8,
+    "visualDescription": "原因の候補4つ（揺れ・接近・光の変化・制御側）を並べる",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "4枚のカードが順に",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
+    }
+  },
+  {
+    "assetId": "p3-open",
+    "shots": [
+      {
+        "overlay": "talk",
+        "header": {
+          "title": "本当の困りごとは？"
+        },
+        "photo": "sato"
+      }
+    ],
+    "seconds": 8,
+    "dialogAt": 0.8,
+    "visualDescription": "佐藤さん「何とか対応できてはいる」。高橋さんが照合を担当",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "会話：話者（お客様／OPTEX-FA）と発言を画面中央に大きく表示（背景は線画のライン）",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
+    }
+  },
+  {
+    "assetId": "p3-q1-a",
+    "shots": [
+      {
+        "overlay": "burden",
+        "header": {
+          "title": "数が合わないと、何が起きる？"
+        }
+      }
+    ],
+    "seconds": 8,
+    "dialogAt": 0.8,
+    "visualDescription": "ライン停止・人手で数え直す",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "影響の連鎖（白→黒→赤）",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
+    }
+  },
+  {
+    "assetId": "p3-q1-b",
+    "shots": [
+      {
+        "overlay": "talk",
+        "header": {
+          "title": "本当の困りごとは？"
+        },
+        "photo": "sato"
+      }
+    ],
+    "seconds": 8,
+    "dialogAt": 0.8,
+    "visualDescription": "価格の前に原因を知りたい",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "会話：話者（お客様／OPTEX-FA）と発言を画面中央に大きく表示（背景は線画のライン）",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
+    }
+  },
+  {
+    "assetId": "p3-q1-c",
+    "shots": [
+      {
+        "overlay": "talk",
+        "header": {
+          "title": "本当の困りごとは？"
+        },
+        "photo": "takahashi"
+      }
+    ],
+    "seconds": 8,
+    "dialogAt": 0.8,
+    "visualDescription": "高橋さん「うちの現場を見てほしい」",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "会話：話者（お客様／OPTEX-FA）と発言を画面中央に大きく表示（背景は線画のライン）",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
+    }
+  },
+  {
+    "assetId": "p3-q2-a",
+    "shots": [
+      {
+        "overlay": "talk-card",
+        "header": {
+          "title": "本当の困りごとは？"
+        },
+        "card": "メーカーが原因とは決まっていない",
+        "photo": "sato"
+      }
+    ],
+    "seconds": 8,
+    "dialogAt": 0.8,
+    "visualDescription": "メーカーを原因と決めつけない",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "赤いカード",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
+    }
+  },
+  {
+    "assetId": "p3-q2-b",
+    "shots": [
+      {
+        "overlay": "talk",
+        "header": {
+          "no": "6",
+          "title": "本当の困りごとは？"
+        },
+        "photo": "sato-smile"
+      }
+    ],
+    "seconds": 8,
+    "dialogAt": 0.8,
+    "visualDescription": "佐藤さんが同意。表面の問題→業務への影響→実現したいこと",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "連鎖のカード",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
+    }
+  },
+  {
+    "assetId": "p3-q2-c",
+    "shots": [
+      {
+        "overlay": "talk-card",
+        "header": {
+          "title": "本当の困りごとは？"
+        },
+        "card": "価格より、安定した生産",
+        "photo": "takahashi"
+      }
+    ],
+    "seconds": 8,
+    "dialogAt": 0.8,
+    "visualDescription": "価格より安定生産",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "赤いカード",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
+    }
+  },
+  {
+    "assetId": "p3-summary",
+    "shots": [
+      {
+        "overlay": "talk",
+        "header": {
+          "no": "6",
+          "title": "お客様の本当の課題"
+        },
+        "photo": "sato"
+      },
+      {
+        "overlay": "issue-photo",
+        "atLine": 1,
+        "header": {
+          "no": "6",
+          "title": "お客様の本当の課題"
+        },
+        "photo": "recount"
+      }
+    ],
+    "seconds": 12,
+    "dialogAt": 0.8,
+    "visualDescription": "課題3つ：正確な本数管理・確認の手戻り削減・安定した生産",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "3枚のカード→「欲しいのは安定した生産」",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
+    }
+  },
+  {
+    "assetId": "p4-open",
+    "shots": [
+      {
+        "overlay": "talk",
+        "header": {
+          "no": "9",
+          "title": "どの方式が合いそう？"
+        },
+        "photo": "mori"
+      }
+    ],
+    "seconds": 8,
+    "dialogAt": 0.8,
+    "visualDescription": "先輩の森さん「センサを提案してみましょう」",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "会話：話者（お客様／OPTEX-FA）と発言を画面中央に大きく表示（背景は線画のライン）",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
+    }
+  },
+  {
+    "assetId": "p4-q1-a",
+    "shots": [
+      {
+        "overlay": "talk",
+        "header": {
+          "no": "9",
+          "title": "どの方式を提案する？"
+        },
+        "photo": "sato"
+      }
+    ],
+    "seconds": 8,
+    "dialogAt": 0.8,
+    "visualDescription": "佐藤さん「何が違うんですか？」",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "会話：話者（お客様／OPTEX-FA）と発言を画面中央に大きく表示（背景は線画のライン）",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
+    }
+  },
+  {
+    "assetId": "p4-q1-b",
+    "shots": [
+      {
+        "overlay": "talk",
+        "header": {
+          "no": "9",
+          "title": "どの方式を提案する？"
+        },
+        "photo": "sato"
+      }
+    ],
+    "seconds": 8,
+    "dialogAt": 0.8,
+    "visualDescription": "実際のボトルで比較しようと提案→佐藤さんが前向き",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "会話：話者（お客様／OPTEX-FA）と発言を画面中央に大きく表示（背景は線画のライン）",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
+    }
+  },
+  {
+    "assetId": "p4-q1-c",
+    "shots": [
+      {
+        "overlay": "talk-card",
+        "header": {
+          "no": "9",
+          "title": "どの方式を提案する？"
+        },
+        "photo": "takahashi"
+      }
+    ],
+    "seconds": 8,
+    "dialogAt": 0.8,
+    "visualDescription": "高橋さん「人の作業は増やしたくない」",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "会話：話者（お客様／OPTEX-FA）と発言を画面中央に大きく表示（背景は線画のライン）",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
+    }
+  },
+  {
+    "assetId": "p4-product",
+    "shots": [
+      {
+        "overlay": "product",
+        "header": {
+          "no": "09",
+          "title": "解決提案（OPTEX-FA KR-Qシリーズ）"
+        }
+      }
+    ],
+    "seconds": 12,
+    "dialogAt": 0.8,
+    "visualDescription": "KR-Qシリーズの紹介。製品画像は公式画像のみ（届くまでは枠）",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "「透明体検出タイプ・回帰反射型」「仕様は公式資料で確認」",
+    "status": [
+      "placeholder",
+      "awaiting-footage",
+      "awaiting-license"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
     },
-    "card": "カタログだけでは判断できない"
-   }
-  ],
-  "seconds": 8,
-  "dialogAt": 0.8,
-  "visualDescription": "カタログだけでは判断が難しい",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "赤いカード",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p4-followup",
-  "shots": [
-   {
-    "overlay": "followup",
-    "header": {
-     "title": "結果が基準に届かなかったとき"
+    "imagePath": "experience/products/optex-fa/transparent-sensor.png",
+    "productName": "OPTEX-FA KR-Qシリーズ（透明体検出タイプ）",
+    "productModel": "候補：KR-Q50N／KR-Q150NW／KR-Q300NW 等（公式資料で確認中）",
+    "sensorType": "回帰反射型（反射ミラー使用）",
+    "assetLicenseStatus": "公式製品画像：許諾確認待ち",
+    "verificationStatus": "現行品・仕様は公式ページで照合待ち（検索抜粋では製品ページ公開中）"
+  },
+  {
+    "assetId": "p4-setup",
+    "shots": [
+      {
+        "overlay": "setup",
+        "header": {
+          "no": "10",
+          "title": "設置と比較デモ"
+        }
+      }
+    ],
+    "seconds": 14,
+    "dialogAt": 0.8,
+    "visualDescription": "比較デモの準備。同じボトル・速度・高さで、既設センサとKR-Qシリーズを比べる",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "配置図（上から・横から）と測るもの",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
     }
-   }
-  ],
-  "seconds": 12,
-  "dialogAt": 0.8,
-  "visualDescription": "基準未達のときの次の一手（設置・感度・PLC・別方式）",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "4枚のカード",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "p4-message",
-  "shots": [
-   {
-    "overlay": "message",
-    "header": {
-     "no": "12",
-     "title": "お客様の評価・次のアクション"
+  },
+  {
+    "assetId": "p4-demo-normal",
+    "shots": [
+      {
+        "overlay": "demo-normal",
+        "header": {
+          "no": "10",
+          "title": "設置と比較デモ"
+        }
+      }
+    ],
+    "seconds": 14,
+    "dialogAt": 0.8,
+    "visualDescription": "比較デモ（通常搬送）。シミュレーションは見方の説明だけ。結果は実機で記録",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "シミュレーション表示。既設／KR-Qの結果欄は「実機で記録」",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
     }
-   }
-  ],
-  "seconds": 10,
-  "dialogAt": 0.8,
-  "visualDescription": "実機の比較で確かめた。次は実際のラインで、お客様と一緒に",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "「お客様と一緒に確かめる」",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
+  },
+  {
+    "assetId": "p4-demo-wobble",
+    "shots": [
+      {
+        "overlay": "demo-wobble",
+        "header": {
+          "no": "10",
+          "title": "設置と比較デモ"
+        }
+      }
+    ],
+    "seconds": 14,
+    "dialogAt": 0.8,
+    "visualDescription": "比較デモ（ボトルの揺れ）。シミュレーションは見方の説明だけ。結果は実機で記録",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "シミュレーション表示。既設／KR-Qの結果欄は「実機で記録」",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
+    }
+  },
+  {
+    "assetId": "p4-demo-gap",
+    "shots": [
+      {
+        "overlay": "demo-gap",
+        "header": {
+          "no": "10",
+          "title": "設置と比較デモ"
+        }
+      }
+    ],
+    "seconds": 14,
+    "dialogAt": 0.8,
+    "visualDescription": "比較デモ（間隔の変化）。シミュレーションは見方の説明だけ。結果は実機で記録",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "シミュレーション表示。既設／KR-Qの結果欄は「実機で記録」",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
+    }
+  },
+  {
+    "assetId": "p4-result",
+    "shots": [
+      {
+        "overlay": "result",
+        "header": {
+          "no": "11",
+          "title": "結果の比較"
+        }
+      }
+    ],
+    "seconds": 12,
+    "dialogAt": 0.8,
+    "visualDescription": "結果の比較の見方：改善前（現状）は通常＋0.5〜0.8%・最大＋3.0%。改善後は実測が得られるまで未確定。実測・シミュレーション・期待効果を分ける",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "比較の枠（改善後は「未確定」）",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
+    }
+  },
+  {
+    "assetId": "p4-q3-a",
+    "shots": [
+      {
+        "overlay": "talk",
+        "header": {
+          "no": "12",
+          "title": "お客様の評価・次のアクション"
+        },
+        "photo": "sato"
+      }
+    ],
+    "seconds": 8,
+    "dialogAt": 0.8,
+    "visualDescription": "佐藤さん「実際のラインでも同じように？」",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "会話：話者（お客様／OPTEX-FA）と発言を画面中央に大きく表示（背景は線画のライン）",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
+    }
+  },
+  {
+    "assetId": "p4-q3-b",
+    "shots": [
+      {
+        "overlay": "next-actions",
+        "header": {
+          "no": "12",
+          "title": "お客様の評価・次のアクション"
+        }
+      }
+    ],
+    "seconds": 8,
+    "dialogAt": 0.8,
+    "visualDescription": "実ラインでの検証に合意。次のアクションのチェックリスト",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "チェックリスト",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
+    }
+  },
+  {
+    "assetId": "p4-q3-c",
+    "shots": [
+      {
+        "overlay": "talk-card",
+        "header": {
+          "no": "12",
+          "title": "お客様の評価・次のアクション"
+        },
+        "photo": "takahashi"
+      }
+    ],
+    "seconds": 8,
+    "dialogAt": 0.8,
+    "visualDescription": "カタログだけでは判断が難しい",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "赤いカード",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
+    }
+  },
+  {
+    "assetId": "p4-followup",
+    "shots": [
+      {
+        "overlay": "followup",
+        "header": {
+          "title": "結果が基準に届かなかったとき"
+        }
+      }
+    ],
+    "seconds": 12,
+    "dialogAt": 0.8,
+    "visualDescription": "基準未達のときの次の一手（設置・感度・PLC・別方式）",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "4枚のカード",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
+    }
+  },
+  {
+    "assetId": "p4-message",
+    "shots": [
+      {
+        "overlay": "message",
+        "header": {
+          "no": "12",
+          "title": "お客様の評価・次のアクション"
+        }
+      }
+    ],
+    "seconds": 10,
+    "dialogAt": 0.8,
+    "visualDescription": "実機の比較で確かめた。次は実際のラインで、お客様と一緒に",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "「お客様と一緒に確かめる」",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
+    }
+  },
+  {
+    "assetId": "closing",
+    "shots": [
+      {
+        "overlay": "closing"
+      }
+    ],
+    "seconds": 12,
+    "dialogAt": 0.8,
+    "visualDescription": "営業は、商品を売るだけの仕事ではない",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "メッセージ",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
+    }
+  },
+  {
+    "assetId": "ending",
+    "shots": [
+      {
+        "overlay": "ending"
+      }
+    ],
+    "seconds": 16,
+    "dialogAt": 0,
+    "visualDescription": "聞く・考える・課題を見つける・提案する、そして確かめる",
+    "cameraDirection": "固定（導入動画と同じ）",
+    "animationDirection": "4ステップ→ブランド",
+    "status": [
+      "placeholder",
+      "awaiting-footage"
+    ],
+    "production": {
+      "method": "cg",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
+    }
+  },
+  {
+    "assetId": "clear-p1",
+    "status": [
+      "implemented"
+    ],
+    "production": {
+      "method": "composite",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "実写風の背景画像＋CG（光路・信号・数値）を Remotion で合成"
+    },
+    "shots": [
+      {
+        "overlay": "clear"
+      }
+    ],
+    "seconds": 5,
+    "dialogAt": 0.8,
+    "visualDescription": "PHASE 1 CLEAR。「現状が具体的になった。」→ NEXT：考える",
+    "cameraDirection": "ゆっくり寄る（Ken Burns）",
+    "animationDirection": "赤いCLEAR表示 → メッセージ → NEXT"
+  },
+  {
+    "assetId": "clear-p2",
+    "status": [
+      "implemented"
+    ],
+    "production": {
+      "method": "composite",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "実写風の背景画像＋CG（光路・信号・数値）を Remotion で合成"
+    },
+    "shots": [
+      {
+        "overlay": "clear"
+      }
+    ],
+    "seconds": 5,
+    "dialogAt": 0.8,
+    "visualDescription": "PHASE 2 CLEAR。「原因の可能性が見えてきた。」→ NEXT：課題を見つける",
+    "cameraDirection": "ゆっくり寄る（Ken Burns）",
+    "animationDirection": "赤いCLEAR表示 → メッセージ → NEXT"
+  },
+  {
+    "assetId": "clear-p3",
+    "status": [
+      "implemented"
+    ],
+    "production": {
+      "method": "composite",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "実写風の背景画像＋CG（光路・信号・数値）を Remotion で合成"
+    },
+    "shots": [
+      {
+        "overlay": "clear"
+      }
+    ],
+    "seconds": 5,
+    "dialogAt": 0.8,
+    "visualDescription": "PHASE 3 CLEAR。「お客様の本当の課題が見えた。」→ NEXT：提案する",
+    "cameraDirection": "ゆっくり寄る（Ken Burns）",
+    "animationDirection": "赤いCLEAR表示 → メッセージ → NEXT"
+  },
+  {
+    "assetId": "clear-p4",
+    "status": [
+      "implemented"
+    ],
+    "production": {
+      "method": "composite",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "実写風の背景画像＋CG（光路・信号・数値）を Remotion で合成"
+    },
+    "shots": [
+      {
+        "overlay": "clear"
+      }
+    ],
+    "seconds": 5,
+    "dialogAt": 0.8,
+    "visualDescription": "PHASE 4 CLEAR。「提案を、実機で確かめた。」→ NEXT：振り返り",
+    "cameraDirection": "ゆっくり寄る（Ken Burns）",
+    "animationDirection": "赤いCLEAR表示 → メッセージ → NEXT"
+  },
+  {
+    "assetId": "p4-why",
+    "status": [
+      "implemented"
+    ],
+    "production": {
+      "method": "composite",
+      "prompt": "",
+      "negativePrompt": "",
+      "note": "実写風の背景画像＋CG（光路・信号・数値）を Remotion で合成"
+    },
+    "shots": [
+      {
+        "overlay": "talk",
+        "header": {
+          "no": "9",
+          "title": "なぜ、透明体専用なのか"
+        },
+        "photo": "mori"
+      },
+      {
+        "overlay": "why-clear",
+        "atLine": 1,
+        "header": {
+          "no": "9",
+          "title": "なぜ、透明体専用なのか"
+        }
+      }
+    ],
+    "seconds": 9,
+    "dialogAt": 0.8,
+    "visualDescription": "森さんが導入P18（透明体専用）を想起させ、なぜ今回のお客様に合うかを話す。最後に「試して確かめる」",
+    "cameraDirection": "ゆっくり寄る（Ken Burns）",
+    "animationDirection": ""
   }
- },
- {
-  "assetId": "closing",
-  "shots": [
-   {
-    "overlay": "closing"
-   }
-  ],
-  "seconds": 12,
-  "dialogAt": 0.8,
-  "visualDescription": "営業は、商品を売るだけの仕事ではない",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "メッセージ",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- },
- {
-  "assetId": "ending",
-  "shots": [
-   {
-    "overlay": "ending"
-   }
-  ],
-  "seconds": 16,
-  "dialogAt": 0,
-  "visualDescription": "聞く・考える・課題を見つける・提案する、そして確かめる",
-  "cameraDirection": "固定（導入動画と同じ）",
-  "animationDirection": "4ステップ→ブランド",
-  "status": [
-   "placeholder",
-   "awaiting-footage"
-  ],
-  "production": {
-   "method": "cg",
-   "prompt": "",
-   "negativePrompt": "",
-   "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
-  }
- }
 ]

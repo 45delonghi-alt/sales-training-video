@@ -53,7 +53,7 @@ export const Scene03Mission: React.FC<{spec: SceneSpec<'Scene03Mission'>}> = ({s
   );
 };
 
-const MissionHeader: React.FC<{label: string; title: string}> = ({label, title}) => (
+export const MissionHeader: React.FC<{label: string; title: string}> = ({label, title}) => (
   <div style={{position: 'absolute', left: 72, top: 110, display: 'flex', alignItems: 'center', gap: 24}}>
     <div style={{fontSize: 30, fontWeight: 900, letterSpacing: 6, color: C.white, background: C.red, padding: '4px 18px 6px'}}>
       {label}

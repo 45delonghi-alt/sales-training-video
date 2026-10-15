@@ -2,11 +2,12 @@
 //   npm run experience:build  … dist/experience/ に書き出す（app.js・app.css・index.html・素材・available.json）
 //   npm run experience:serve  … dist/experience/ を http://localhost:4173/ で配信（会場PCでの実行用）
 //                                 あわせて、スマートフォン回答の API（/api/…）を提供する（メモリ上の一時保存。サーバーを止めると消える）
-import {cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync} from 'node:fs';
+import {cpSync, createReadStream, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync} from 'node:fs';
 import {createServer, type IncomingMessage, type ServerResponse} from 'node:http';
 import {networkInterfaces} from 'node:os';
 import {extname, join, relative} from 'node:path';
 import {build} from 'esbuild';
+import {handleLive} from './live-server';
 
 const ROOT = join(__dirname, '..');
 const OUT = join(ROOT, 'dist', 'experience');
@@ -47,6 +48,15 @@ const buildApp = async () => {
     if (!existsSync(src)) continue;
     cpSync(src, join(OUT, d), {recursive: true});
     files.push(...walk(src).map((f) => relative(join(ROOT, 'public'), f).split('\\').join('/')));
+  }
+  // 書き出し済みの体験クリップ（MP4）。WEB参加の学生端末は、端末で描画せずにこれを再生する（軽い）
+  const rendered = join(ROOT, 'out', 'experience', 'videos');
+  if (existsSync(rendered)) {
+    mkdirSync(join(OUT, 'experience', 'rendered'), {recursive: true});
+    for (const f of readdirSync(rendered).filter((x) => x.endsWith('.mp4'))) {
+      cpSync(join(rendered, f), join(OUT, 'experience', 'rendered', f));
+      files.push(`experience/rendered/${f}`);
+    }
   }
   // 配置済みの素材一覧（アプリはここにあるものだけを参照する＝存在しないファイルを読まない）
   writeFileSync(join(OUT, 'available.json'), JSON.stringify(files.sort(), null, 1));
@@ -191,6 +201,10 @@ const serve = () => {
   }
   const port = Number(process.env.PORT || 4173);
   createServer((req, res) => {
+    if ((req.url || '').startsWith('/api/live')) {
+      void handleLive(req, res, 'intro-video');
+      return;
+    }
     if ((req.url || '').startsWith('/api/')) {
       void handleApi(req, res, port);
       return;
@@ -199,6 +213,18 @@ const serve = () => {
     const file = join(OUT, url.endsWith('/') ? `${url}index.html` : url);
     if (!file.startsWith(OUT) || !existsSync(file) || statSync(file).isDirectory()) {
       res.writeHead(404).end('not found');
+      return;
+    }
+    const size = statSync(file).size;
+    const type0 = TYPES[extname(file)] || 'application/octet-stream';
+    // 大きな動画は読み込まずに流す（Range 対応）
+    if (size > 8e6) {
+      const range = req.headers.range;
+      const [a, b] = (range || 'bytes=0-').replace('bytes=', '').split('-');
+      const start = Number(a) || 0;
+      const end = b ? Number(b) : size - 1;
+      res.writeHead(range ? 206 : 200, {'Content-Type': type0, 'Accept-Ranges': 'bytes', 'Content-Length': end - start + 1, ...(range ? {'Content-Range': `bytes ${start}-${end}/${size}`} : {})});
+      createReadStream(file, {start, end}).pipe(res);
       return;
     }
     const body = readFileSync(file);
@@ -217,6 +243,7 @@ const serve = () => {
     res.end(body);
   }).listen(port, () => {
     console.log(`http://localhost:${port}/ で配信中（進行役：そのまま開く／投影用：?view=projector）`);
+    console.log(`  WEB参加（学生1〜5名）：進行役は http://localhost:${port}/?view=host を開いてセッションを作成`);
     for (const ip of lanAddresses()) console.log(`  スマートフォン回答：http://${ip}:${port}/?view=vote （同じネットワークから）`);
   });
 };

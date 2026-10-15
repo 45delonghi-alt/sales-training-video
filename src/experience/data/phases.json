@@ -12,7 +12,7 @@
         "type": "video",
         "title": "導入動画：コンサルティング営業とは",
         "compositionId": "ConsultingSales",
-        "description": "導入動画（完成版・約3分58秒）。最後の「聞く・考える・課題を見つける・提案する」が、この体験の4フェーズになる。",
+        "description": "導入動画（約3分58秒）＝ intro-slides.pptx の24ページ。最後の「YOUR MISSION／FIRST STEP：まずはお客様に現状を確認」から本編が始まる。",
         "pauses": [
           {
             "atSeconds": 54.9,
@@ -30,26 +30,35 @@
             "hint": "15秒で、理由を1つ考えよう"
           }
         ],
-        "facilitatorNote": "完成版の導入動画（public/consulting/video/intro-final.mp4）を再生する。3か所で止まる（各15秒程度）。答えは言わせっぱなしでよい。",
+        "facilitatorNote": "導入動画を再生する（3か所で止まる・各15秒）。止める問いの答えは言わない（本編で答え合わせをする）。導入動画は、0:30.8〜0:48.75（P6）のセンサを正しい設置（片側・ボトル下部・反対側に反射板）に差し替えた版（intro-fixed.mp4）を使う。",
         "nextSceneId": "bridge",
-        "videoFile": "consulting/video/intro-final.mp4"
+        "videoFile": "consulting/video/intro-fixed.mp4"
       },
       {
         "sceneId": "bridge",
         "type": "clip",
-        "title": "YOUR MISSION",
+        "title": "YOUR MISSION　ここからは、あなたが営業担当です。",
         "videoAsset": "bridge",
         "lines": [
           {
             "speaker": "narration",
-            "text": "あなたは、OPTEX-FAの営業担当です。"
+            "text": "ここまで、コンサルティング営業の考え方と、光電センサの基本を学びました。"
           },
           {
             "speaker": "narration",
-            "text": "飲料工場のお客様から、相談が入りました。"
+            "text": "ここからは皆さんが、OPTEX-FAの営業担当になります。"
+          },
+          {
+            "speaker": "narration",
+            "text": "お客様から相談を受けています。"
+          },
+          {
+            "speaker": "narration",
+            "text": "まずは、どんなことに困っているのか、確認してみましょう。"
           }
         ],
-        "nextSceneId": "p1-open"
+        "nextSceneId": "p1-open",
+        "facilitatorNote": "導入P23「FIRST STEP：まずはお客様に現状を確認」を受けて始める。センサの方式やOPTEX-FA製品の説明はしない。"
       }
     ]
   },
@@ -77,7 +86,7 @@
           },
           {
             "speaker": "sato",
-            "text": "実際より多く数えられることがあるんですよ。"
+            "text": "最近、実際より多くカウントされることがあるんです。"
           }
         ],
         "facilitatorNote": "ここでは解説しない。学生が「最初に何を確認するか」を考える前振り。",
@@ -91,7 +100,7 @@
         "backdropAsset": "p1-open",
         "situation": {
           "speaker": "sato",
-          "text": "実際より多く数えられることがあるんですよ。"
+          "text": "最近、実際より多くカウントされることがあるんです。"
         },
         "questionText": "最初に、何を確認しますか？",
         "thinkSeconds": 45,
@@ -105,16 +114,16 @@
         "choices": [
           {
             "choiceId": "A",
-            "choiceText": "使用しているセンサを確認する",
-            "salesLine": "今は、どんなセンサを使っていますか？",
+            "choiceText": "センサのメーカーや種類を確認する",
+            "salesLine": "今は、どんなメーカーの、どんなセンサを使っていますか？",
             "videoAsset": "p1-q1-a",
             "responder": "sato",
             "mood": "thinking",
-            "customerResponse": "他社製の、回帰反射型の光電センサです。透明なボトル専用かどうかは、確認してみないと分かりません。",
-            "gained": "既設は他社製の回帰反射型センサ。透明体専用かどうかは未確認",
-            "missing": "問題の大きさ（どれくらい多いのか）・いつ起きるのか",
-            "learningPoint": "使っている機器は分かったが、困りごとの大きさはまだ分からない。",
-            "technicalInsight": "回帰反射型：センサと反射板を向かい合わせ、戻ってくる光の変化で検出する方式。"
+            "customerResponse": "他社製の、回帰反射型の光電センサです。透明なボトル専用のタイプではないと思います。",
+            "gained": "既設は他社製の一般的な回帰反射型（透明体専用ではないようだ）",
+            "missing": "困りごとの大きさ（どれくらい多いのか）・いつ起きるのか",
+            "learningPoint": "機器のことは分かったが、お客様の困りごとの大きさは、まだ分からない。",
+            "technicalInsight": "回帰反射型：導入で見た方式。片側にセンサ、反対側に反射板。"
           },
           {
             "choiceId": "B",
@@ -124,33 +133,27 @@
             "responder": "sato",
             "mood": "request",
             "customerResponse": "通常は0.5〜0.8%ほど多くて、多い週は3%くらいです。",
-            "extraLines": [
-              {
-                "speaker": "sato",
-                "text": "特に、ボトルの流れが乱れたときに起こる気がします。"
-              }
-            ],
-            "gained": "実際の10,000本に対し、通常は＋0.5〜0.8%（10,050〜10,080本）、最も多い週は＋3.0%（10,300本）。ボトルの流れが乱れたときに起きるようだ",
-            "missing": "なぜ流れが乱れると数が増えるのか（原因）",
+            "gained": "実際の10,000本に対し、通常は＋0.5〜0.8%（10,050〜10,080本）、多い週は＋3.0%（10,300本）",
+            "missing": "どんなときに多くなるのか（起きる条件）",
             "learningPoint": "困りごとが数字と条件で具体的になった。",
             "technicalInsight": "過剰カウント（実際より多い）。検出漏れ（少ない）とは別の問題として扱う。"
           },
           {
             "choiceId": "C",
-            "choiceText": "センサ交換を提案する",
-            "salesLine": "新しいセンサに交換しませんか？",
+            "choiceText": "新しいセンサの導入予定を聞く",
+            "salesLine": "新しいセンサを導入するご予定はありますか？",
             "videoAsset": "p1-q1-c",
             "responder": "sato",
             "mood": "uneasy",
-            "customerResponse": "まだ原因が分からないので、交換が必要かどうか判断できません。",
-            "gained": "お客様自身も原因が分からず、交換が必要か判断できていない",
-            "missing": "問題の大きさ・起きる条件",
-            "learningPoint": "解決策を急ぐ前に、現状を理解する。"
+            "customerResponse": "原因が分からないうちは、交換するかどうか決められません。",
+            "gained": "お客様自身も原因が分からず、交換を判断できない",
+            "missing": "困りごとの大きさ・起きる条件",
+            "learningPoint": "商品の提案を急がない。まず現状を理解する。"
           }
         ],
         "recommendedChoice": "B",
-        "recommendReason": "商品の説明より先に、困りごとを数字と条件で具体化すると、次に確かめることが見えてきます。",
-        "learningPoint": "商品の説明より先に、困りごとを具体化する。",
+        "recommendReason": "導入のFIRST STEP「まずはお客様に現状を確認」のとおり。困りごとを数字で具体化すると、次に聞くことが見えてきます。",
+        "learningPoint": "商品提案を急がず、困りごとを具体化する。",
         "nextSceneId": "p1-data"
       },
       {
@@ -175,33 +178,33 @@
         "glossary": [
           "overcount"
         ],
-        "facilitatorNote": "数値は研修用の架空データ。通常＋0.5〜0.8%、最大＋3.0%。毎週3%ではないことを強調する。",
+        "facilitatorNote": "数値は研修用の架空データ。通常＋0.5〜0.8%、最大＋3.0%。毎週3%ではないことを強調する。導入P6の「1,260本／1,262本」はある時点のカウント。こちらは1週間ごとの記録（1万本あたり）で、別の集計。数字を置き換えて説明しない。",
         "nextSceneId": "p1-q2"
       },
       {
         "sceneId": "p1-q2",
         "questionId": "P1-Q2",
         "type": "question",
-        "title": "次に何をお願いする？",
+        "title": "どんなときに起きる？",
         "backdropAsset": "p1-data",
-        "questionText": "次に、何をお願いしますか？",
+        "questionText": "どんなときに発生するか、もう少し確認しますか？",
         "thinkSeconds": 45,
         "hint": {
           "speaker": "mori",
-          "text": "「流れが乱れたとき」に起きるなら、どこを見れば手がかりがありそうですか？"
+          "text": "数字は分かりました。どんな場面で起きるかが分かると、原因の手がかりになりそうです。"
         },
         "choices": [
           {
             "choiceId": "A",
-            "choiceText": "実際のラインを見せてもらう",
-            "salesLine": "実際のラインを、見せていただけますか？",
+            "choiceText": "どんなときに多くなるかを聞く",
+            "salesLine": "多くなるのは、どんなときですか？",
             "videoAsset": "p1-q2-a",
             "responder": "sato",
-            "mood": "positive",
-            "customerResponse": "どうぞ。センサは、ボトルの下のほうを横から見ています。",
-            "gained": "現場のラインを見られる。センサはボトル下部を横から検出している",
-            "missing": "どこで数が増えているのか",
-            "learningPoint": "現場を見ると、話だけでは分からない手がかりが得られる。"
+            "mood": "thinking",
+            "customerResponse": "ボトルの流れが乱れるときに、多く数える気がします。",
+            "gained": "ボトルの流れが乱れるときに、多く数えるようだ（お客様の印象）",
+            "missing": "なぜ流れが乱れると数が増えるのか（原因）",
+            "learningPoint": "起きる条件が分かると、調べる場所が見えてくる。"
           },
           {
             "choiceId": "B",
@@ -213,7 +216,7 @@
             "customerResponse": "まだ原因も分からないので、予算の話は早いですね……。",
             "gained": "お客様は、まず原因を知りたい",
             "missing": "誤カウントが起きる仕組み・原因",
-            "learningPoint": "予算は大切。ただ、困りごとが分かる前に聞くと売り込みに聞こえる。"
+            "learningPoint": "原因が分かる前のお金の話は、お客様を構えさせる。"
           },
           {
             "choiceId": "C",
@@ -225,12 +228,31 @@
             "customerResponse": "導入して3年ほどです。故障の記録はありません。",
             "gained": "設備は導入して約3年。故障の記録はない",
             "missing": "誤カウントが起きる仕組み・原因",
-            "learningPoint": "使用年数だけでは原因は分からない。「古いから」と決めつけない。"
+            "learningPoint": "役立つ情報。ただ、どんなときに起きるかは、まだ分からない。"
           }
         ],
         "recommendedChoice": "A",
-        "recommendReason": "流れが乱れたときに起きるなら、実際のラインを見ることが一番の手がかりになります。",
-        "learningPoint": "現場を見せてもらうと、原因を考える材料が増える。",
+        "recommendReason": "「いつ・どれくらい」が分かったら、次は「どんなときに」。起きる条件が、原因を考える手がかりになります。",
+        "learningPoint": "起きる条件を具体的に聞く。",
+        "nextSceneId": "clear-p1"
+      },
+      {
+        "sceneId": "clear-p1",
+        "type": "clip",
+        "title": "PHASE 1 CLEAR　現状が具体的になった。",
+        "videoAsset": "clear-p1",
+        "lines": [
+          {
+            "speaker": "narration",
+            "text": "いつ、どのくらい起こるか分かりました。次は原因を考えてみましょう。"
+          }
+        ],
+        "clear": {
+          "head": "PHASE 1 CLEAR",
+          "message": "現状が具体的になった。",
+          "next": "考える"
+        },
+        "facilitatorNote": "フェーズの区切り。次は「考える」。",
         "nextSceneId": "p2-open"
       }
     ]
@@ -246,31 +268,27 @@
       {
         "sceneId": "p2-open",
         "type": "clip",
-        "title": "既設センサの確認",
+        "title": "現場のセンサを見る",
         "videoAsset": "p2-open",
         "lines": [
+          {
+            "speaker": "sato",
+            "text": "ボトルの流れが乱れると、カウントが増える気がするんです。"
+          },
           {
             "speaker": "sato",
             "text": "これが今のセンサです。他社製の、回帰反射型の光電センサです。"
           },
           {
-            "speaker": "sato",
-            "text": "センサはコンベアの片側、反対側の同じ高さに反射板があります。"
-          },
-          {
-            "speaker": "narration",
-            "text": "センサから出た光は、ボトルの下部を通り、反射板で折り返して、同じセンサに戻ります。"
-          },
-          {
-            "speaker": "narration",
-            "text": "ボトルが通ると、戻ってくる光が変化します。その変化で、ボトルを数えています。"
+            "speaker": "nakata",
+            "text": "導入で見た回帰反射型ですね。片側にセンサ、反対側に反射板。ボトルの下部を、横から見ています。"
           }
         ],
         "glossary": [
           "retro",
           "reflector"
         ],
-        "facilitatorNote": "既設センサは他社製。メーカーや機種を原因と決めつけない。赤い光の線は説明用の表現。",
+        "facilitatorNote": "方式の説明はしない（導入P16で学習済み）。導入P6の図は概念図で、実際は「横から・ボトル下部・反対側に反射板」であることを、この画面で確認する。",
         "nextSceneId": "p2-q1"
       },
       {
@@ -396,7 +414,7 @@
         "type": "question",
         "title": "どうやって確かめる？",
         "backdropAsset": "p2-signal",
-        "questionText": "どのように原因を確かめますか？",
+        "questionText": "次に、どう確認しますか？",
         "thinkSeconds": 45,
         "hint": {
           "speaker": "nakata",
@@ -417,8 +435,8 @@
           },
           {
             "choiceId": "B",
-            "choiceText": "センサ出力とPLCのカウントを比べる",
-            "salesLine": "センサの出力とPLCのカウントを、同時に記録して比べませんか？",
+            "choiceText": "条件を変えて、信号を比べる",
+            "salesLine": "条件を変えながら、センサの信号とPLCのカウントを同時に記録して、比べませんか？",
             "videoAsset": "p2-q2-b",
             "responder": "sato",
             "mood": "positive",
@@ -448,25 +466,49 @@
           }
         ],
         "recommendedChoice": "B",
-        "recommendReason": "センサの出力とPLCのカウントを比べれば、どこで数が増えているかを切り分けられます。",
-        "learningPoint": "すぐ交換せず、原因を確認する。",
+        "recommendReason": "条件を変えて信号とカウントを比べれば、どこで、どんなときに数が増えるかを切り分けられます。",
+        "learningPoint": "原因を決めつけず、仮説を検証する。",
         "nextSceneId": "p2-isolation"
       },
       {
         "sceneId": "p2-isolation",
         "type": "clip",
-        "title": "原因の候補を整理する",
+        "title": "原因の仮説",
         "videoAsset": "p2-isolation",
         "lines": [
           {
             "speaker": "narration",
-            "text": "原因の候補は、ボトルの揺れ、ボトルの接近、透明なボトルを通る光の変化、そして制御側の数え方です。"
+            "text": "条件を変えて比べると、ボトルの流れが乱れたときに、1本の間に信号が2回変化する場面がありました。"
+          },
+          {
+            "speaker": "nakata",
+            "text": "ボトル下部の凹凸や揺れで、戻ってくる光が変化し、信号が不安定になっているのかもしれません。"
           },
           {
             "speaker": "narration",
-            "text": "1つに決めつけず、どこで数が増えているかを切り分けて、絞り込みます。"
+            "text": "ただし、これは仮説です。決めつけずに、確かめていきます。"
           }
         ],
+        "nextSceneId": "clear-p2",
+        "facilitatorNote": "研修用の仮想検証（実測ではない）。「原因の候補」と「確定した原因」を区別する。"
+      },
+      {
+        "sceneId": "clear-p2",
+        "type": "clip",
+        "title": "PHASE 2 CLEAR　原因の可能性が見えてきた。",
+        "videoAsset": "clear-p2",
+        "lines": [
+          {
+            "speaker": "narration",
+            "text": "原因の可能性が見えてきました。では、お客様は本当に何に困っているのでしょうか？"
+          }
+        ],
+        "clear": {
+          "head": "PHASE 2 CLEAR",
+          "message": "原因の可能性が見えてきた。",
+          "next": "課題を見つける"
+        },
+        "facilitatorNote": "フェーズの区切り。次は「課題を見つける」。",
         "nextSceneId": "p3-open"
       }
     ]
@@ -487,14 +529,15 @@
         "lines": [
           {
             "speaker": "sato",
-            "text": "多少数字が違っても、何とか対応できてはいるんですが……。"
+            "text": "数字が合わないんですが、何とか対応できています。"
           },
           {
             "speaker": "takahashi",
             "text": "数量の照合は、私たち品質管理が担当しています。"
           }
         ],
-        "nextSceneId": "p3-q1"
+        "nextSceneId": "p3-q1",
+        "facilitatorNote": "導入P10〜12（お客様が実現したいこと・放っておくと何が起きる）を、会話から引き出す場面。概念図は出さない。"
       },
       {
         "sceneId": "p3-q1",
@@ -504,9 +547,9 @@
         "backdropAsset": "p3-open",
         "situation": {
           "speaker": "sato",
-          "text": "多少数字が違っても、何とか対応できてはいるんですが……。"
+          "text": "数字が合わないんですが、何とか対応できています。"
         },
-        "questionText": "何を聞きますか？",
+        "questionText": "何を詳しく聞きますか？",
         "thinkSeconds": 45,
         "hint": {
           "speaker": "mori",
@@ -515,19 +558,19 @@
         "choices": [
           {
             "choiceId": "A",
-            "choiceText": "再確認の手間を聞く",
+            "choiceText": "再確認にかかる手間を聞く",
             "salesLine": "数が合わないとき、確認にどれくらい手間がかかっていますか？",
             "videoAsset": "p3-q1-a",
             "responder": "takahashi",
             "mood": "worried",
-            "customerResponse": "数が合わないと、確認し直さなければいけません。ときには、ラインを止めることもあります。",
+            "customerResponse": "数が合わないと、現場で数え直さなければなりません。場合によっては、ラインを一時停止することもあります。",
             "gained": "数が合わないと本数を確認し直す。ときにはラインを止める",
             "missing": "それが、お客様にとってどれくらい大きな負担か",
             "learningPoint": "業務への影響を聞くと、本当の課題が見えてくる。"
           },
           {
             "choiceId": "B",
-            "choiceText": "センサの価格を聞く",
+            "choiceText": "センサの購入価格を聞く",
             "salesLine": "今のセンサは、おいくらでしたか？",
             "videoAsset": "p3-q1-b",
             "responder": "sato",
@@ -539,15 +582,15 @@
           },
           {
             "choiceId": "C",
-            "choiceText": "他社の事例を聞く",
-            "salesLine": "ほかの工場でも、同じことは起きていますか？",
+            "choiceText": "センサのメーカーを聞く",
+            "salesLine": "今のセンサは、どこのメーカーのものですか？",
             "videoAsset": "p3-q1-c",
             "responder": "takahashi",
             "mood": "cool",
-            "customerResponse": "他社さんのことは分かりませんが……うちの現場の状況を見てほしいです。",
-            "gained": "お客様は、自分たちの現場に合った解決を求めている",
-            "missing": "誤カウントが現場に与えている影響",
-            "learningPoint": "他社の話より、目の前のお客様の困りごとに集中する。"
+            "customerResponse": "メーカーよりも、うちの現場で何が起きているかを知りたいです。",
+            "gained": "お客様の関心は、メーカーより現場で起きていること",
+            "missing": "誤カウントが仕事に与えている影響",
+            "learningPoint": "メーカーの話より、お客様の仕事への影響を聞く。"
           }
         ],
         "recommendedChoice": "A",
@@ -561,7 +604,7 @@
         "type": "question",
         "title": "本当に困っていることは？",
         "backdropAsset": "p3-open",
-        "questionText": "お客様が本当に困っていることは、何ですか？",
+        "questionText": "お客様が本当に解決したいことは何でしょうか？",
         "thinkSeconds": 45,
         "hint": {
           "speaker": "mori",
@@ -570,65 +613,81 @@
         "choices": [
           {
             "choiceId": "A",
-            "choiceText": "センサのメーカー",
+            "choiceText": "新しいセンサを購入すること",
             "salesLine": "今のセンサのメーカーに、問題があるのではないでしょうか。",
             "videoAsset": "p3-q2-a",
-            "responder": "takahashi",
-            "mood": "thinking",
-            "customerResponse": "メーカーが原因かどうかは、まだ分かりませんよね。",
-            "gained": "メーカーを原因と決めつけることはできない",
-            "missing": "お客様が本当に困っていること",
-            "learningPoint": "原因を決めつけない。他社製品を悪く言わない。"
+            "responder": "sato",
+            "mood": "cool",
+            "customerResponse": "センサを買うこと自体が、目的ではないんです。",
+            "gained": "新しいセンサは手段であって、目的ではない",
+            "missing": "お客様が本当に解決したいこと",
+            "learningPoint": "商品は手段。お客様の目的を考える。"
           },
           {
             "choiceId": "B",
-            "choiceText": "数量確認やライン停止の負担",
+            "choiceText": "正確な数量管理と、確認作業の削減",
             "salesLine": "本当に困っているのは、数量の確認やライン停止の負担ではないでしょうか。",
             "videoAsset": "p3-q2-b",
             "responder": "sato",
             "mood": "positive",
-            "customerResponse": "そうなんです。確認やライン停止がなくなれば、安心して生産できます。",
-            "gained": "本当に困っているのは、数量の確認やライン停止の負担。実現したいのは、正確な本数管理と安定した生産",
-            "missing": "どうやって解決するか",
-            "learningPoint": "表面の問題（数が多い）→ 業務への影響（確認・停止）→ 本当に実現したいこと（安定した生産）。"
+            "customerResponse": "そうなんです。数が正しく合って、確認の手間が減れば、安心して生産できます。",
+            "gained": "本当の課題：正確な数量管理と、数え直し・ライン停止の削減",
+            "missing": "解決策（このあと提案する）",
+            "learningPoint": "見えている問題（誤カウント）の先に、本当の課題（確認作業・ライン停止）がある。"
           },
           {
             "choiceId": "C",
-            "choiceText": "センサの購入価格",
+            "choiceText": "設備のメーカーを変えること",
             "salesLine": "センサの購入価格が、課題でしょうか。",
             "videoAsset": "p3-q2-c",
-            "responder": "sato",
-            "mood": "thinking",
-            "customerResponse": "価格より、安定して生産できるかが大事です。",
-            "gained": "お客様にとって大事なのは、価格より安定した生産",
-            "missing": "お客様が本当に困っていること",
-            "learningPoint": "お客様が欲しいのは、安い製品そのものではない。"
+            "responder": "takahashi",
+            "mood": "cool",
+            "customerResponse": "メーカーを変えれば解決する、とは限りませんよね。",
+            "gained": "メーカーを変えることが目的ではない",
+            "missing": "お客様が本当に解決したいこと",
+            "learningPoint": "「他社製だから」と決めつけない。"
           }
         ],
         "recommendedChoice": "B",
-        "recommendReason": "誤カウントそのものより、確認の手戻りやライン停止の負担が、お客様の困りごとです。",
+        "recommendReason": "導入で考えた「お客様が本当は何を実現したいか」。誤カウントの先にある、数え直しやライン停止の負担をなくすことが目的です。",
         "learningPoint": "お客様が欲しいのは、新しいセンサではなく、安定した生産である。",
         "nextSceneId": "p3-summary"
       },
       {
         "sceneId": "p3-summary",
         "type": "clip",
-        "title": "見つけた課題",
+        "title": "お客様の本当の課題",
         "videoAsset": "p3-summary",
         "lines": [
           {
-            "speaker": "narration",
-            "text": "見えてきた課題は、3つです。"
+            "speaker": "sato",
+            "text": "数が合っていれば、数え直しも、ラインを止めることもなくなります。"
           },
           {
             "speaker": "narration",
-            "text": "正確な本数管理。数量確認の手戻りを減らすこと。そして、安定した生産です。"
-          },
-          {
-            "speaker": "narration",
-            "text": "お客様が欲しいのは、新しいセンサではなく、安定した生産です。"
+            "text": "お客様が解決したいのは、正確な数量管理と、確認作業を減らすこと。その先にあるのは、安定した生産です。"
           }
         ],
+        "nextSceneId": "clear-p3",
+        "facilitatorNote": "導入P12の図は再掲しない。工場の実写と、お客様の言葉で確認する（10秒程度）。"
+      },
+      {
+        "sceneId": "clear-p3",
+        "type": "clip",
+        "title": "PHASE 3 CLEAR　お客様の本当の課題が見えた。",
+        "videoAsset": "clear-p3",
+        "lines": [
+          {
+            "speaker": "narration",
+            "text": "お客様の課題が見えてきました。では、どんな解決策が考えられるでしょうか？"
+          }
+        ],
+        "clear": {
+          "head": "PHASE 3 CLEAR",
+          "message": "お客様の本当の課題が見えた。",
+          "next": "提案する"
+        },
+        "facilitatorNote": "フェーズの区切り。次は「提案する」。",
         "nextSceneId": "p4-open"
       }
     ]
@@ -644,74 +703,93 @@
       {
         "sceneId": "p4-open",
         "type": "clip",
-        "title": "先輩からのひとこと",
+        "title": "どの方式が合いそう？",
         "videoAsset": "p4-open",
         "lines": [
           {
             "speaker": "mori",
-            "text": "原因の可能性が見えてきましたね。"
-          },
-          {
-            "speaker": "mori",
-            "text": "では、お客様のPETボトルに適したセンサを、提案してみましょう。"
+            "text": "ここまでの調査結果を踏まえると、どの方式が合いそうでしょうか？"
           }
         ],
-        "nextSceneId": "p4-q1"
+        "nextSceneId": "p4-q1",
+        "facilitatorNote": "導入P22の止める問い「透明。どの方式が合いそう？」の答え合わせになる。"
       },
       {
         "sceneId": "p4-q1",
         "questionId": "P4-Q1",
         "type": "question",
-        "title": "どのように提案する？",
+        "title": "どの方式を提案する？",
         "backdropAsset": "p4-open",
-        "questionText": "どのように提案しますか？",
+        "questionText": "今回のお客様には、どの方式が合いそうですか？",
         "thinkSeconds": 45,
         "hint": {
           "speaker": "mori",
-          "text": "お客様が、安心して判断できる提案はどれでしょう？"
+          "text": "導入で見た方式の中に、透明なボトルに向いたものがありましたね。"
         },
         "choices": [
           {
             "choiceId": "A",
-            "choiceText": "高性能なセンサへ交換する",
-            "salesLine": "高性能なセンサに、交換しましょう。",
+            "choiceText": "一般的な回帰反射型を、もう一度提案する",
+            "salesLine": "今と同じ、回帰反射型のセンサをもう一度おすすめします。",
             "videoAsset": "p4-q1-a",
             "responder": "sato",
-            "mood": "thinking",
-            "customerResponse": "今のセンサと、何が違うんですか？",
-            "gained": "お客様は、何が違い、なぜ課題が解決するのかを知りたい",
-            "missing": "根拠（実際のボトルでの結果）",
-            "learningPoint": "「高性能」だけでは、お客様の課題とつながらない。"
+            "mood": "uneasy",
+            "customerResponse": "今と同じタイプだと、また同じことが起きないか心配です。",
+            "gained": "同じ方式のままでは、お客様は安心できない",
+            "missing": "透明なボトルに合った方式",
+            "learningPoint": "今の方式で起きている問題を、同じ方式で解決できるとは限らない。"
           },
           {
             "choiceId": "B",
-            "choiceText": "OPTEX-FAの透明体検出センサで、実際のボトルを検証する",
-            "salesLine": "今のセンサでもPETボトルは検出できていますが、搬送の条件によって、信号が不安定になる可能性があります。そこで、OPTEX-FAの透明体検出用センサを使い、実際のボトルで比較してみませんか？",
+            "choiceText": "透明体専用の回帰反射型を提案する",
+            "salesLine": "透明なボトル向けの、透明体専用の回帰反射型センサを提案します。",
             "videoAsset": "p4-q1-b",
             "responder": "sato",
-            "mood": "positive",
-            "customerResponse": "実際のボトルで比べられるなら、ぜひお願いします。",
-            "gained": "お客様は、実際のボトルでの比較検証に前向き",
-            "missing": "何を確かめれば合格か",
-            "learningPoint": "課題と技術を結び付け、確かめる方法まで提案する。",
+            "mood": "request",
+            "customerResponse": "透明なボトル専用のタイプがあるんですね。くわしく聞かせてください。",
+            "gained": "透明体専用の回帰反射型が候補になる",
+            "missing": "実際のボトルと現場で、安定して検出できるか",
+            "learningPoint": "今回のお客様に最適な方式を選ぶ。",
             "technicalInsight": "提案候補：OPTEX-FA KR-Qシリーズ（透明体検出タイプの回帰反射型）。仕様は公式資料で確認し、性能は実際のボトルで確かめる。"
           },
           {
             "choiceId": "C",
-            "choiceText": "人が数を再確認する",
-            "salesLine": "当面は、人が数を確認し直すのはいかがでしょう。",
+            "choiceText": "人による確認を増やす",
+            "salesLine": "当面は、人の確認を増やしてはいかがでしょう。",
             "videoAsset": "p4-q1-c",
             "responder": "takahashi",
             "mood": "cool",
             "customerResponse": "人の作業が増えるのは、避けたいですね。",
             "gained": "人手を増やす案は、お客様の負担（本当の課題）を増やしてしまう",
             "missing": "負担を増やさない解決策",
-            "learningPoint": "提案が、お客様の課題を増やしていないか確かめる。"
+            "learningPoint": "お客様の課題は、確認作業を減らすこと。逆の提案になっている。"
           }
         ],
         "recommendedChoice": "B",
-        "recommendReason": "課題に合う技術を、お客様の実際のボトルで確かめる提案だからです。他社製品より必ず優れている、とは言いません。",
-        "learningPoint": "課題と技術を結び付け、「一緒に確かめる」を提案する。",
+        "recommendReason": "導入P21「どれが高性能か、ではなく、今回のお客様にどれが最適か」。透明なPETボトルには、透明体専用の回帰反射型が合いそうです（導入P18）。",
+        "learningPoint": "今回のお客様に最適な方式を選ぶ。",
+        "nextSceneId": "p4-why"
+      },
+      {
+        "sceneId": "p4-why",
+        "type": "clip",
+        "title": "なぜ、透明体専用なのか",
+        "videoAsset": "p4-why",
+        "lines": [
+          {
+            "speaker": "mori",
+            "text": "導入動画で学んだ、透明体専用センサを覚えていますか？"
+          },
+          {
+            "speaker": "mori",
+            "text": "透明なPETボトルでも、わずかな光の変化をとらえる仕組みが使われています。"
+          },
+          {
+            "speaker": "mori",
+            "text": "ただし、実際の現場で安定して検出できるかは、試して確かめる必要があります。"
+          }
+        ],
+        "facilitatorNote": "方式の説明は導入P18で済んでいる。ここでは「なぜ今回のお客様に合うか」と「試して確かめる」だけを話す。",
         "nextSceneId": "p4-product"
       },
       {
@@ -726,11 +804,11 @@
           },
           {
             "speaker": "nakata",
-            "text": "センサと反射板を向かい合わせて、ボトルの下部を横から検出します。"
+            "text": "今と同じように、片側にセンサ、反対側に反射板。ボトルの下部を、横から検出します。"
           },
           {
             "speaker": "nakata",
-            "text": "今のセンサとの違いは、公式の仕様で確認し、実際のボトルで確かめましょう。"
+            "text": "性能の数値は公式の資料で確認し、効果は実際のボトルで確かめましょう。"
           }
         ],
         "glossary": [
@@ -738,6 +816,53 @@
           "reflector"
         ],
         "facilitatorNote": "製品画像は公式画像のみ。機能の違いはメーカー公式資料に基づいて説明する。「他社より必ず優れている」とは言わない。",
+        "nextSceneId": "p4-pitch"
+      },
+      {
+        "sceneId": "p4-pitch",
+        "type": "pitch",
+        "title": "30秒で提案しよう",
+        "prompt": "次の4つを組み合わせて、お客様に30秒で提案してください。",
+        "parts": [
+          {
+            "key": "issue",
+            "label": "お客様の課題",
+            "placeholder": "例：数え直しやライン停止の手間をなくしたい",
+            "options": [
+              "数が合わず、数え直しやライン停止が起きている",
+              "正確な数量管理をしたい"
+            ]
+          },
+          {
+            "key": "sensor",
+            "label": "提案するセンサ",
+            "placeholder": "例：透明体専用の回帰反射型（KR-Qシリーズ）",
+            "options": [
+              "透明体専用の回帰反射型（OPTEX-FA KR-Qシリーズ）"
+            ]
+          },
+          {
+            "key": "benefit",
+            "label": "期待できる改善",
+            "placeholder": "例：誤カウントが減り、確認作業が減る（実機で確かめる）",
+            "options": [
+              "誤カウントが減り、数え直しが減る可能性がある",
+              "確認作業が減り、安定して生産できる可能性がある"
+            ]
+          },
+          {
+            "key": "verify",
+            "label": "実機での検証",
+            "placeholder": "例：実際のボトルで、今のセンサと同じ条件で比べる",
+            "options": [
+              "実際のボトルで、今のセンサと同じ条件で比べる",
+              "揺れや間隔が詰まる条件でも確かめる"
+            ]
+          }
+        ],
+        "seconds": 30,
+        "minutes": 3,
+        "facilitatorNote": "1〜2名に読み上げてもらう（1人30秒）。「必ず直る」と言い切った提案には「実機で確かめる」を足すよう返す。正解・不正解はつけない。",
         "nextSceneId": "p4-setup"
       },
       {
@@ -752,68 +877,13 @@
           },
           {
             "speaker": "nakata",
-            "text": "同じボトル、同じ搬送速度、同じ設置の高さです。高さを変えて比べるときも、2つのセンサを同じ高さにそろえます。反射板と設定は、それぞれのセンサに合ったものを使います。"
+            "text": "同じボトル、生産時と同じ搬送速度、ボトル下部の同じ高さです。反射板と設定は、それぞれのセンサに合ったものを使います。"
           },
           {
             "speaker": "nakata",
             "text": "測るのは、通過した本数、センサの出力の回数、そしてPLCのカウント値です。"
           }
         ],
-        "nextSceneId": "p4-q2"
-      },
-      {
-        "sceneId": "p4-q2",
-        "questionId": "P4-Q2",
-        "type": "question",
-        "title": "デモで何を確認する？",
-        "backdropAsset": "p4-setup",
-        "questionText": "デモで、何を確認すべきですか？",
-        "thinkSeconds": 30,
-        "hint": {
-          "speaker": "nakata",
-          "text": "お客様が困っていたのは、何でしたか？"
-        },
-        "choices": [
-          {
-            "choiceId": "A",
-            "choiceText": "センサの見た目",
-            "salesLine": "センサの見た目を、確認しましょう。",
-            "videoAsset": "p4-q2-a",
-            "responder": "sato",
-            "mood": "neutral",
-            "customerResponse": "見た目より、ちゃんと数えられるかが大事ですね。",
-            "gained": "お客様にとって大事なのは、正確に数えられるか",
-            "missing": "確認する基準",
-            "learningPoint": "確認することは、お客様の課題から決める。"
-          },
-          {
-            "choiceId": "B",
-            "choiceText": "1本につき出力1回か、本数とカウントが合うか",
-            "salesLine": "ボトル1本につき出力が1回だけか、本数とカウントが合うかを確かめましょう。",
-            "videoAsset": "p4-q2-b",
-            "responder": "takahashi",
-            "mood": "positive",
-            "customerResponse": "そうです。本数が合うかどうかが、一番大事です。",
-            "gained": "確かめることは「1本につき出力1回」「通過本数＝出力回数＝PLCのカウント値」",
-            "missing": "実際の結果（これから測る）",
-            "learningPoint": "試す前に、何を確かめれば合格かを決める。"
-          },
-          {
-            "choiceId": "C",
-            "choiceText": "カタログのページ数",
-            "salesLine": "カタログが何ページあるか、確認しましょう。",
-            "videoAsset": "p4-q2-c",
-            "responder": "takahashi",
-            "mood": "uneasy",
-            "customerResponse": "ページ数では、判断できませんね……。",
-            "gained": "カタログの情報量では、現場で使えるかは判断できない",
-            "missing": "確認する基準",
-            "learningPoint": "現場の条件で確かめる。"
-          }
-        ],
-        "recommendedChoice": "B",
-        "recommendReason": "お客様が求めるのは正確なカウント。通過本数・センサの出力・PLCのカウントを比べます。",
-        "learningPoint": "試す前に、何を確かめれば合格かをお客様と決める。",
         "nextSceneId": "p4-demo-normal"
       },
       {
@@ -835,7 +905,7 @@
       {
         "sceneId": "p4-demo-wobble",
         "type": "demo",
-        "title": "比較デモ2：ボトルの揺れ",
+        "title": "比較デモ2：悪条件（ボトルの揺れ）",
         "videoAsset": "p4-demo-wobble",
         "condition": "ボトルが揺れながら流れる（実際のラインで起こりうる範囲）",
         "checks": [
@@ -851,34 +921,18 @@
       {
         "sceneId": "p4-demo-gap",
         "type": "demo",
-        "title": "比較デモ3：間隔の変化",
+        "title": "比較デモ3：悪条件（間隔が詰まる）",
         "videoAsset": "p4-demo-gap",
         "condition": "ボトルどうしの間隔が詰まる",
         "checks": [
-          "詰まったボトルを、1本ずつ区別して出力が出るか",
+          "詰まったボトルを、1本ずつ区別して出力が出るか（多く数えないか・少なく数えないか）",
           "カウント値が通過本数と一致するか"
         ],
         "predictPrompt": "間隔が詰まっても、1本ずつ区別できると思う？",
         "record": true,
         "compare": true,
-        "nextSceneId": "p4-demo-height",
+        "nextSceneId": "p4-result",
         "facilitatorNote": "詰める間隔の範囲は、実際のラインで起こりうる範囲を設備担当者と事前に決める。2つのセンサで同じ間隔を再現する。"
-      },
-      {
-        "sceneId": "p4-demo-height",
-        "type": "demo",
-        "title": "比較デモ4：検出高さの比較",
-        "videoAsset": "p4-demo-height",
-        "condition": "検出の高さを変えて比べる（ボトル下部の基準位置と、その上下）",
-        "checks": [
-          "高さによって、出力の安定性が変わるか",
-          "ボトル下部の基準位置で、カウント値が通過本数と一致するか"
-        ],
-        "predictPrompt": "どの高さが、いちばん安定すると思う？",
-        "record": true,
-        "compare": true,
-        "facilitatorNote": "検出の基準はボトル下部。2つのセンサを同じ高さにそろえて比べる。アプリには基準位置（ボトル下部）の結果を入力し、上・下の結果は記録シートの補助行に書く。キャップや上部を検出位置にしない。",
-        "nextSceneId": "p4-result"
       },
       {
         "sceneId": "p4-result",
@@ -892,7 +946,7 @@
           },
           {
             "speaker": "narration",
-            "text": "実測の値、研修用のシミュレーション、期待する効果は、分けて考えます。"
+            "text": "実測の値がない場合、画面の改善結果は仮想データです。実測、シミュレーション、期待する効果は、分けて考えます。"
           }
         ],
         "facilitatorNote": "表示するのは、この画面で記録した実測値だけ。未記録の欄は「未記録」と表示し、改善後の数値を作らない。",
@@ -906,7 +960,7 @@
         "backdropAsset": "p4-result",
         "requiresDemoPass": true,
         "fallbackSceneId": "p4-followup",
-        "questionText": "実機で正しく検出できれば、すぐ採用してよいでしょうか？",
+        "questionText": "実機で良い結果が出れば、すぐ採用を決めてもよいでしょうか？",
         "thinkSeconds": 30,
         "hint": {
           "speaker": "mori",
@@ -939,15 +993,15 @@
           },
           {
             "choiceId": "C",
-            "choiceText": "カタログだけで判断する",
-            "salesLine": "あとは、カタログで判断していただけますか？",
+            "choiceText": "価格だけで判断する",
+            "salesLine": "あとは、価格で判断していただけますか？",
             "videoAsset": "p4-q3-c",
             "responder": "takahashi",
             "mood": "uneasy",
-            "customerResponse": "カタログだけだと、うちのラインで使えるか判断が難しいですね。",
-            "gained": "資料だけでは、現場で使えるかは判断できない",
-            "missing": "実際のラインでの結果",
-            "learningPoint": "次の一歩は、お客様の不安を解消するものにする。"
+            "customerResponse": "価格だけでは、うちのラインで使えるか判断できませんね。",
+            "gained": "価格だけでは、お客様は判断できない",
+            "missing": "実際のラインでの確認",
+            "learningPoint": "お客様が安心して判断できる材料をそろえる。"
           }
         ],
         "recommendedChoice": "B",
@@ -985,15 +1039,34 @@
         "videoAsset": "p4-message",
         "lines": [
           {
-            "speaker": "narration",
-            "text": "実機の比較で、記録した条件での結果を、お客様と一緒に確かめました。"
+            "speaker": "sato",
+            "text": "実際のボトルで確かめられて、安心しました。ぜひ、実際のラインでも一緒に確認させてください。"
           },
           {
             "speaker": "narration",
-            "text": "次は、残る条件を整理して、実際のラインで一緒に確かめます。"
+            "text": "提案を実機で確かめ、お客様と次の一歩を決めました。"
           }
         ],
         "facilitatorNote": "基準を満たした場合も、満たさなかった場合（追加調査の後）も、このまとめに進む。「改善した」とは言わない。言えるのは、記録した条件での結果と、次に確かめることだけ。",
+        "nextSceneId": "clear-p4"
+      },
+      {
+        "sceneId": "clear-p4",
+        "type": "clip",
+        "title": "PHASE 4 CLEAR　提案を、実機で確かめた。",
+        "videoAsset": "clear-p4",
+        "lines": [
+          {
+            "speaker": "narration",
+            "text": "提案を実機で確かめました。今日の営業体験を振り返りましょう。"
+          }
+        ],
+        "clear": {
+          "head": "PHASE 4 CLEAR",
+          "message": "提案を、実機で確かめた。",
+          "next": "振り返り"
+        },
+        "facilitatorNote": "フェーズの区切り。次は「振り返り」。",
         "nextSceneId": "r-q1"
       }
     ]
@@ -1054,7 +1127,7 @@
           },
           {
             "speaker": "narration",
-            "text": "OPTEX-FAのセンシング技術は、ものづくりの現場を支えています。"
+            "text": "現場の課題を見つけ、解決策を提案する。それが、OPTEX-FAのコンサルティング営業です。"
           }
         ],
         "nextSceneId": "ending"

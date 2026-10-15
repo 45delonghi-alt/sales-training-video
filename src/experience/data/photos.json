@@ -1,0 +1,77 @@
+{
+  "note": "実写風の写真の枠。file を public/ に置き、npm run experience:photos を実行すると ready が更新され、動画で使われる。生成用の指示は docs/web-experience/06-shot-instructions.md",
+  "slots": [
+    {
+      "slot": "factory-line",
+      "file": "experience/photos/factory-line.jpg",
+      "ready": false,
+      "use": "飲料工場のライン全景（人物なし）"
+    },
+    {
+      "slot": "sensor-side",
+      "file": "experience/photos/sensor-side.jpg",
+      "ready": false,
+      "use": "既設センサ：コンベア片側・ボトル下部の高さ・反対側に反射板"
+    },
+    {
+      "slot": "sato",
+      "file": "experience/photos/sato.jpg",
+      "ready": false,
+      "use": "佐藤さん（女性・設備課）：白い衛生作業服・衛生帽・タブレット"
+    },
+    {
+      "slot": "sato-smile",
+      "file": "experience/photos/sato-smile.jpg",
+      "ready": false,
+      "use": "佐藤さん：安心した笑顔"
+    },
+    {
+      "slot": "takahashi",
+      "file": "experience/photos/takahashi.jpg",
+      "ready": false,
+      "use": "高橋さん（女性・品質管理）：白い衛生作業服・衛生帽・眼鏡・記録"
+    },
+    {
+      "slot": "recount",
+      "file": "experience/photos/recount.jpg",
+      "ready": false,
+      "use": "止めたラインの横で、ボトルを数え直す作業"
+    },
+    {
+      "slot": "plc-panel",
+      "file": "experience/photos/plc-panel.jpg",
+      "ready": false,
+      "use": "制御盤（PLC）"
+    },
+    {
+      "slot": "nakata",
+      "file": "experience/photos/nakata.jpg",
+      "ready": false,
+      "use": "中田さん（男性・OPTEX-FA技術）：ブルーグレーの作業ジャンパー・衛生帽"
+    },
+    {
+      "slot": "mori",
+      "file": "experience/photos/mori.jpg",
+      "ready": false,
+      "use": "森さん（女性・OPTEX-FA営業）：ブルーグレーの作業ジャンパー・衛生帽"
+    },
+    {
+      "slot": "demo-rig",
+      "file": "experience/photos/demo-rig.jpg",
+      "ready": false,
+      "use": "比較デモ：同じ片側に2台のセンサ、反対側にそれぞれ反射板"
+    },
+    {
+      "slot": "team-demo",
+      "file": "experience/photos/team-demo.jpg",
+      "ready": false,
+      "use": "お客様2名とOPTEX-FA 2名がデモ結果を一緒に見る"
+    },
+    {
+      "slot": "line-wobble",
+      "file": "experience/photos/line-wobble.jpg",
+      "ready": false,
+      "use": "揺れて間隔が乱れたボトル（ボトル下部の高さから）"
+    }
+  ]
+}

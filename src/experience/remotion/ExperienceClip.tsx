@@ -5,8 +5,9 @@ import React from 'react';
 import {AbsoluteFill, Audio, OffthreadVideo, Sequence, interpolate, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {Backdrop} from '../../consulting/components/Backdrop';
 import {script as introScript} from '../../consulting/script';
-import {cardByKey, clipById, lineAudioPath, lineSchedule, linesForAsset, videoPathFor} from '../data';
+import {cardByKey, clipById, scenes, lineAudioPath, lineSchedule, linesForAsset, videoPathFor} from '../data';
 import {FONT, Heading, Subtitle, Tags} from './v4/Kit';
+import {PhotoLayer, photoFile} from './v4/Connect';
 import {QUOTE, Scene, toneOf} from './v4/Scenes';
 
 export type ExperienceClipProps = {
@@ -40,6 +41,8 @@ export const ExperienceClip: React.FC<ExperienceClipProps> = ({assetId, showSubt
   // いちばん最近に話し始めたセリフ（会話の場面で、次のセリフまで出しておく）
   const lastStarted = [...sched].reverse().find((l) => t >= l.from - 0.15);
   const card = cardByKey.get(assetId);
+  const clipScene = scenes.find((sc) => sc.type === 'clip' && sc.videoAsset === assetId);
+  const clear = clipScene && clipScene.type === 'clip' ? clipScene.clear : undefined;
   const phase = card ? (card.kind === 'reflection' ? '振り返り' : PHASE[card.scene.phaseId]) : PHASE[assetId.slice(0, 2)];
 
   // ショットの開始フレーム
@@ -73,7 +76,8 @@ export const ExperienceClip: React.FC<ExperienceClipProps> = ({assetId, showSubt
             <AbsoluteFill key={i} style={{opacity: o}}>
               <Sequence from={from} layout="none">
                 <Backdrop tone={st} sceneNo={Number(s.header?.no ?? 0)} total={s.header?.no ? 12 : null} />
-                <Scene overlay={s.overlay} card={s.card} cardScene={card?.scene} imagePath={hasImage ? a.imagePath : undefined} quote={lastStarted ? {speaker: lastStarted.speaker, text: lastStarted.text, from: lastStarted.from - from / fps} : undefined} />
+                {photoFile(s.photo) ? <PhotoLayer slot={s.photo} tone={st} /> : null}
+                <Scene overlay={s.overlay} photo={s.photo} clear={clear} card={s.card} cardScene={card?.scene} imagePath={hasImage ? a.imagePath : undefined} quote={lastStarted ? {speaker: lastStarted.speaker, text: lastStarted.text, from: lastStarted.from - from / fps} : undefined} />
                 {s.header ? <Heading phase={phase} title={s.header.title} tone={st} frame={frame - from} /> : null}
               </Sequence>
             </AbsoluteFill>

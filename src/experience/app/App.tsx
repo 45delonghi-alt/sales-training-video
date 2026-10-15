@@ -4,6 +4,8 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {characterById, glossaryByKey, lineAudioPath, phases, questions, recordedSeconds, salesLineOf, sceneById, scenes} from '../data';
 import type {Choice, DemoScene, Line, QuestionScene, ReflectionScene, ResultScene, Scene} from '../types';
+import {HostApp} from '../live/HostApp';
+import {StudentApp} from '../live/StudentApp';
 import {ClipPlayer, pauseFrames, type PlayerControl} from './ClipPlayer';
 import {SENSORS, demoGate, discoveries, judge, judgeDemo, overRate, phaseOf, useExperience, type Action, type ChoiceId, type DemoResult, type Measure, type SensorKey, type State} from './state';
 import {createSession, sendVote, serverInfo, setCurrent, useVoteStatus, voterId, type VoteStatus} from './vote';
@@ -56,7 +58,8 @@ type Ctx = {
   sendCmd: (c: 'play' | 'pause') => void;
 };
 
-export const App: React.FC = () => (view === 'vote' ? <VoteApp sessionId={(params.get('session') ?? '').toUpperCase()} /> : <Experience />);
+export const App: React.FC = () =>
+  view === 'host' ? <HostApp /> : view === 'join' ? <StudentApp sessionId={(params.get('session') ?? '').toUpperCase()} /> : view === 'vote' ? <VoteApp sessionId={(params.get('session') ?? '').toUpperCase()} /> : <Experience />;
 
 const Experience: React.FC = () => {
   const {state, dispatch, sendCmd, onCmd} = useExperience(role);

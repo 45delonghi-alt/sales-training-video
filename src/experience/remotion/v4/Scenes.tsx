@@ -8,6 +8,7 @@ import {Conveyor} from '../../../consulting/components/Conveyor';
 import {progress} from '../../../consulting/components/anim';
 import {CountHud} from '../../../consulting/scenes/Scene03Mission';
 import type {Scene as StoryScene, Speaker} from '../../types';
+import {Bridge, Clear, type ClearInfo, IssuePhoto, WhyClear, photoFile} from './Connect';
 import {FrontView, LayoutCard, TopView} from './Layout';
 import {C, Emph, InkLabel, Panel, Red, RedLabel, type Tone, ap, speakerInfo, useSec} from './Kit';
 
@@ -20,7 +21,7 @@ export const WEEKS = [
 const pct = (w: (typeof WEEKS)[number]) => ((w.count - w.actual) / w.actual) * 100;
 
 // 黒い背景の場面（それ以外は白）
-const DARK = new Set(['question', 'hint', 'reflection', 'title', 'miscount', 'talk', 'talk-card', 'sensor-existing', 'beam', 'line-walk', 'message', 'closing', 'ending']);
+const DARK = new Set(['bridge', 'clear', 'issue-photo', 'question', 'hint', 'reflection', 'title', 'miscount', 'talk', 'talk-card', 'sensor-existing', 'beam', 'line-walk', 'message', 'closing', 'ending']);
 export const toneOf = (overlay: string): Tone => (DARK.has(overlay) ? 'dark' : 'light');
 // 画面中央に大きくセリフを出す場面（下の字幕は出さない）
 export const QUOTE = new Set(['talk', 'talk-card', 'question', 'hint', 'reflection']);
@@ -76,13 +77,13 @@ const Miscount: React.FC = () => {
 // ------------------------------------------------------------------ 会話：話者と、いま話しているセリフを大きく
 export type QuoteLine = {speaker: Speaker; text: string; from: number};
 
-const Talk: React.FC<{line?: QuoteLine; card?: string}> = ({line, card}) => {
+const Talk: React.FC<{line?: QuoteLine; card?: string; photo?: boolean}> = ({line, card, photo}) => {
   const {frame, fps} = useSec();
   const who = line ? speakerInfo(line.speaker) : null;
   const at = line ? Math.round(line.from * fps) : 0;
   return (
     <AbsoluteFill>
-      <Line faint />
+      {photo ? null : <Line faint />}
       {line ? (
         <>
           {who ? (
@@ -778,8 +779,17 @@ const Reflection: React.FC<{scene?: StoryScene}> = ({scene}) => {
   );
 };
 
-export const Scene: React.FC<{overlay: string; card?: string; imagePath?: string; quote?: QuoteLine; cardScene?: StoryScene}> = ({overlay, card, imagePath, quote, cardScene}) => {
+export const Scene: React.FC<{overlay: string; card?: string; imagePath?: string; quote?: QuoteLine; cardScene?: StoryScene; clear?: ClearInfo; photo?: string}> = ({overlay, card, imagePath, quote, cardScene, clear, photo}) => {
+  const hasPhoto = !!photoFile(photo);
   switch (overlay) {
+    case 'bridge':
+      return <Bridge />;
+    case 'clear':
+      return <Clear info={clear} />;
+    case 'why-clear':
+      return <WhyClear />;
+    case 'issue-photo':
+      return <IssuePhoto photo={photo} />;
     case 'question':
       return <Question scene={cardScene} />;
     case 'hint':
@@ -791,9 +801,9 @@ export const Scene: React.FC<{overlay: string; card?: string; imagePath?: string
     case 'miscount':
       return <Miscount />;
     case 'talk':
-      return <Talk line={quote} />;
+      return <Talk line={quote} photo={hasPhoto} />;
     case 'talk-card':
-      return <Talk line={quote} card={card} />;
+      return <Talk line={quote} card={card} photo={hasPhoto} />;
     case 'figures':
       return <Figures />;
     case 'chart':
