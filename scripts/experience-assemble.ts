@@ -37,7 +37,8 @@ const order = (): string[] => {
   return mode === 'recommended' ? ids.filter((id) => id !== 'p4-followup') : ids;
 };
 
-// 単独再生用なので、フェーズナビゲーション（上部）とチャプタータイトル（フェーズの最初のクリップの頭 2.6秒）を焼き込む。
+// 単独再生用なので、フェーズナビゲーション（上部）を焼き込み、フェーズの最初のクリップの前に、チャプタータイトルの扉（2.6秒）を入れる。
+// 扉は、そのクリップの最初の画面を暗くぼかした上にタイトルを重ねたもの（会話や設備の上には重ねない）。
 // 画像は scripts/web-experience/nav-overlays.ts で書き出したもの（ない場合は重ねない）
 const NAV = join(ROOT, 'out', 'experience', 'nav');
 const CHAPTER_SEC = 2.6;
@@ -66,6 +67,14 @@ const probe = (f: string, stream?: 'v' | 'a') =>
 
 // 映像と音声を別々に用意し、音声は映像の長さぴったりに切りそろえて（サンプル単位で）つなぐ。
 // クリップごとに音声が映像より少し長い（約16ミリ秒）ので、そのままつなぐと後ろへ行くほど音声が遅れるため。
+const chapterCard = (src: string, base: string, navPng: string, chapterPng: string) => {
+  const frames = Math.round(CHAPTER_SEC * FPS);
+  const f = `[0:v]scale=1920:1080,fps=30,trim=end_frame=1,loop=loop=${frames - 1}:size=1:start=0,setpts=N/30/TB,boxblur=10:2,eq=brightness=-0.18,format=yuva420p[bg];[bg][1:v]overlay=0:0[b1];[2:v]format=rgba,fade=t=in:st=0:d=0.3:alpha=1,fade=t=out:st=${CHAPTER_SEC - 0.4}:d=0.4:alpha=1[ch];[b1][ch]overlay=0:0,format=yuv420p[vout]`;
+  sh('ffmpeg', ['-nostdin', '-y', '-loglevel', 'error', '-i', src, '-i', navPng, '-loop', '1', '-t', String(CHAPTER_SEC), '-i', chapterPng, '-filter_complex', f, '-map', '[vout]', '-c:v', 'libx264', '-crf', '20', '-preset', 'veryfast', '-frames:v', String(frames), '-f', 'mpegts', `${base}.ts`]);
+  sh('ffmpeg', ['-nostdin', '-y', '-loglevel', 'error', '-f', 'lavfi', '-i', 'anullsrc=r=48000:cl=stereo', '-t', (frames / FPS).toFixed(4), '-c:a', 'pcm_s16le', `${base}.wav`]);
+  return frames / FPS;
+};
+
 const piece = (src: string, base: string, navPng?: string, chapterPng?: string) => {
   const v = probe(src, 'v');
   const nav = navFilter(navPng, chapterPng);
@@ -106,7 +115,14 @@ const main = () => {
     const lines = linesForAsset(id);
     const expect = Math.ceil(clipSeconds(a.seconds, lines, a.dialogAt ?? 0.8, id) * FPS) / FPS;
     const base = join(seg, `${String(k + 1).padStart(3, '0')}-${id}`);
-    const d = piece(src, base, join(NAV, `${sceneId}.png`), chapter);
+    if (chapter && existsSync(chapter) && existsSync(join(NAV, `${sceneId}.png`))) {
+      const cb = `${base}-chapter`;
+      const cd = chapterCard(src, cb, join(NAV, `${sceneId}.png`), chapter);
+      bases.push(cb);
+      manifest.push({id: `chapter-${phaseId}`, start: t, duration: cd, lines: []});
+      t += cd;
+    }
+    const d = piece(src, base, join(NAV, `${sceneId}.png`));
     bases.push(base);
     if (Math.abs(d - expect) > 0.05) throw new Error(`${id}：クリップの長さ ${d.toFixed(2)}秒が想定 ${expect.toFixed(2)}秒と違います（書き出しが古い可能性）`);
     const sched = lineSchedule(lines, a.dialogAt ?? 0.8, id).filter((l) => l.recorded);

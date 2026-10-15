@@ -1,7 +1,7 @@
 // 単独再生用の完成動画に焼き込むフェーズナビゲーション（WEB参加型体験では React 側で表示するので、各クリップには入れない）。
 // 背景透過の静止画として書き出し、scripts/experience-assemble.ts がクリップの上に重ねる。
 //   chapter=false：画面上部のナビゲーション（高さ84px＝画面の約7.8%）
-//   chapter=true ：フェーズが変わったときに中央に2〜3秒出すチャプタータイトル
+//   chapter=true ：フェーズが変わったときに中央に2〜3秒出すチャプタータイトル（完成動画では、そのフェーズの最初のクリップの前に、2.6秒の扉として入れる）
 import React from 'react';
 import {AbsoluteFill} from 'remotion';
 import {FONT} from '../../consulting/theme';
@@ -33,7 +33,7 @@ export const PhaseNavOverlay: React.FC<{sceneId: string; chapter?: boolean}> = (
           const now = i === st.currentPhase;
           const done = st.completedPhases.includes(i);
           return (
-            <div key={p.id} style={{flex: 1, display: 'flex', alignItems: 'center', gap: 16, padding: '0 20px', background: now ? NAV_RED : '#2A2D33', color: now ? '#fff' : done ? '#E6E8EB' : '#8C929A'}}>
+            <div key={p.id} style={{flex: 1, minWidth: 0, overflow: 'hidden', display: 'flex', alignItems: 'center', gap: 16, padding: '0 20px', background: now ? NAV_RED : '#2A2D33', color: now ? '#fff' : done ? '#E6E8EB' : '#8C929A'}}>
               <span style={{fontSize: 17, fontWeight: 800, letterSpacing: 2, whiteSpace: 'nowrap'}}>
                 {done ? '✓ ' : ''}PHASE {p.no}
               </span>
@@ -42,7 +42,7 @@ export const PhaseNavOverlay: React.FC<{sceneId: string; chapter?: boolean}> = (
             </div>
           );
         })}
-        <div style={{flex: 'none', width: 190, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-end', color: '#C9CED4'}}>
+        <div style={{flex: 'none', width: 230, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-end', color: '#C9CED4'}}>
           {st.isReflection ? (
             <b style={{fontSize: 21, letterSpacing: 2, color: '#fff'}}>MISSION COMPLETE</b>
           ) : (
