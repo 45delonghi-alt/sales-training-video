@@ -8,7 +8,7 @@ import {join} from 'node:path';
 import {cardByKey, clipById, clipSeconds, lineSchedule, linesForAsset, scenes} from '../src/experience/data';
 
 const ROOT = join(__dirname, '..');
-// VIDEOS_DIR で書き出し先を変えられる。PARTIAL=1 なら、まだ書き出していないクリップの手前までで1本にする（途中確認用）
+// VIDEOS_DIR で書き出し先を変えられる。PARTIAL=1 なら、まだ書き出していないクリップを除いて1本にする（途中確認用）
 const VIDEOS = process.env.VIDEOS_DIR || join(ROOT, 'out', 'experience', 'videos');
 const PARTIAL = process.env.PARTIAL === '1';
 const OUT = join(ROOT, 'out', 'experience', 'final');
@@ -80,8 +80,10 @@ const main = () => {
   rmSync(seg, {recursive: true, force: true});
   mkdirSync(seg, {recursive: true});
   const all = order();
-  const firstMissing = PARTIAL ? all.findIndex((id) => !existsSync(join(VIDEOS, `${id}.mp4`))) : -1;
-  const ids = firstMissing >= 0 ? all.slice(0, firstMissing) : all;
+  const missing = PARTIAL ? all.filter((id) => !existsSync(join(VIDEOS, `${id}.mp4`))) : [];
+  const firstMissing = missing.length ? 0 : -1;
+  const ids = all.filter((id) => !missing.includes(id));
+  if (missing.length) console.log(`未書き出しのため除いたクリップ（${missing.length}）：${missing.join(' ')}`);
   const bases: string[] = [];
   const manifest: {id: string; start: number; duration: number; lines: {lineId: string; at: number; seconds: number; text: string}[]}[] = [];
   let t = 0;
