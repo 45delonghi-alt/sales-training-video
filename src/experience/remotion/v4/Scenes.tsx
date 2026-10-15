@@ -10,7 +10,7 @@ import {CountHud} from '../../../consulting/scenes/Scene03Mission';
 import type {Scene as StoryScene, Speaker} from '../../types';
 import {Bridge, Clear, type ClearInfo, IssuePhoto, WhyClear, photoFile} from './Connect';
 import {FrontView, LayoutCard, TopView} from './Layout';
-import {C, Emph, InkLabel, Panel, Red, RedLabel, type Tone, ap, speakerInfo, useSec} from './Kit';
+import {C, Emph, InkLabel, Panel, Red, RedLabel, type Tone, ap, useSec} from './Kit';
 
 export const WEEKS = [
   {week: '第1週', actual: 10000, count: 10060},
@@ -79,23 +79,14 @@ export type QuoteLine = {speaker: Speaker; text: string; from: number};
 
 const Talk: React.FC<{line?: QuoteLine; card?: string; photo?: boolean}> = ({line, card, photo}) => {
   const {frame, fps} = useSec();
-  const who = line ? speakerInfo(line.speaker) : null;
   const at = line ? Math.round(line.from * fps) : 0;
   return (
     <AbsoluteFill>
       {photo ? null : <Line faint />}
       {line ? (
         <>
-          {who ? (
-            <div key={`w-${at}`} style={{position: 'absolute', left: 160, top: 250, display: 'flex', alignItems: 'center', gap: 22, ...ap(frame - at, 0, fps, {dy: 12, dur: 10})}}>
-              <RedLabel size={26} style={{background: who.customer ? C.red : C.white, color: who.customer ? C.white : C.red}}>
-                {who.side}
-              </RedLabel>
-              <span style={{fontSize: 30, fontWeight: 700, color: 'rgba(255,255,255,0.75)'}}>{who.unit}</span>
-            </div>
-          ) : null}
+          {/* 名前・所属は顔タグ（SpeakerFace）で出す */}
           <div key={`q-${at}`} style={{position: 'absolute', left: 160, right: card ? 700 : 160, top: 320, ...ap(frame - at, 0, fps, {dy: 18, dur: 12})}}>
-            {who ? <div style={{fontSize: 64, fontWeight: 900, color: C.white, marginBottom: 18}}>{who.name}</div> : null}
             <div style={{display: 'flex', gap: 24}}>
               <div style={{width: 8, background: C.red, flex: 'none'}} />
               <div style={{fontSize: 58, fontWeight: 800, color: C.white, lineHeight: 1.45}}>

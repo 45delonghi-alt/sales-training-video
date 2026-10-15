@@ -15,7 +15,23 @@ export type Phase = {
 
 export type Speaker = 'sales' | 'sato' | 'takahashi' | 'mori' | 'nakata' | 'narration';
 
-export type Character = {id: Speaker; role: 'sales' | 'customer' | 'senior' | 'narration'; name: string; title: string; gender: string; voice: string; appearance?: string; ondokuVoice?: string; ondokuPitch?: number};
+export type Character = {
+  id: Speaker;
+  role: 'sales' | 'customer' | 'senior' | 'narration';
+  name: string;
+  title: string;
+  gender: string;
+  voice: string;
+  appearance?: string;
+  ondokuVoice?: string;
+  ondokuPitch?: number;
+  // 顔タグ用（お客様から受領した人物画像を切り出したもの）。ナレーションにはない
+  fullName?: string;
+  tagRole?: string;
+  category?: 'optex' | 'customer';
+  image?: string;
+  faceImage?: string;
+};
 
 export type GlossaryItem = {key: string; term: string; short: string};
 
