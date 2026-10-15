@@ -46,7 +46,11 @@ const main = async () => {
       const starts = a.shots.map((sh, i) => (i === 0 ? 0 : sh.atLine === undefined ? 0 : Math.round((sched[sh.atLine]?.from ?? 0) * FPS) - 4));
       for (let i = 0; i < a.shots.length; i++) {
         const end = i + 1 < a.shots.length ? starts[i + 1] : composition.durationInFrames;
-        const frame = Math.max(starts[i] + 10, end - (i + 1 < a.shots.length ? 6 : 24));
+        // 演出が出そろった状態を撮る。話している人がいれば、その人のワイプが出ている瞬間（ショットの中の最後の文の途中）
+        const inShot = sched.filter((l) => l.from * FPS >= starts[i] - 2 && l.from * FPS < end);
+        const last = inShot[inShot.length - 1];
+        const talkFrame = last && last.speaker !== 'narration' ? Math.round(((last.from + Math.min(last.to, end / FPS)) / 2) * FPS) : null;
+        const frame = talkFrame ?? Math.max(starts[i] + 10, end - (i + 1 < a.shots.length ? 6 : 24));
         const name = `${String(++n).padStart(3, '0')}_${it.assetId}_${i + 1}`;
         const png = join(OUT, `${name}.png`);
         await renderStill({serveUrl, composition, frame, output: png, inputProps, browserExecutable, logLevel: 'error'});
