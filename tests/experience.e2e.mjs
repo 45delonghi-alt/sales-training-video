@@ -35,8 +35,9 @@ const context = await browser.newContext({viewport: {width: 1600, height: 900}})
 const page = await context.newPage();
 const errors = [];
 const missing = [];
+const demoCount = scenes.filter((s) => s.type === 'demo').length;
 page.on('pageerror', (e) => errors.push(String(e)));
-page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
+page.on('console', (m) => m.type() === 'error' && errors.push(`${m.text()} ${m.location()?.url ?? ''}`));
 page.on('response', (r) => r.status() >= 400 && missing.push(`${r.status()} ${r.url()}`));
 
 const shot = async (name) => SHOTS && page.screenshot({path: join(SHOTS, `${name}.png`)});
@@ -149,7 +150,7 @@ for (const s of order.slice(1)) {
   }
   if (s.type === 'result') {
     const t = await page.locator('.rc-table').innerText();
-    ok('結果の比較：記録した実測値だけを、センサごと・条件ごとに表示', t.includes('既設センサ') && t.includes('KR-Qシリーズ') && (t.match(/基準を満たした/g) ?? []).length === 4 && (t.match(/基準を満たさない/g) ?? []).length === 4 && t.includes('+10.0%'));
+    ok('結果の比較：記録した実測値だけを、センサごと・条件ごとに表示', t.includes('既設センサ') && t.includes('KR-Qシリーズ') && (t.match(/基準を満たした/g) ?? []).length === demoCount && (t.match(/基準を満たさない/g) ?? []).length === demoCount && t.includes('+10.0%'));
     ok('結果の比較：改善後の数値を作らない旨を表示', t.includes('未記録の欄に数値を入れたり、作ったりしません') && t.includes('研修用の架空データ'));
     await shot('03b-result');
   }
