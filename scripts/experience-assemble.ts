@@ -8,7 +8,9 @@ import {join} from 'node:path';
 import {cardByKey, clipById, clipSeconds, lineSchedule, linesForAsset, scenes} from '../src/experience/data';
 
 const ROOT = join(__dirname, '..');
-const VIDEOS = join(ROOT, 'out', 'experience', 'videos');
+// VIDEOS_DIR で書き出し先を変えられる。PARTIAL=1 なら、まだ書き出していないクリップの手前までで1本にする（途中確認用）
+const VIDEOS = process.env.VIDEOS_DIR || join(ROOT, 'out', 'experience', 'videos');
+const PARTIAL = process.env.PARTIAL === '1';
 const OUT = join(ROOT, 'out', 'experience', 'final');
 const FPS = 30;
 const mode = process.argv[2] === 'recommended' ? 'recommended' : 'all';
@@ -77,7 +79,9 @@ const main = () => {
   const seg = join(OUT, `seg-${mode}`);
   rmSync(seg, {recursive: true, force: true});
   mkdirSync(seg, {recursive: true});
-  const ids = order();
+  const all = order();
+  const firstMissing = PARTIAL ? all.findIndex((id) => !existsSync(join(VIDEOS, `${id}.mp4`))) : -1;
+  const ids = firstMissing >= 0 ? all.slice(0, firstMissing) : all;
   const bases: string[] = [];
   const manifest: {id: string; start: number; duration: number; lines: {lineId: string; at: number; seconds: number; text: string}[]}[] = [];
   let t = 0;
@@ -107,7 +111,7 @@ const main = () => {
     manifest.push({id, start: t, duration: d, lines: sched.map((l) => ({lineId: l.lineId!, at: t + l.from, seconds: l.to - l.from - 0.15, text: l.text}))});
     t += d;
   });
-  const name = mode === 'all' ? 'experience-all-64-slides.mp4' : 'experience-with-intro.mp4';
+  const name = (mode === 'all' ? 'experience-all-64-slides' : 'experience-with-intro') + (firstMissing >= 0 ? '-partial' : '') + '.mp4';
   const out = join(OUT, name);
   const list = join(seg, 'audio.txt');
   writeFileSync(list, bases.map((b) => `file '${b}.wav'`).join('\n') + '\n');
