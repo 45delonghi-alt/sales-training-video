@@ -64,11 +64,11 @@ const chunkGroups = (lines: TalkLine[]) => {
 // 音読さん Beta の声（話者ごと）。talk-script.md の「話者と声」と同じ
 const BETA: Record<Speaker, string> = {
   narration: 'Yann',
-  sales: 'Kai',
-  sato: 'Misa',
+  sales: 'Leo',
+  sato: 'Roy',
   takahashi: 'Tina',
-  mori: 'Lena',
-  nakata: 'Reid',
+  mori: 'Reid',
+  nakata: 'Emma',
 };
 
 // スライド（画面）ごとのトークスクリプト：再生順に、画面1枚ずつ、話者・声・読み上げ文・音声ファイル名
@@ -136,33 +136,32 @@ export const writeTalk = () => {
     '',
     '## 話者と声',
     '',
-    '音読さんでは、日本語の声を選び、下の「設定のめやす」から始めて耳で調整してください（声の名前は音読さんの一覧から選んで、右の欄に記入）。',
+    '音読さん Beta で、下の表の声と確定済みの設定（声色値・速度・ピッチ）を使ってください。設定は変えません。',
     '',
-    '| 話者 | 役割 | 声のイメージ | 設定のめやす（速度／ピッチ／読み上げスタイル） | 決めた声（見本） |',
-    '|---|---|---|---|---|',
+    '| 話者 | 役割 | 声のイメージ | 音読さん Beta の設定 |',
+    '|---|---|---|---|',
   ];
   const SETTING: Record<string, string> = {
     narration: '導入動画と同じ：音読さん Beta「Yann（ヤン）」／声色値 1576295248／速度1.0x／ピッチ0／ビジネス（プロフェッショナルでビジネスライクに読み上げてください）／高速',
-    sales: '音読さん Beta「Kai（カイ）」／声色値 -579746604／速度1.0x／ピッチ やや高い（0.5）／ビジネス（プロフェッショナルでビジネスライクに読み上げてください）／高速',
-    sato: '音読さん Beta「Misa（ミサ）」／声色値 264584882／速度1.0x／ピッチ やや高い（0.5）／ビジネス（プロフェッショナルでビジネスライクに読み上げてください）／高速',
-    takahashi: '音読さん Beta「Tina（ティナ）」／声色値 407820404／速度1.0x／ピッチ 非常に高い（1）／ビジネス（プロフェッショナルでビジネスライクに読み上げてください）／高速',
-    mori: '音読さん Beta「Lena（レナ）」／声色値 619652536／速度1.0x／ピッチ 普通（0）／ビジネス（プロフェッショナルでビジネスライクに読み上げてください）／高速',
-    nakata: '音読さん Beta「Reid（リード）」／声色値 -1388357271／速度1.0x／ピッチ やや低い（-0.5）／ビジネス（プロフェッショナルでビジネスライクに読み上げてください）／高速',
+    sales: '音読さん Beta「Leo（レオ）」／声色値・速度・ピッチは確定済みの設定（音読さんに保存した値）／ビジネス（プロフェッショナルでビジネスライクに読み上げてください）／高速',
+    sato: '音読さん Beta「Roy（ロイ）」／声色値・速度・ピッチは確定済みの設定（音読さんに保存した値）／ビジネス（プロフェッショナルでビジネスライクに読み上げてください）／高速',
+    takahashi: '音読さん Beta「Tina（ティナ）」／声色値 407820404／速度・ピッチは確定済みの設定／ビジネス（プロフェッショナルでビジネスライクに読み上げてください）／高速',
+    mori: '音読さん Beta「Reid（リード）」／声色値 -1388357271／速度・ピッチは確定済みの設定／ビジネス（プロフェッショナルでビジネスライクに読み上げてください）／高速',
+    nakata: '音読さん Beta「Emma（エマ）」／声色値・速度・ピッチは確定済みの設定（音読さんに保存した値）／ビジネス（プロフェッショナルでビジネスライクに読み上げてください）／高速',
   };
   for (const sp of SPEAKER_ORDER) {
     const c = characterById.get(sp);
     const n = lines.filter((l) => l.speaker === sp).length;
-    const sample = existsSync(`assets-src/v3/voice-samples/${sp}.mp3`) ? `[見本](../../assets-src/v3/voice-samples/${sp}.mp3)` : '';
-    if (c && n) md.push(`| ${c.name} | ${c.title || '—'} | ${c.voice}（${n}文） | ${SETTING[sp] ?? ''} | ${sample} |`);
+    if (c && n) md.push(`| ${c.name} | ${c.title || '—'} | ${c.voice}（${n}文） | ${SETTING[sp] ?? ''} |`);
   }
   const apiVoices = SPEAKER_ORDER.map((sp) => characterById.get(sp)).filter((c) => c?.ondokuVoice).map((c) => `${c!.name}＝${c!.ondokuVoice!.replace('ja-JP-', '')}`);
   if (apiVoices.length)
     md.push(
       '',
-      `- **録音の方針（2026-10-15）**：後半の音声は、全文を音読さん Beta（下の表の声）で作り直す。届くまでは、以前に収録した文のうち文が変わっていないものを仮に使い、文が変わったものは字幕だけで流す。`,
+      `- **録音の方針（2026-10-15）**：後半の音声は、全文を音読さん Beta（下の表の声。B案の人物設定：あなた＝Leo／森さん＝Reid／中田さん＝Emma／佐藤さん＝Roy／高橋さん＝Tina／ナレーション＝Yann）で作り直す。届くまでは、以前に収録した文のうち文が変わっていないものを仮に使い、文が変わったものは字幕だけで流す。`,
       '- 表の Beta の声に差し替えるときは、Beta で作った話者ごとの音声（例：`sato_01.mp3`）を `audio_import/experience/` に置き、同じ話者の文ごとの音声（例：`p1-open_01.mp3`）を消してから `npm run experience:import-audio`。',
     );
-  md.push('', '- 男性：佐藤さん・中田さん。女性：高橋さん・森さん。お客様（佐藤さん・高橋さん）と営業（あなた）は、必ず別の声にする。', '- 「…」で終わる文は、少し間をとって言いよどむ感じに。');
+  md.push('', '- 男性：あなた（Leo）・森さん（Reid）・佐藤さん（Roy）。女性：中田さん（Emma）・高橋さん（Tina）。ナレーション：Yann。全員、確定済みの声色値・ピッチ・速度を変えない。', '- 「…」で終わる文は、少し間をとって言いよどむ感じに。');
   md.push('', '## 原稿ファイル（音読さんに貼るもの）', '', '| ファイル | 話者 | 文の数 | 文字数 | 最初のセリフID |', '|---|---|---|---|---|');
   const groups = chunkGroups(lines);
   for (const [g, ls] of groups) md.push(`| [ondoku/${g}.txt](ondoku/${g}.txt) | ${nameOf(ls[0].speaker)} | ${ls.length} | ${ls.reduce((n, l) => n + [...speechOf(l.text)].length, 0)} | \`${ls[0].lineId}\` |`);
