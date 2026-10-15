@@ -301,8 +301,9 @@ const Control: React.FC = () => {
         <div style={{display: 'flex', alignItems: 'baseline', gap: 30, marginTop: 20}}>
           <span style={{fontSize: 30, fontWeight: 800, color: 'rgba(255,255,255,0.8)'}}>PLC のカウント</span>
           <span style={{fontSize: 96, fontWeight: 900, fontVariantNumeric: 'tabular-nums'}}>{1240 + Math.floor((frame / fps) * 1.4)}</span>
+          {/* 注記は右に置く（左下は話している人のワイプが出る） */}
+          <span style={{marginLeft: 'auto', fontSize: 26, color: 'rgba(255,255,255,0.65)'}}>※ 模式図です。数え方の設定は PLC 側にあります</span>
         </div>
-        <div style={{fontSize: 26, color: 'rgba(255,255,255,0.65)', marginTop: 10}}>※ 模式図です。数え方の設定は PLC 側にあります</div>
       </div>
     </AbsoluteFill>
   );
@@ -318,12 +319,13 @@ const ComparePlc: React.FC = () => {
     ['5本目', '1回', '2', 'PLC側で増えている？'],
   ];
   return (
-    <Panel accent="top" style={{left: 140, right: 140, top: 200, height: 680, ...ap(frame, 0.3, fps)}}>
+    // 表は左下のワイプ（上端 y≈708）より上で終わるように詰める
+    <Panel accent="top" style={{left: 140, right: 140, top: 190, height: 500, ...ap(frame, 0.3, fps)}}>
       <div style={{display: 'flex', alignItems: 'center', gap: 20}}>
         <span style={{fontSize: 44, fontWeight: 900}}>センサの出力と、PLCのカウントを同時に記録</span>
         <InkLabel>例：記録の見方（実測ではありません）</InkLabel>
       </div>
-      <table style={{width: '100%', borderCollapse: 'collapse', marginTop: 24, fontSize: 36}}>
+      <table style={{width: '100%', borderCollapse: 'collapse', marginTop: 16, fontSize: 32}}>
         <thead>
           <tr style={{color: C.gray, fontSize: 28}}>
             {['ボトル', 'センサの出力', 'PLCのカウント', '読み取れること'].map((h) => (
@@ -337,7 +339,7 @@ const ComparePlc: React.FC = () => {
           {rows.map((r, i) => (
             <tr key={r[0]} style={{background: r[3] ? '#FDE8EA' : undefined, ...ap(frame, 0.8 + i * 0.4, fps)}}>
               {r.map((c, j) => (
-                <td key={j} style={{padding: '12px 14px', borderBottom: `1.5px solid ${C.line}`, fontWeight: j === 3 ? 900 : 700, color: j === 3 || (r[3] && j > 0) ? C.red : C.ink}}>
+                <td key={j} style={{padding: '8px 14px', borderBottom: `1.5px solid ${C.line}`, fontWeight: j === 3 ? 900 : 700, color: j === 3 || (r[3] && j > 0) ? C.red : C.ink}}>
                   {c}
                 </td>
               ))}

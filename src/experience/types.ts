@@ -31,6 +31,8 @@ export type Character = {
   category?: 'optex' | 'customer';
   image?: string;
   faceImage?: string;
+  // 顔タグ（ワイプ）：お客様から受領した丸いバッジ（名前入り・背景透過）
+  badgeImage?: string;
 };
 
 export type GlossaryItem = {key: string; term: string; short: string};

@@ -12,7 +12,8 @@
     "tagRole": "営業担当",
     "category": "optex",
     "image": "experience/people/sales.jpg",
-    "faceImage": "experience/people/sales-face.jpg"
+    "faceImage": "experience/people/sales-face.jpg",
+    "badgeImage": "experience/people/sales-badge.png"
   },
   {
     "id": "sato",
@@ -27,7 +28,8 @@
     "tagRole": "設備担当",
     "category": "customer",
     "image": "experience/people/sato.jpg",
-    "faceImage": "experience/people/sato-face.jpg"
+    "faceImage": "experience/people/sato-face.jpg",
+    "badgeImage": "experience/people/sato-badge.png"
   },
   {
     "id": "takahashi",
@@ -42,7 +44,8 @@
     "tagRole": "品質管理担当",
     "category": "customer",
     "image": "experience/people/takahashi.jpg",
-    "faceImage": "experience/people/takahashi-face.jpg"
+    "faceImage": "experience/people/takahashi-face.jpg",
+    "badgeImage": "experience/people/takahashi-badge.png"
   },
   {
     "id": "mori",
@@ -57,7 +60,8 @@
     "tagRole": "営業先輩社員",
     "category": "optex",
     "image": "experience/people/mori.jpg",
-    "faceImage": "experience/people/mori-face.jpg"
+    "faceImage": "experience/people/mori-face.jpg",
+    "badgeImage": "experience/people/mori-badge.png"
   },
   {
     "id": "nakata",
@@ -72,7 +76,8 @@
     "tagRole": "技術先輩社員",
     "category": "optex",
     "image": "experience/people/nakata.jpg",
-    "faceImage": "experience/people/nakata-face.jpg"
+    "faceImage": "experience/people/nakata-face.jpg",
+    "badgeImage": "experience/people/nakata-badge.png"
   },
   {
     "id": "narration",
