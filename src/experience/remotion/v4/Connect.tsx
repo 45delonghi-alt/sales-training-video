@@ -11,7 +11,7 @@ import {RedSlash} from '../../../consulting/components/Backdrop';
 import {Conveyor} from '../../../consulting/components/Conveyor';
 import {progress} from '../../../consulting/components/anim';
 import photosJson from '../../data/photos.json';
-import {C, Panel, Red, RedLabel, ap, useSec} from './Kit';
+import {C, FONT, Panel, Red, RedLabel, ap, useSec} from './Kit';
 
 type PhotoSlot = {slot: string; file: string; ready: boolean};
 const PHOTOS = new Map((photosJson as {slots: PhotoSlot[]}).slots.map((p) => [p.slot, p]));
@@ -154,36 +154,27 @@ export const IssuePhoto: React.FC<{photo?: string}> = ({photo}) => {
   );
 };
 
-// ───── 登場する名前と役割（後半の最初）。受領した一覧画像を全面に出し、5人を左から1人ずつ強調して紹介する
-// 画像の中のカードの位置（1920×1080）。左から あなた・森さん・中田さん・佐藤さん・高橋さん
-const CAST_X = [21, 404, 784, 1164, 1546];
-const CAST_W = 366;
-const CAST_TOP = 124;
-const CAST_H = 922;
-const CAST_START = 1.6; // 1人目を強調し始める秒
-const CAST_EACH = 2.2; // 1人あたりの秒
+// ───── 登場する名前と役割（後半の最初・5秒）。受領した一覧画像を出し、下の空いたところに
+//   「皆さんは、一番左の『新入社員』になります。」（一番左のカードの下）と、架空の人物であることを表示する
+const CAST_SCALE = 0.9;
 export const Cast: React.FC = () => {
-  const {frame, fps, t} = useSec();
-  const fadeIn = interpolate(frame, [0, 0.6 * fps], [0, 1], {extrapolateRight: 'clamp'});
-  const end = CAST_START + CAST_X.length * CAST_EACH;
-  const k = t >= CAST_START && t < end ? Math.floor((t - CAST_START) / CAST_EACH) : -1;
-  // 強調の明るさ（切り替わりは0.3秒でなめらかに）
-  const dimOf = (i: number) => {
-    if (t < CAST_START - 0.3 || t >= end + 0.3) return 0;
-    const from = CAST_START + i * CAST_EACH;
-    const on = interpolate(t, [from - 0.3, from, from + CAST_EACH - 0.3, from + CAST_EACH], [0, 1, 1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
-    const inSeq = interpolate(t, [CAST_START - 0.3, CAST_START, end, end + 0.3], [0, 1, 1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
-    return inSeq * (1 - on);
-  };
+  const {frame, fps} = useSec();
+  const fadeIn = interpolate(frame, [0, 0.4 * fps], [0, 1], {extrapolateRight: 'clamp'});
+  const w = 1920 * CAST_SCALE;
+  const h = 1080 * CAST_SCALE;
+  const left = (1920 - w) / 2;
+  // 一番左のカード（あなた）の中央。元画像の x=18〜336（1672幅）
+  const youX = left + ((18 + 336) / 2 / 1672) * w;
   return (
-    <AbsoluteFill style={{background: '#0D0E10', opacity: fadeIn}}>
-      <Img src={staticFile('experience/people/cast-intro.jpg')} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
-      {CAST_X.map((x, i) => (
-        <React.Fragment key={i}>
-          <div style={{position: 'absolute', left: x, top: CAST_TOP, width: CAST_W, height: CAST_H, background: '#0D0E10', opacity: 0.55 * dimOf(i)}} />
-          {k === i ? <div style={{position: 'absolute', left: x - 6, top: CAST_TOP - 6, width: CAST_W + 12, height: CAST_H + 12, border: `6px solid ${i < 3 ? C.red : '#1F5FAF'}`, boxSizing: 'border-box', ...ap(frame - Math.round((CAST_START + i * CAST_EACH) * fps), 0, fps, {dy: 0, dur: 8})}} /> : null}
-        </React.Fragment>
-      ))}
+    <AbsoluteFill style={{background: '#E9ECF0', opacity: fadeIn, fontFamily: FONT}}>
+      <Img src={staticFile('experience/people/cast-intro.jpg')} style={{position: 'absolute', left, top: 0, width: w, height: h}} />
+      <div style={{position: 'absolute', left: youX - 40, top: h + 14, display: 'flex', alignItems: 'center', gap: 14, ...ap(frame, 0.3, fps, {dy: 10})}}>
+        <span style={{fontSize: 34, color: C.red, fontWeight: 900}}>▲</span>
+        <span style={{fontSize: 36, fontWeight: 900, color: C.ink, whiteSpace: 'nowrap'}}>
+          皆さんは、一番左の<span style={{color: C.red}}>「新入社員」</span>になります。
+        </span>
+      </div>
+      <div style={{position: 'absolute', right: left, top: h + 34, fontSize: 24, fontWeight: 700, color: '#5B626B', whiteSpace: 'nowrap'}}>※ 登場人物はすべて架空の人物です（研修用）</div>
     </AbsoluteFill>
   );
 };
