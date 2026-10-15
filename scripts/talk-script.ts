@@ -3,7 +3,7 @@
 //   npm run experience:import-audio  … audio_import/experience/ の音声を文ごとに分け、public/experience/audio/<セリフID>.mp3 と
 //                                      src/experience/data/audioTiming.json（文ごとの秒数）を作る。映像の長さ・字幕はこの秒数に合わせて伸び縮みする
 import {execFileSync, spawnSync} from 'node:child_process';
-import {existsSync, mkdirSync, readdirSync, rmSync, writeFileSync} from 'node:fs';
+import {existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync} from 'node:fs';
 import {join} from 'node:path';
 import {assetById, characterById, lineIdOf, linesForAsset, phases, scenes, speechOf} from '../src/experience/data';
 import type {Line, Speaker} from '../src/experience/types';
@@ -64,11 +64,11 @@ const chunkGroups = (lines: TalkLine[]) => {
 // 音読さん Beta の声（話者ごと）。talk-script.md の「話者と声」と同じ
 const BETA: Record<Speaker, string> = {
   narration: 'Yann',
-  sales: 'Leo',
-  sato: 'Roy',
-  takahashi: 'Tina',
-  mori: 'Reid',
-  nakata: 'Emma',
+  sales: 'Ash',
+  sato: 'Ash',
+  takahashi: 'Misa',
+  mori: 'Leo',
+  nakata: 'Ellis',
 };
 
 // スライド（画面）ごとのトークスクリプト：再生順に、画面1枚ずつ、話者・声・読み上げ文・音声ファイル名
@@ -142,12 +142,12 @@ export const writeTalk = () => {
     '|---|---|---|---|',
   ];
   const SETTING: Record<string, string> = {
-    narration: '導入動画と同じ：音読さん Beta「Yann（ヤン）」／声色値 1576295248／速度1.0x／ピッチ0／ビジネス（プロフェッショナルでビジネスライクに読み上げてください）／高速',
-    sales: '音読さん Beta「Leo（レオ）」／声色値・速度・ピッチは確定済みの設定（音読さんに保存した値）／ビジネス（プロフェッショナルでビジネスライクに読み上げてください）／高速',
-    sato: '音読さん Beta「Roy（ロイ）」／声色値・速度・ピッチは確定済みの設定（音読さんに保存した値）／ビジネス（プロフェッショナルでビジネスライクに読み上げてください）／高速',
-    takahashi: '音読さん Beta「Tina（ティナ）」／声色値 407820404／速度・ピッチは確定済みの設定／ビジネス（プロフェッショナルでビジネスライクに読み上げてください）／高速',
-    mori: '音読さん Beta「Reid（リード）」／声色値 -1388357271／速度・ピッチは確定済みの設定／ビジネス（プロフェッショナルでビジネスライクに読み上げてください）／高速',
-    nakata: '音読さん Beta「Emma（エマ）」／声色値・速度・ピッチは確定済みの設定（音読さんに保存した値）／ビジネス（プロフェッショナルでビジネスライクに読み上げてください）／高速',
+    narration: '音読さん Beta「Yann（ヤン）」／声色値 1576295248／速度1.0x／ピッチ0／ビジネス／高速',
+    sales: '音読さん Beta「Ash（アッシュ）」／声色値・速度・ピッチは確定済みの設定（佐藤さんとは別の値）',
+    sato: '音読さん Beta「Ash（アッシュ）」／声色値・速度・ピッチは確定済みの設定（あなたとは別の値）',
+    takahashi: '音読さん Beta「Misa（ミサ）」／声色値・速度・ピッチは確定済みの設定',
+    mori: '音読さん Beta「Leo（レオ）」／声色値・速度・ピッチは確定済みの設定',
+    nakata: '音読さん Beta「Ellis（エリス）」／声色値・速度・ピッチは確定済みの設定',
   };
   for (const sp of SPEAKER_ORDER) {
     const c = characterById.get(sp);
@@ -158,10 +158,10 @@ export const writeTalk = () => {
   if (apiVoices.length)
     md.push(
       '',
-      `- **録音の方針（2026-10-15）**：後半の音声は、全文を音読さん Beta（下の表の声。B案の人物設定：あなた＝Leo／森さん＝Reid／中田さん＝Emma／佐藤さん＝Roy／高橋さん＝Tina／ナレーション＝Yann）で作り直す。届くまでは、以前に収録した文のうち文が変わっていないものを仮に使い、文が変わったものは字幕だけで流す。`,
+      `- **収録（2026-10-15）**：後半の全137文を音読さん Beta で収録済み（あなた＝Ash／森さん＝Leo／中田さん＝Ellis／佐藤さん＝Ash／高橋さん＝Misa／ナレーション＝Yann）。400字を超えた5ファイルは _part1・_part2 に分けて収録し、番号順につないで取り込んだ（原本：assets-src/audio/beta-2026-10-15/）。`,
       '- 表の Beta の声に差し替えるときは、Beta で作った話者ごとの音声（例：`sato_01.mp3`）を `audio_import/experience/` に置き、同じ話者の文ごとの音声（例：`p1-open_01.mp3`）を消してから `npm run experience:import-audio`。',
     );
-  md.push('', '- 男性：あなた（Leo）・森さん（Reid）・佐藤さん（Roy）。女性：中田さん（Emma）・高橋さん（Tina）。ナレーション：Yann。全員、確定済みの声色値・ピッチ・速度を変えない。', '- 「…」で終わる文は、少し間をとって言いよどむ感じに。');
+  md.push('', '- あなたと佐藤さんは同じ Ash だが、声色値と話し方が違う。画面では話している人の顔ワイプ（OPTEX-FA＝左、お客様＝右）で見分けられる。', '- 「…」で終わる文は、少し間をとって言いよどむ感じに。');
   md.push('', '## 原稿ファイル（音読さんに貼るもの）', '', '| ファイル | 話者 | 文の数 | 文字数 | 最初のセリフID |', '|---|---|---|---|---|');
   const groups = chunkGroups(lines);
   for (const [g, ls] of groups) md.push(`| [ondoku/${g}.txt](ondoku/${g}.txt) | ${nameOf(ls[0].speaker)} | ${ls.length} | ${ls.reduce((n, l) => n + [...speechOf(l.text)].length, 0)} | \`${ls[0].lineId}\` |`);
@@ -295,9 +295,12 @@ const importAudio = () => {
   const timing: Record<string, number> = {};
   const lines = talkLines();
   const groups = chunkGroups(lines);
+  const splitFile = join(IMPORT_DIR, 'split.json');
+  const presplit: Record<string, {start: number; end: number}[]> = existsSync(splitFile) ? JSON.parse(readFileSync(splitFile, 'utf8')) : {};
   for (const [g, ls] of groups) {
     const whole = findInput(g);
-    const ranges = whole ? split(whole, ls.map((l) => speechOf(l.text))) : [];
+    // audio_import/experience/split.json（scripts/web-experience/audio-align.py が読みの長さで求めた区切り）があれば、それを使う
+    const ranges = whole ? (presplit[g]?.length === ls.length ? presplit[g] : split(whole, ls.map((l) => speechOf(l.text)))) : [];
     ls.forEach((l, k) => {
       const single = findInput(l.lineId);
       if (single) {

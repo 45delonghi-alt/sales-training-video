@@ -7,7 +7,7 @@ import {characters} from '../data';
 
 const BLUE = '#1F5FAF';
 const ORDER = ['sales', 'mori', 'nakata', 'sato', 'takahashi'];
-const VOICE: Record<string, string> = {sales: 'Leo', mori: 'Reid', nakata: 'Emma', sato: 'Roy', takahashi: 'Tina'};
+const VOICE: Record<string, string> = {sales: 'Ash', mori: 'Leo', nakata: 'Ellis', sato: 'Ash', takahashi: 'Misa'};
 
 export const CharacterSheet: React.FC = () => (
   <AbsoluteFill style={{background: '#F4F5F7', fontFamily: FONT, color: C.ink}}>
