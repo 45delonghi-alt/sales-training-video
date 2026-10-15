@@ -3,7 +3,7 @@
 //   環境変数：APP_URL（既定 http://localhost:4173/）、SHOTS（スクリーンショットの保存先。省略可）
 import {createRequire} from 'node:module';
 import {execSync} from 'node:child_process';
-import {mkdirSync, readFileSync} from 'node:fs';
+import {existsSync, mkdirSync, readFileSync} from 'node:fs';
 import {join} from 'node:path';
 
 const require = createRequire(import.meta.url);
@@ -54,15 +54,18 @@ await page.waitForSelector('.player-box');
 await shot('01-intro');
 // 導入動画（完成版の MP4）：指定の秒で「考えよう」が出て止まる
 {
+  // テスト用 WebM（dist にだけ置く）。なければ作る
+  const webm = join(root, 'dist/experience/consulting/video/intro-fixed-test.webm');
+  if (!existsSync(webm)) execSync(`ffmpeg -nostdin -y -loglevel error -t 70 -i ${join(root, 'public/consulting/video/intro-fixed.mp4')} -vf scale=640:-2 -c:v libvpx-vp9 -deadline realtime -cpu-used 8 -b:v 600k -c:a libopus ${webm}`);
   await page.getByRole('button', {name: /▶ 導入動画/}).click();
   const v = page.locator('.player-box video');
-  ok('導入動画は完成版の MP4 を再生する', (await v.count()) === 1 && (await v.getAttribute('src')).includes('intro-final.mp4'));
+  ok('導入動画は完成版の MP4 を再生する', (await v.count()) === 1 && (await v.getAttribute('src')).includes('intro-fixed.mp4'));
   // （テスト用 WebM は scripts の外で作成：ffmpeg -t 70 -i intro-final.mp4 … dist/experience/consulting/video/intro-final-test.webm）
   // テスト用の Chromium は H.264 を再生できないため、同じ映像の WebM（テスト用・dist にだけ置く）に差し替えて確かめる
   await v.evaluate(async (el) => {
     if (!el.canPlayType('video/mp4; codecs="avc1.640028"')) {
-      el.src = 'consulting/video/intro-final-test.webm';
-      await new Promise((r) => el.addEventListener('loadedmetadata', r, {once: true}));
+      el.src = 'consulting/video/intro-fixed-test.webm';
+      await new Promise((r, j) => (el.addEventListener('loadedmetadata', r, {once: true}), el.addEventListener('error', j, {once: true}), setTimeout(j, 20000)));
     }
     el.muted = true;
     el.currentTime = 54.2;
