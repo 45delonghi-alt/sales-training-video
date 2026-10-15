@@ -54,7 +54,7 @@ const main = () => {
   let t = 0;
   if (mode === 'recommended') {
     const base = join(seg, '000-intro');
-    const d = piece(join(ROOT, 'public', 'consulting', 'video', 'intro-final.mp4'), base);
+    const d = piece(join(ROOT, 'public', 'consulting', 'video', 'intro-fixed.mp4'), base);
     bases.push(base);
     manifest.push({id: 'intro', start: t, duration: d, lines: []});
     t += d;
