@@ -741,12 +741,12 @@ const Ending: React.FC = () => {
 };
 
 // ------------------------------------------------------------------ 問い・先輩のヒント・振り返り（導入動画の「問い」と同じ形）
-const Question: React.FC<{scene?: StoryScene}> = ({scene}) => {
+const Question: React.FC<{scene?: StoryScene; photo?: boolean}> = ({scene, photo}) => {
   const {frame, fps} = useSec();
   if (!scene || scene.type !== 'question') return null;
   return (
     <AbsoluteFill>
-      <Line faint />
+      {photo ? null : <Line faint />}
       <div style={{position: 'absolute', left: 160, right: 160, top: 220, textAlign: 'center', ...ap(frame, 0.2, fps)}}>
         <div style={{fontSize: 30, fontWeight: 900, letterSpacing: 6, color: C.redOnDark}}>QUESTION</div>
         <div style={{fontSize: 76, fontWeight: 900, color: C.white, lineHeight: 1.3, marginTop: 12}}>{scene.questionText}</div>
@@ -791,9 +791,9 @@ export const Scene: React.FC<{overlay: string; card?: string; imagePath?: string
     case 'issue-photo':
       return <IssuePhoto photo={photo} />;
     case 'question':
-      return <Question scene={cardScene} />;
+      return <Question scene={cardScene} photo={hasPhoto} />;
     case 'hint':
-      return <Talk line={quote} />;
+      return <Talk line={quote} photo={hasPhoto} />;
     case 'reflection':
       return <Reflection scene={cardScene} />;
     case 'title':

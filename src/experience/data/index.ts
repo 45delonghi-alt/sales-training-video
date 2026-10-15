@@ -56,9 +56,11 @@ const cardLines = (key: string): Line[] | undefined => {
   if (c.kind === 'reflection' && s.type === 'reflection') return [{speaker: 'narration', text: s.question}];
   return [];
 };
+// 場面の写真（3DCGの背景）。フェーズごとの場所：P1 ライン／P2 センサの設置／P3 数え直し／P4 比較デモ
+export const PLACE: Record<string, string> = {p1: 'factory-line', p2: 'sensor-side', p3: 'recount', p4: 'demo-rig'};
 const cardAsset = (key: string, kind: CardKind): Asset => ({
   assetId: key,
-  shots: [{overlay: kind, header: {title: kind === 'question' ? `問い ${key.slice(2)}` : kind === 'hint' ? `先輩のヒント（${key.slice(5)}）` : '振り返り'}}],
+  shots: [{overlay: kind, photo: PLACE[cardByKey.get(key)?.scene.phaseId ?? ''], header: {title: kind === 'question' ? `問い ${key.slice(2)}` : kind === 'hint' ? `先輩のヒント（${key.slice(5)}）` : '振り返り'}}],
   seconds: kind === 'question' ? 6 : 4,
   dialogAt: 0.6,
   visualDescription: kind === 'question' ? '問いと選択肢' : kind === 'hint' ? '先輩のヒント' : '振り返りの問い',

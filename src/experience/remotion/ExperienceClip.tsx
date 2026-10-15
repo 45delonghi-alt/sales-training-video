@@ -75,8 +75,7 @@ export const ExperienceClip: React.FC<ExperienceClipProps> = ({assetId, showSubt
           return (
             <AbsoluteFill key={i} style={{opacity: o}}>
               <Sequence from={from} layout="none">
-                <Backdrop tone={st} sceneNo={Number(s.header?.no ?? 0)} total={s.header?.no ? 12 : null} />
-                {photoFile(s.photo) ? <PhotoLayer slot={s.photo} tone={st} /> : null}
+                <Backdrop tone={st} sceneNo={Number(s.header?.no ?? 0)} total={s.header?.no ? 12 : null} decor={photoFile(s.photo) ? <PhotoLayer slot={s.photo} tone={st} /> : undefined} />
                 <Scene overlay={s.overlay} photo={s.photo} clear={clear} card={s.card} cardScene={card?.scene} imagePath={hasImage ? a.imagePath : undefined} quote={lastStarted ? {speaker: lastStarted.speaker, text: lastStarted.text, from: lastStarted.from - from / fps} : undefined} />
                 {s.header ? <Heading phase={phase} title={s.header.title} tone={st} frame={frame - from} /> : null}
               </Sequence>

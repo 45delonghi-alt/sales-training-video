@@ -39,7 +39,7 @@
           "title": "お客様からの相談"
         },
         "atLine": 1,
-        "photo": "sato"
+        "photo": "factory-line"
       }
     ],
     "seconds": 10,
@@ -98,7 +98,7 @@
           "no": "02",
           "title": "お客様からの相談"
         },
-        "photo": "sato"
+        "photo": "factory-line"
       },
       {
         "overlay": "figures",
@@ -134,7 +134,7 @@
           "no": "02",
           "title": "お客様からの相談"
         },
-        "photo": "sato"
+        "photo": "factory-line"
       }
     ],
     "seconds": 8,
@@ -190,7 +190,7 @@
           "title": "お客様からの相談"
         },
         "card": "流れが乱れるときに多い？",
-        "photo": "sato"
+        "photo": "factory-line"
       }
     ],
     "seconds": 6,
@@ -218,7 +218,7 @@
           "no": "02",
           "title": "お客様からの相談"
         },
-        "photo": "sato"
+        "photo": "factory-line"
       }
     ],
     "seconds": 8,
@@ -247,7 +247,7 @@
           "title": "お客様からの相談"
         },
         "card": "導入して約3年・故障の記録なし",
-        "photo": "sato"
+        "photo": "factory-line"
       }
     ],
     "seconds": 8,
@@ -275,7 +275,7 @@
           "no": "4",
           "title": "センサの設置位置（現状）"
         },
-        "photo": "sato"
+        "photo": "sensor-side"
       },
       {
         "overlay": "sensor-existing",
@@ -435,7 +435,7 @@
           "no": "02",
           "title": "お客様からの相談"
         },
-        "photo": "sato"
+        "photo": "sensor-side"
       }
     ],
     "seconds": 8,
@@ -491,7 +491,7 @@
           "title": "お客様からの相談"
         },
         "card": "ラインの速度は落とせない",
-        "photo": "sato"
+        "photo": "sensor-side"
       }
     ],
     "seconds": 8,
@@ -544,7 +544,7 @@
         "header": {
           "title": "本当の困りごとは？"
         },
-        "photo": "sato"
+        "photo": "recount"
       }
     ],
     "seconds": 8,
@@ -567,15 +567,18 @@
     "assetId": "p3-q1-a",
     "shots": [
       {
-        "overlay": "burden",
+        "overlay": "talk-card",
         "header": {
+          "no": "6",
           "title": "数が合わないと、何が起きる？"
-        }
+        },
+        "card": "数え直す手間",
+        "photo": "recount"
       }
     ],
     "seconds": 8,
     "dialogAt": 0.8,
-    "visualDescription": "ライン停止・人手で数え直す",
+    "visualDescription": "止めたラインの横で数え直す現場（3DCG）。高橋さんが「現場で数え直す」「ラインを一時停止することもある」と答える。導入P12の図は出さない",
     "cameraDirection": "固定（導入動画と同じ）",
     "animationDirection": "影響の連鎖（白→黒→赤）",
     "status": [
@@ -597,7 +600,7 @@
         "header": {
           "title": "本当の困りごとは？"
         },
-        "photo": "sato"
+        "photo": "recount"
       }
     ],
     "seconds": 8,
@@ -624,7 +627,7 @@
         "header": {
           "title": "本当の困りごとは？"
         },
-        "photo": "takahashi"
+        "photo": "recount"
       }
     ],
     "seconds": 8,
@@ -652,7 +655,7 @@
           "title": "本当の困りごとは？"
         },
         "card": "メーカーが原因とは決まっていない",
-        "photo": "sato"
+        "photo": "recount"
       }
     ],
     "seconds": 8,
@@ -680,7 +683,7 @@
           "no": "6",
           "title": "本当の困りごとは？"
         },
-        "photo": "sato-smile"
+        "photo": "recount"
       }
     ],
     "seconds": 8,
@@ -708,7 +711,7 @@
           "title": "本当の困りごとは？"
         },
         "card": "価格より、安定した生産",
-        "photo": "takahashi"
+        "photo": "recount"
       }
     ],
     "seconds": 8,
@@ -736,7 +739,7 @@
           "no": "6",
           "title": "お客様の本当の課題"
         },
-        "photo": "sato"
+        "photo": "recount"
       },
       {
         "overlay": "issue-photo",
@@ -773,7 +776,7 @@
           "no": "9",
           "title": "どの方式が合いそう？"
         },
-        "photo": "mori"
+        "photo": "demo-rig"
       }
     ],
     "seconds": 8,
@@ -801,7 +804,7 @@
           "no": "9",
           "title": "どの方式を提案する？"
         },
-        "photo": "sato"
+        "photo": "demo-rig"
       }
     ],
     "seconds": 8,
@@ -829,7 +832,7 @@
           "no": "9",
           "title": "どの方式を提案する？"
         },
-        "photo": "sato"
+        "photo": "demo-rig"
       }
     ],
     "seconds": 8,
@@ -857,7 +860,7 @@
           "no": "9",
           "title": "どの方式を提案する？"
         },
-        "photo": "takahashi"
+        "photo": "demo-rig"
       }
     ],
     "seconds": 8,
@@ -1054,7 +1057,7 @@
           "no": "12",
           "title": "お客様の評価・次のアクション"
         },
-        "photo": "sato"
+        "photo": "demo-rig"
       }
     ],
     "seconds": 8,
@@ -1109,7 +1112,7 @@
           "no": "12",
           "title": "お客様の評価・次のアクション"
         },
-        "photo": "takahashi"
+        "photo": "demo-rig"
       }
     ],
     "seconds": 8,
@@ -1333,7 +1336,7 @@
           "no": "9",
           "title": "なぜ、透明体専用なのか"
         },
-        "photo": "mori"
+        "photo": "demo-rig"
       },
       {
         "overlay": "why-clear",

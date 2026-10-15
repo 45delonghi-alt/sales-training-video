@@ -21,7 +21,7 @@
 
 写真は `src/experience/data/photos.json` の枠ごとに、`public/` の指定の場所に置き、`npx tsx scripts/web-experience/assign-photos.ts` を実行すると使われる（置くまでは導入動画と同じ線画で描く）。会話の場面は、話している人の写真が自動で背景になる。
 
-**今回の制作では生成できていない**（接続していた画像生成サービス ElevenLabs が無料プランの上限に達していた）。下の指示文で生成するか、撮影した写真を置く。
+**ElevenLabs は使わない**（2026-10-15 決定）。設備の6枠（factory-line・sensor-side・line-wobble・demo-rig・plc-panel・recount）は3DCG（three.js、`node scripts/web-experience/photo3d/render.mjs`）で作成済み。センサ配置は3Dモデルで正しく作っている（片側・ボトル下部・反対側に反射板）。人物の6枠は、実在の社員・協力者の撮影写真を置く想定（下の指示は撮影の構図の目安）。人物の写真が置かれるまで、会話の背景は場面の場所（P1 ライン／P2 センサの設置／P3 数え直し／P4 比較デモ）の3DCGになる。
 
 | 枠 | ファイル | 使う場面 | 生成・撮影の指示（共通：photorealistic, 16:9, bright clean Japanese beverage bottling plant, transparent PET water bottles, stainless steel, blue-gray and silver tones, no text, no logos） |
 |---|---|---|---|

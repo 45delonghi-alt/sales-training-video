@@ -1,17 +1,17 @@
 {
-  "note": "実写風の写真の枠。file を public/ に置き、npm run experience:photos を実行すると ready が更新され、動画で使われる。生成用の指示は docs/web-experience/06-shot-instructions.md",
+  "note": "実写風の背景。設備の場面は3DCG（three.js）で作成（npm 不要：node scripts/web-experience/photo3d/render.mjs）。人物の写真は実在の社員の撮影を想定（置けば会話の背景が人物の写真に切り替わる）。",
   "slots": [
     {
       "slot": "factory-line",
       "file": "experience/photos/factory-line.jpg",
-      "ready": false,
-      "use": "飲料工場のライン全景（人物なし）"
+      "ready": true,
+      "use": "飲料工場のライン全景（人物なし）（3DCGで作成済み：scripts/web-experience/photo3d）"
     },
     {
       "slot": "sensor-side",
       "file": "experience/photos/sensor-side.jpg",
-      "ready": false,
-      "use": "既設センサ：コンベア片側・ボトル下部の高さ・反対側に反射板"
+      "ready": true,
+      "use": "既設センサ：コンベア片側・ボトル下部の高さ・反対側に反射板（3DCGで作成済み：scripts/web-experience/photo3d）"
     },
     {
       "slot": "sato",
@@ -34,14 +34,14 @@
     {
       "slot": "recount",
       "file": "experience/photos/recount.jpg",
-      "ready": false,
-      "use": "止めたラインの横で、ボトルを数え直す作業"
+      "ready": true,
+      "use": "止めたラインの横で、ボトルを数え直す作業（3DCGで作成済み：scripts/web-experience/photo3d）"
     },
     {
       "slot": "plc-panel",
       "file": "experience/photos/plc-panel.jpg",
-      "ready": false,
-      "use": "制御盤（PLC）"
+      "ready": true,
+      "use": "制御盤（PLC）（3DCGで作成済み：scripts/web-experience/photo3d）"
     },
     {
       "slot": "nakata",
@@ -58,8 +58,8 @@
     {
       "slot": "demo-rig",
       "file": "experience/photos/demo-rig.jpg",
-      "ready": false,
-      "use": "比較デモ：同じ片側に2台のセンサ、反対側にそれぞれ反射板"
+      "ready": true,
+      "use": "比較デモ：同じ片側に2台のセンサ、反対側にそれぞれ反射板（3DCGで作成済み：scripts/web-experience/photo3d）"
     },
     {
       "slot": "team-demo",
@@ -70,8 +70,8 @@
     {
       "slot": "line-wobble",
       "file": "experience/photos/line-wobble.jpg",
-      "ready": false,
-      "use": "揺れて間隔が乱れたボトル（ボトル下部の高さから）"
+      "ready": true,
+      "use": "揺れて間隔が乱れたボトル（ボトル下部の高さから）（3DCGで作成済み：scripts/web-experience/photo3d）"
     }
   ]
 }

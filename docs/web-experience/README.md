@@ -13,6 +13,6 @@
 | 9 | 進行役操作マニュアル | [09-facilitator-manual.md](09-facilitator-manual.md) |
 | 10 | 前後接続の検証結果 | [10-connection-check.md](10-connection-check.md) |
 | 11 | 変更履歴 | [11-change-log.md](11-change-log.md) |
-| 12 | 素材・技術上の未確認事項（＋録音が必要な文） | [12-open-issues.md](12-open-issues.md)・[12b-recording-list.md](12b-recording-list.md) |
+| 12 | 素材・技術上の未確認事項（＋録音が必要な文） | [12-open-issues.md](12-open-issues.md)・録音原稿 [talk-script-by-slide.md](../consulting-experience/talk-script-by-slide.md)（全137文） |
 
 参照資料：`docs/reference/`（台本ボード・参考画像）、`docs/intro-slides/intro-slides.pptx`

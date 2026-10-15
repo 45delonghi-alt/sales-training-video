@@ -2,7 +2,7 @@
 // 使い方：npx tsx scripts/web-experience/docs.ts
 import {readFileSync, writeFileSync} from 'node:fs';
 import {join} from 'node:path';
-import {assetById, characterById, lineIdOf, linesForAsset, phases, salesLineOf, scenes, speechOf} from '../../src/experience/data';
+import {assetById, characterById, lineIdOf, linesForAsset, phases, salesLineOf, scenes} from '../../src/experience/data';
 import type {Scene} from '../../src/experience/types';
 
 const ROOT = join(__dirname, '..', '..');
@@ -24,7 +24,7 @@ for (const p of phases) {
     if (s.type === 'video') script.push('導入動画（intro-fixed.mp4・3分58秒）を再生。台本は intro-slides.pptx のノートと docs/reference/sales_storyboard.html。', '');
     if (s.type === 'pitch') script.push(`学生が入力：${s.prompt}`, '', ...s.parts.map((x, i) => `${i + 1}. ${x.label}（例：${x.placeholder.replace('例：', '')}）`), '');
     if (s.type === 'reflection') script.push(`問い：${s.question}（学生が各自入力）`, '');
-    for (const aid of assetIds) {
+    for (const aid of assetIds as string[]) {
       const lines = linesForAsset(aid);
       if (!lines.length) continue;
       script.push(`| 映像 | # | 話者 | セリフ | 音声 |`, '|---|---|---|---|---|');
@@ -48,7 +48,7 @@ for (const q of qs) {
   choices.push(`## ${p.phaseTitle}　${q.questionId}「${q.questionText}」`, '');
   if (q.situation) choices.push(`直前の言葉：${who(q.situation.speaker)}「${q.situation.text}」`, '');
   choices.push('| 選択肢 | 営業（あなた）の言葉 | 答える人 | お客様の回答 | 分かったこと | まだ分からないこと |', '|---|---|---|---|---|---|');
-  for (const c of q.choices) choices.push(`| ${c.choiceId}${c.choiceId === q.recommendedChoice ? '（推奨）' : ''}　${esc(c.choiceText)} | ${esc(salesLineOf(c))} | ${who(c.responder)} | ${esc(c.customerResponse)}${c.extraLines?.length ? ' ／ ' + c.extraLines.map((l) => `${who(l.speaker)}「${esc(l.text)}」`).join(' ') : ''} | ${esc(c.gained)} | ${esc(c.missing)} |`);
+  for (const c of q.choices) choices.push(`| ${c.choiceId}${c.choiceId === q.recommendedChoice ? '（推奨）' : ''}　${esc(c.choiceText)} | ${esc(salesLineOf(c) ?? "")} | ${who(c.responder)} | ${esc(c.customerResponse)}${c.extraLines?.length ? ' ／ ' + c.extraLines.map((l) => `${who(l.speaker)}「${esc(l.text)}」`).join(' ') : ''} | ${esc(c.gained)} | ${esc(c.missing)} |`);
   choices.push('', `推奨の理由（解説で表示）：${q.recommendReason}`, '', `学び：${q.learningPoint}`, '', q.hint ? `先輩のヒント（学生が押すと表示）：${who(q.hint.speaker)}「${q.hint.text}」` : '', '');
 }
 writeFileSync(join(OUT, '04-choices.md'), choices.join('\n'));
@@ -74,20 +74,3 @@ function kind(s: Scene) {
 console.log(`03・04・05 を書き出しました（要録音 ${need}文）`);
 void assetById;
 
-// ───── 録音が必要な文（音読さんで1文ずつ作る）
-{
-  const VOICE: Record<string, string> = {narration: 'Yann', sales: 'Kai', sato: 'Misa', takahashi: 'Tina', mori: 'Lena', nakata: 'Reid'};
-  const rows: string[] = ['# 録音が必要な文（台本変更による録り直し・新規）', '', '> 自動生成。声の設定は docs/consulting-experience/talk-script.md の「話者と声」と同じ（音読さん Beta）。', '> 作った音声は、ファイル名どおりに `audio_import/experience/` に置き、`npm run experience:import-audio` → `npm run experience:render`。', '', '| # | ファイル名 | 話者 | 声 | 読み上げ文（読み方に直したもの） | 字幕の表記 |', '|---|---|---|---|---|---|'];
-  let k = 0;
-  for (const s of scenes) {
-    const ids = s.type === 'question' ? [`q-${s.questionId}`, ...(s.hint ? [`hint-${s.questionId}`] : []), ...s.choices.map((c) => c.videoAsset)] : 'videoAsset' in s ? [s.videoAsset] : [];
-    for (const aid of ids)
-      linesForAsset(aid).forEach((l, i) => {
-        const id = lineIdOf(aid, i);
-        if (id in timing) return;
-        rows.push(`| ${++k} | \`${id}.mp3\` | ${who(l.speaker)} | ${VOICE[l.speaker] ?? ''} | ${esc(speechOf(l.text))} | ${esc(l.text)} |`);
-      });
-  }
-  writeFileSync(join(OUT, '12b-recording-list.md'), rows.join('\n') + '\n');
-  console.log(`録音リスト：${k}文`);
-}
