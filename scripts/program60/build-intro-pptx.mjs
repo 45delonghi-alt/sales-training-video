@@ -48,10 +48,14 @@ export const STOPS = {
 
 const W = 13.333, H = 7.5, FONT = 'Meiryo';
 
-// 導入の24枚を pres に足す（全体版の PowerPoint からも使う）。ノートは先頭にセリフ（ナレーション）
+// PowerPoint に入れない画面（動画には残る）。15＝偏光フィルタの説明（2026-10-16 指示で削除）
+export const SKIP = new Set([15]);
+export const SLIDE_SHOTS = SHOTS.filter((s) => !SKIP.has(s[0]));
+
+// 導入の23枚を pres に足す（全体版の PowerPoint からも使う）。ノートは先頭にセリフ（ナレーション）
 export const addIntroSlides = (pres, {sectionPrefix = ''} = {}) => {
   let section = null;
-  for (const shot of SHOTS) {
+  for (const shot of SLIDE_SHOTS) {
     if (shot[0] === 'STOP') {
       const st = STOPS[shot[1]];
       const s = pres.addSlide({sectionTitle: section});
@@ -85,5 +89,5 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   pres.theme = {headFontFace: FONT, bodyFontFace: FONT};
   addIntroSlides(pres);
   await pres.writeFile({fileName: OUT});
-  console.log(`${OUT}：${SHOTS.length}枚`);
+  console.log(`${OUT}：${SLIDE_SHOTS.length}枚`);
 }
