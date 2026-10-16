@@ -154,27 +154,38 @@ export const IssuePhoto: React.FC<{photo?: string}> = ({photo}) => {
   );
 };
 
-// ───── 登場する名前と役割（後半の最初・5秒）。受領した一覧画像を出し、下の空いたところに
-//   「皆さんは、一番左の『新入社員』になります。」（一番左のカードの下）と、架空の人物であることを表示する
-const CAST_SCALE = 0.9;
+// ───── 登場する名前と役割（後半の最初・5秒）。受領した紹介画像（5人・上3人＋下2人）を出し、下の空いたところに
+//   「皆さんは、左上の『あなた（営業担当）』になります。」と、架空の人物であることを必ず表示する（2026-10-16 指示）
+//   あなたのカードだけ赤い枠で示す（1人ずつ順に明るくはしない）
+const CAST_IMG = {w: 1672, h: 941};
+const YOU_CARD = {x0: 8, y0: 33, x1: 550, y1: 460}; // 紹介画像の中の「あなた」のカード
 export const Cast: React.FC = () => {
   const {frame, fps} = useSec();
   const fadeIn = interpolate(frame, [0, 0.4 * fps], [0, 1], {extrapolateRight: 'clamp'});
-  const w = 1920 * CAST_SCALE;
-  const h = 1080 * CAST_SCALE;
+  const w = 1500;
+  const k = w / CAST_IMG.w;
+  const h = CAST_IMG.h * k;
   const left = (1920 - w) / 2;
-  // 一番左のカード（あなた）の中央。元画像の x=18〜336（1672幅）
-  const youX = left + ((18 + 336) / 2 / 1672) * w;
+  const top = 14;
   return (
-    <AbsoluteFill style={{background: '#E9ECF0', opacity: fadeIn, fontFamily: FONT}}>
-      <Img src={staticFile('experience/people/cast-intro.jpg')} style={{position: 'absolute', left, top: 0, width: w, height: h}} />
-      <div style={{position: 'absolute', left: youX - 40, top: h + 14, display: 'flex', alignItems: 'center', gap: 14, ...ap(frame, 0.3, fps, {dy: 10})}}>
-        <span style={{fontSize: 34, color: C.red, fontWeight: 900}}>▲</span>
-        <span style={{fontSize: 36, fontWeight: 900, color: C.ink, whiteSpace: 'nowrap'}}>
-          皆さんは、一番左の<span style={{color: C.red}}>「新入社員」</span>になります。
-        </span>
+    <AbsoluteFill style={{background: '#FFFFFF', opacity: fadeIn, fontFamily: FONT}}>
+      <Img src={staticFile('experience/people/cast-intro.jpg')} style={{position: 'absolute', left, top, width: w, height: h}} />
+      <div
+        style={{
+          position: 'absolute',
+          left: left + YOU_CARD.x0 * k - 6,
+          top: top + YOU_CARD.y0 * k - 6,
+          width: (YOU_CARD.x1 - YOU_CARD.x0) * k + 12,
+          height: (YOU_CARD.y1 - YOU_CARD.y0) * k + 12,
+          border: `6px solid ${C.red}`,
+          borderRadius: 14,
+          ...ap(frame, 0.3, fps),
+        }}
+      />
+      <div style={{position: 'absolute', left: left + 8, top: top + h + 16, fontSize: 42, fontWeight: 900, color: C.ink, whiteSpace: 'nowrap', ...ap(frame, 0.3, fps, {dy: 10})}}>
+        皆さんは、左上の<span style={{color: C.red}}>「あなた（営業担当）」</span>になります。
       </div>
-      <div style={{position: 'absolute', right: left, top: h + 34, fontSize: 24, fontWeight: 700, color: '#5B626B', whiteSpace: 'nowrap'}}>※ 登場人物はすべて架空の人物です（研修用）</div>
+      <div style={{position: 'absolute', left: left + 8, top: top + h + 92, fontSize: 32, fontWeight: 800, color: '#3A3F46', whiteSpace: 'nowrap'}}>※ 登場人物はすべて架空の人物です（研修用）。実在の人物・団体とは関係ありません。</div>
     </AbsoluteFill>
   );
 };

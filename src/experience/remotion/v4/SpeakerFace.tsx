@@ -6,12 +6,13 @@ import {Img, interpolate, staticFile} from 'remotion';
 import type {FaceCue} from '../../data';
 
 const FADE = 0.25;
-// 高さが画面の約3割（上端 y≈714）に収まる幅。図・表の左下・右下の角に重ならない（2026-10-16 確認）
-export const BADGE_W = 240;
+// 1人ずつの受領画像（2026-10-16・丸い顔写真＋役割・名前の枠。assets-src/characters/badges-v3）。
+// 高さは前のバッジ（約326px・上端 y≈714）以下に収め、図・表の左下・右下の角に重ならないようにする
+export const BADGE_W = 320;
 const SIDE = 40;
-const BOTTOM = 40;
-// バッジ画像の縦横比（public/experience/people/<id>-badge.png・約340×462。役割＋名前の帯つき）
-const RATIO = 462 / 340;
+const BOTTOM = 24; // 高さ約347px。上端 y≈709（前のバッジの上端 714 とほぼ同じ）
+// バッジ画像の縦横比（public/experience/people/<id>-badge.png・700×760）
+const RATIO = 760 / 700;
 
 export const SpeakerFaceOverlay: React.FC<{cues: FaceCue[]; t: number}> = ({cues, t}) => (
   <>
