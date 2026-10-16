@@ -33,6 +33,7 @@ const role = (id) => data.characters.find((c) => c.id === id)?.title ?? '';
 const PLACE_JA = {'factory-line': '飲料工場のライン', 'sensor-side': 'センサの設置箇所（コンベアの横・ボトル下部の高さ）', recount: '止めたラインの横（数え直しの現場）', 'demo-rig': '比較デモの装置（同じ側に2台のセンサ）', 'line-wobble': '揺れて間隔が乱れたボトル（ボトル下部の高さ）'};
 const OVERLAY_JA = {
   cast: '登場する名前と役割（受領画像）',
+  'plc-explain': 'PLCとは？（外観のイメージ・正式名称・センサとPLCの関係）',
   talk: '会話（話す人の名前カードと、いま話している言葉）', 'talk-card': '会話＋赤い要点カード', question: '問いとA/B/Cの選択肢', hint: '先輩のヒント', reflection: '振り返りの問い',
   bridge: 'YOUR MISSION（導入P23からのつなぎ）', clear: 'PHASE CLEAR → NEXT', 'why-clear': '導入P18の想起と、今回のお客様に合う理由', 'issue-photo': 'お客様が解決したいこと（現場の写真の上に）',
   miscount: 'ラインと誤カウントの表示', figures: '誤カウント率の数字', chart: '週ごとの誤カウント率のグラフ', 'sensor-existing': '既設センサの設置（片側・ボトル下部・反対側に反射板）', beam: '光の往復（センサ→反射板→センサ）',

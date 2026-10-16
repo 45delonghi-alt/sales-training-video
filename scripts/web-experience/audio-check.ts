@@ -12,7 +12,7 @@ for (const m of md.matchAll(/^\| \d+ \| .+? \| .+? \| (.+?) \| `(.+?)\.mp3` \|$/
 const TP = join(ROOT, 'src/experience/data/audioTiming.json');
 const timing: Record<string, number> = JSON.parse(readFileSync(TP, 'utf8'));
 const now = new Map<string, string>();
-for (const a of allClips) linesForAsset(a.assetId).forEach((l, i) => now.set(lineIdOf(a.assetId, i), speechOf(l.text)));
+for (const a of allClips) linesForAsset(a.assetId).forEach((l, i) => now.set(l.audioId ?? lineIdOf(a.assetId, i), speechOf(l.text)));
 const norm = (t: string) => t.replace(/[\s　]/g, '');
 const retired: string[] = [];
 const keep: string[] = [];

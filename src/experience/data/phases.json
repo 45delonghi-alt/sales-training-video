@@ -163,7 +163,8 @@
         "recommendedChoice": "B",
         "recommendReason": "導入のFIRST STEP「まずはお客様に現状を確認」のとおり。困りごとを数字で具体化すると、次に聞くことが見えてきます。",
         "learningPoint": "商品提案を急がず、困りごとを具体化する。",
-        "nextSceneId": "p1-data"
+        "nextSceneId": "p1-data",
+        "hintOnQuestion": true
       },
       {
         "sceneId": "p1-data",
@@ -243,7 +244,8 @@
         "recommendedChoice": "A",
         "recommendReason": "「いつ・どれくらい」が分かったら、次は「どんなときに」。起きる条件が、原因を考える手がかりになります。",
         "learningPoint": "起きる条件を具体的に聞く。",
-        "nextSceneId": "clear-p1"
+        "nextSceneId": "clear-p1",
+        "hintOnQuestion": true
       },
       {
         "sceneId": "clear-p1",
@@ -477,7 +479,8 @@
         "recommendedChoice": "B",
         "recommendReason": "条件を変えて信号とカウントを比べれば、どこで、どんなときに数が増えるかを切り分けられます。",
         "learningPoint": "原因を決めつけず、仮説を検証する。",
-        "nextSceneId": "p2-isolation"
+        "nextSceneId": "p2-isolation",
+        "hintOnQuestion": true
       },
       {
         "sceneId": "p2-isolation",
@@ -605,7 +608,8 @@
         "recommendedChoice": "A",
         "recommendReason": "手間を聞くと、誤カウントが現場の仕事にどう影響しているかが分かります。",
         "learningPoint": "業務への影響を聞くと、本当の課題が見えてくる。",
-        "nextSceneId": "p3-q2"
+        "nextSceneId": "p3-q2",
+        "hintOnQuestion": true
       },
       {
         "sceneId": "p3-q2",
@@ -777,7 +781,8 @@
         "recommendedChoice": "B",
         "recommendReason": "導入P21「どれが高性能か、ではなく、今回のお客様にどれが最適か」。透明なPETボトルには、透明体専用の回帰反射型が合いそうです（導入P18）。",
         "learningPoint": "今回のお客様に最適な方式を選ぶ。",
-        "nextSceneId": "p4-why"
+        "nextSceneId": "p4-why",
+        "hintOnQuestion": true
       },
       {
         "sceneId": "p4-why",
@@ -1017,7 +1022,8 @@
         "recommendReason": "デモの条件と実際のラインは違います。現場で起きる条件を整理し、実ラインでも一緒に確かめます。",
         "learningPoint": "提案して終わらない。お客様と一緒に、本当に解決できるかを確かめる。",
         "facilitatorNote": "KR-Qシリーズの実測が、記録したすべての条件で基準を満たしたときだけ出す（満たさない・未記録なら追加調査へ）。",
-        "nextSceneId": "p4-message"
+        "nextSceneId": "p4-message",
+        "hintOnQuestion": true
       },
       {
         "sceneId": "p4-followup",

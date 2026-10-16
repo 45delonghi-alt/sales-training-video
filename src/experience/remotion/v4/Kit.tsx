@@ -7,7 +7,7 @@ import React from 'react';
 import {useCurrentFrame, useVideoConfig} from 'remotion';
 import {appear} from '../../../consulting/components/anim';
 import {C, FONT} from '../../../consulting/theme';
-import {characterById} from '../../data';
+import {characterById, displayLines} from '../../data';
 import type {Speaker} from '../../types';
 
 export {C, FONT};
@@ -86,6 +86,21 @@ export const Emph: React.FC<{text: string; color?: string}> = ({text, color = C.
   );
 };
 
+// 表示用の改行（data/displayBreaks.json）を反映した文。行ごとに強調語を赤くする
+export const BrokenText: React.FC<{lineId?: string; text: string; color?: string}> = ({lineId, text, color}) => {
+  const {lines, nowrap} = displayLines(lineId, text);
+  return (
+    <span style={nowrap ? {whiteSpace: 'nowrap'} : undefined}>
+      {lines.map((l, i) => (
+        <React.Fragment key={i}>
+          {i ? <br /> : null}
+          <Emph text={l} color={color} />
+        </React.Fragment>
+      ))}
+    </span>
+  );
+};
+
 // 話者の表示（お客様／OPTEX-FA）
 export const speakerInfo = (sp: Speaker) => {
   const c = characterById.get(sp);
@@ -96,7 +111,7 @@ export const speakerInfo = (sp: Speaker) => {
 };
 
 // 字幕：導入動画と同じ黒い帯＋赤い縦線。話者名を赤で前に置く
-export const Subtitle: React.FC<{speaker: Speaker; text: string; from: number; frame: number}> = ({speaker, text, from, frame}) => {
+export const Subtitle: React.FC<{speaker: Speaker; text: string; from: number; frame: number; lineId?: string}> = ({speaker, text, from, frame, lineId}) => {
   const opacity = Math.min(1, Math.max(0, (frame - from) / 4));
   const who = speakerInfo(speaker);
   return (
@@ -116,7 +131,7 @@ export const Subtitle: React.FC<{speaker: Speaker; text: string; from: number; f
         }}
       >
         {who ? <span style={{color: C.redOnDark, fontWeight: 900, fontSize: 30, marginRight: 20, verticalAlign: 3}}>{who.name}</span> : null}
-        <Emph text={text} />
+        <BrokenText lineId={lineId} text={text} />
       </div>
     </div>
   );

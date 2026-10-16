@@ -137,3 +137,49 @@ export const LayoutCard: React.FC<{frame: number; bottlesX?: number[]; compact?:
     </div>
   );
 };
+
+// ───── 上から見たボトルの並び（2026-10-16 修正：ボトルどうしは重ならない）
+// spacings：隣のボトルとの中心間の距離（px）。合計がループの長さ（w+160）になるように最後で調整する。
+// どの距離も「直径＋すき間」以上にするので、輪郭は交差しない。
+export const bottleRadius = (h: number) => (h * 0.7 - h * 0.3) * 0.36;
+export const lineBottles = (frame: number, w: number, h: number, pattern: 'normal' | 'close', speed = 3) => {
+  const r = bottleRadius(h);
+  const loop = w + 160;
+  const minPitch = 2 * r + 8; // わずかなすき間（8px）
+  const base = pattern === 'close' ? [minPitch, minPitch * 2.1] : [Math.max(minPitch, loop / 6)];
+  const sp: number[] = [];
+  let sum = 0;
+  for (let i = 0; sum + base[i % base.length] <= loop - minPitch; i++) {
+    sp.push(base[i % base.length]);
+    sum += base[i % base.length];
+  }
+  // 残りを最後の間隔に足して、ループの継ぎ目でも詰まりすぎないようにする
+  sp.push(loop - sum);
+  const offs = sp.slice(0, -1).reduce((acc, s) => [...acc, acc[acc.length - 1] + s], [0]);
+  // id：流れてくるボトルの通し番号（同じボトルは画面を通り過ぎるまで同じ番号）
+  return offs.map((o, i) => {
+    const p = frame * speed + o;
+    const pass = Math.floor(p / loop);
+    return {x: (p % loop) - 80, pass, id: (pass + 1) * offs.length - i};
+  });
+};
+// ときどき1本だけ横（コンベアの幅方向）にずれる。規則的な波にしない。
+// ずれるボトルは通し番号で決める：おおむね7〜12本に1本、前にずれたボトルから5本以上あける。ずれる向きと量もボトルごとに変わる
+const rnd = (n: number) => Math.abs(Math.sin(n * 12.9898 + 78.233) * 43758.5453) % 1;
+const shiftCache = new Map<number, number>();
+const shiftOf = (id: number): number => {
+  if (id < 0) return 0;
+  const hit = shiftCache.get(id);
+  if (hit !== undefined) return hit;
+  let last = -99;
+  let v = 0;
+  for (let k = 0; k <= id; k++) {
+    const r = rnd(k);
+    const on = k - last >= 5 && r < 0.14;
+    if (on) last = k;
+    if (k === id) v = on ? (rnd(k + 0.5) < 0.5 ? -1 : 1) * (0.4 + rnd(k + 0.25) * 0.3) : 0;
+  }
+  shiftCache.set(id, v);
+  return v;
+};
+export const occasionalShift = (bottles: {id: number}[], frame: number) => bottles.map((b) => shiftOf(b.id) * Math.min(1, frame / 6));

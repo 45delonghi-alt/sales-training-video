@@ -16,10 +16,11 @@ export const PhaseNavOverlay: React.FC<{sceneId: string; chapter?: boolean}> = (
     if (!p) return null;
     return (
       <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center', fontFamily: FONT}}>
-        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: '40px 90px 44px', background: 'rgba(13,14,16,0.9)', borderTop: `8px solid ${NAV_RED}`, color: '#fff', marginTop: -60}}>
-          <span style={{fontSize: 30, fontWeight: 800, letterSpacing: 6, color: '#FF5A63'}}>PHASE {p.no}</span>
-          <b style={{fontSize: 76, fontWeight: 900}}>{p.name}</b>
-          <span style={{fontSize: 38, fontWeight: 700, color: '#E6E8EB'}}>「{p.chapter}」</span>
+        {/* 中央のメッセージは2倍の大きさ（2026-10-16 修正指示 第3章）。上部のナビゲーション（84px）にかからない位置 */}
+        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, padding: '44px 110px 52px', background: 'rgba(13,14,16,0.9)', borderTop: `10px solid ${NAV_RED}`, color: '#fff', marginTop: 60, maxWidth: 1760, boxSizing: 'border-box'}}>
+          <span style={{fontSize: 60, fontWeight: 800, letterSpacing: 10, color: '#FF5A63', lineHeight: 1.1}}>PHASE {p.no}</span>
+          <b style={{fontSize: 152, fontWeight: 900, lineHeight: 1.15, whiteSpace: 'nowrap'}}>{p.name}</b>
+          <span style={{fontSize: 76, fontWeight: 700, color: '#E6E8EB', lineHeight: 1.25, whiteSpace: 'nowrap'}}>「{p.chapter}」</span>
         </div>
       </AbsoluteFill>
     );

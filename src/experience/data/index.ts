@@ -2,6 +2,7 @@ import type {Asset, Character, GlossaryItem, Line, Phase, PhaseFile, QuestionSce
 import phasesJson from './phases.json';
 import assetsJson from './assets.json';
 import charactersJson from './characters.json';
+import displayBreaksJson from './displayBreaks.json';
 import glossaryJson from './glossary.json';
 import audioTimingJson from './audioTiming.json';
 
@@ -42,7 +43,8 @@ const splitAll = (lines: Line[]) => lines.flatMap((l) => splitLong(l.speaker, l.
 export type CardKind = 'question' | 'hint' | 'reflection';
 type Card = {key: string; kind: CardKind; scene: Scene};
 export const cards: Card[] = scenes.flatMap((s): Card[] => {
-  if (s.type === 'question') return [{key: `q-${s.questionId}`, kind: 'question', scene: s}, ...(s.hint ? [{key: `hint-${s.questionId}`, kind: 'hint' as const, scene: s}] : [])];
+  // ヒントを問いの画面に入れる設問（hintOnQuestion）は、ヒントだけの画面を作らない
+  if (s.type === 'question') return [{key: `q-${s.questionId}`, kind: 'question', scene: s}, ...(s.hint && !s.hintOnQuestion ? [{key: `hint-${s.questionId}`, kind: 'hint' as const, scene: s}] : [])];
   if (s.type === 'reflection') return [{key: `r-${s.sceneId}`, kind: 'reflection', scene: s}];
   return [];
 });
@@ -51,7 +53,8 @@ const cardLines = (key: string): Line[] | undefined => {
   const c = cardByKey.get(key);
   if (!c) return undefined;
   const s = c.scene;
-  if (c.kind === 'question' && s.type === 'question') return [{speaker: 'narration', text: s.questionText}];
+  // 問いの読み上げ。ヒントを問いの画面に入れる設問は、続けて先輩のヒント（音声は hint-<設問ID>_01 をそのまま使う）
+  if (c.kind === 'question' && s.type === 'question') return [{speaker: 'narration', text: s.questionText}, ...(s.hintOnQuestion && s.hint ? [{...s.hint, audioId: `hint-${s.questionId}_01`}] : [])];
   if (c.kind === 'hint' && s.type === 'question' && s.hint) return [s.hint];
   if (c.kind === 'reflection' && s.type === 'reflection') return [{speaker: 'narration', text: s.question}];
   return [];
@@ -178,7 +181,9 @@ export type TimedLine = Line & {from: number; to: number; lineId?: string; recor
 export const lineSchedule = (lines: Line[], dialogAt: number, assetId?: string): TimedLine[] => {
   let t = dialogAt;
   return lines.map((l, i) => {
-    const lineId = assetId ? lineIdOf(assetId, i) : undefined;
+    const lineId = l.audioId ?? (assetId ? lineIdOf(assetId, i) : undefined);
+    // 指定されたセリフの前に間を入れる（前の画面を長く見せる）
+    t += (assetId ? assetById.get(assetId)?.gapBefore?.[String(i)] : undefined) ?? 0;
     const rec = lineId ? recordedSeconds(lineId) : undefined;
     const from = t;
     if (rec === undefined) {
@@ -240,4 +245,20 @@ export const faceCues = (sched: TimedLine[]): FaceCue[] => {
     });
   }
   return cues;
+};
+
+// ───── 映像の表示用の改行（data/displayBreaks.json）。音声・字幕の元の文は変えず、表示のときだけ行を分ける
+type DisplayBreak = {page: string; lineId: string; after?: string; nowrap?: boolean; note?: string};
+export const displayBreaks: DisplayBreak[] = (displayBreaksJson as {breaks: DisplayBreak[]}).breaks;
+const breakById = new Map(displayBreaks.map((b) => [b.lineId, b]));
+// 表示する行（1行または2行）と、改行させないかどうか
+export const displayLines = (lineId: string | undefined, text: string): {lines: string[]; nowrap: boolean} => {
+  const b = lineId ? breakById.get(lineId) : undefined;
+  if (!b) return {lines: [text], nowrap: false};
+  if (b.nowrap) return {lines: [text], nowrap: true};
+  const k = b.after ? text.indexOf(b.after) : -1;
+  if (k < 0) return {lines: [text], nowrap: false};
+  const cut = k + b.after!.length;
+  const rest = text.slice(cut).replace(/^[\s　]+/, '');
+  return rest ? {lines: [text.slice(0, cut), rest], nowrap: false} : {lines: [text], nowrap: false};
 };

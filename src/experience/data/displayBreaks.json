@@ -1,0 +1,140 @@
+{
+  "_note": "映像の表示用の改行（2026-10-16 修正指示 第5・6章）。音声原稿は変えない。after＝その語句の直後で改行（最初の1か所）。nowrap＝改行させない。page＝修正前のページ番号",
+  "breaks": [
+    {
+      "page": "P6",
+      "lineId": "hint-P1-Q1_01",
+      "after": "専門知識がなくても大丈夫。"
+    },
+    {
+      "page": "P10",
+      "lineId": "p1-q1-b_01",
+      "after": "？"
+    },
+    {
+      "page": "P12",
+      "lineId": "p1-q1-c_02",
+      "after": "、"
+    },
+    {
+      "page": "P14",
+      "lineId": "q-P1-Q2_01",
+      "after": "、"
+    },
+    {
+      "page": "P14",
+      "lineId": "hint-P1-Q2_01",
+      "after": "数字は分かりました。",
+      "note": "移設したヒント。改行の指定はないため、1文目の後で自然に改行"
+    },
+    {
+      "page": "P18",
+      "lineId": "p1-q2-c_02",
+      "after": "。"
+    },
+    {
+      "page": "P21",
+      "lineId": "p2-open_01",
+      "after": "、"
+    },
+    {
+      "page": "P25",
+      "lineId": "hint-P2-Q1_01",
+      "after": "。"
+    },
+    {
+      "page": "P31",
+      "lineId": "hint-P2-Q2_01",
+      "after": "、"
+    },
+    {
+      "page": "P38",
+      "lineId": "hint-P3-Q1_01",
+      "after": "、",
+      "note": "移設したヒント。改行の指定はないが、1行に収まらず語尾だけが孤立するため「、」の後で改行"
+    },
+    {
+      "page": "P42",
+      "lineId": "p3-q1-c_01",
+      "after": "、"
+    },
+    {
+      "page": "P42",
+      "lineId": "p3-q1-c_02",
+      "after": "、"
+    },
+    {
+      "page": "P43",
+      "lineId": "q-P3-Q2_01",
+      "after": "お客様が本当に解決したいことは"
+    },
+    {
+      "page": "P44",
+      "lineId": "hint-P3-Q2_01",
+      "after": "その先で困っていることを、",
+      "note": "指示は「その先で困っていること、」。原文は「ことを、」のため、その直後で改行"
+    },
+    {
+      "page": "P45",
+      "lineId": "p3-q2-a_01",
+      "after": "、"
+    },
+    {
+      "page": "P45",
+      "lineId": "p3-q2-a_02",
+      "after": "、"
+    },
+    {
+      "page": "P46",
+      "lineId": "p3-q2-b_03",
+      "after": "減れば、"
+    },
+    {
+      "page": "P47",
+      "lineId": "p3-q2-c_01",
+      "after": "、"
+    },
+    {
+      "page": "P47",
+      "lineId": "p3-q2-c_02",
+      "after": "、"
+    },
+    {
+      "page": "P48",
+      "lineId": "p3-summary_01",
+      "after": "数え直しも、"
+    },
+    {
+      "page": "P52",
+      "lineId": "p4-open_01",
+      "after": "、"
+    },
+    {
+      "page": "P53",
+      "lineId": "hint-P4-Q1_01",
+      "after": "、"
+    },
+    {
+      "page": "P67",
+      "lineId": "q-P4-Q3_01",
+      "after": "、",
+      "note": "指定はないが、1行に収まらず「決めてもよ／いでしょうか」と語の途中で切れるため、「、」の後で改行（改行共通ルール：不自然な改行の禁止）"
+    },
+    {
+      "page": "P69",
+      "lineId": "p4-q3-a_01",
+      "after": "、"
+    },
+    {
+      "page": "P69",
+      "lineId": "p4-q3-a_02",
+      "after": "、"
+    },
+    {
+      "page": "P79",
+      "lineId": "r-r-q4_01",
+      "nowrap": true,
+      "note": "「か？」を上段に続けて1行で表示"
+    }
+  ]
+}

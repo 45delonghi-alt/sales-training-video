@@ -7,7 +7,7 @@ import {mkdirSync, rmSync, writeFileSync} from 'node:fs';
 import {join} from 'node:path';
 import {bundle} from '@remotion/bundler';
 import {renderStill, selectComposition} from '@remotion/renderer';
-import {clipById, compositionIdFor, lineIdOf, lineSchedule, linesForAsset, scenes} from '../../src/experience/data';
+import {cardByKey, clipById, compositionIdFor, lineIdOf, lineSchedule, linesForAsset, scenes} from '../../src/experience/data';
 import type {Scene} from '../../src/experience/types';
 
 const ROOT = join(__dirname, '..', '..');
@@ -21,7 +21,7 @@ const items = (s: Scene): Item[] => {
   if (s.type === 'question')
     return [
       {sceneId: s.sceneId, assetId: `q-${s.questionId}`, role: '問い'},
-      ...(s.hint ? [{sceneId: s.sceneId, assetId: `hint-${s.questionId}`, role: '先輩のヒント'}] : []),
+      ...(cardByKey.has(`hint-${s.questionId}`) ? [{sceneId: s.sceneId, assetId: `hint-${s.questionId}`, role: '先輩のヒント'}] : []),
       ...s.choices.map((c) => ({sceneId: s.sceneId, assetId: c.videoAsset, role: `選択肢${c.choiceId}`, choiceId: c.choiceId})),
     ];
   if (s.type === 'reflection') return [{sceneId: s.sceneId, assetId: `r-${s.sceneId}`, role: '振り返り'}];
@@ -63,7 +63,7 @@ const main = async () => {
         manifest.push({
           file: `${name}.jpg`, sceneId: s.sceneId, phaseId: s.phaseId, sceneTitle: s.title, sceneType: s.type, assetId: it.assetId, role: it.role, choiceId: it.choiceId,
           shot: i + 1, shots: a.shots.length, overlay: a.shots[i].overlay, header: a.shots[i].header?.title ?? '', photo: a.shots[i].photo ?? '',
-          seconds: +(composition.durationInFrames / FPS).toFixed(1), lines: said.map((l) => ({speaker: l.speaker, text: l.text, lineId: lineIdOf(it.assetId, l.k)})),
+          seconds: +(composition.durationInFrames / FPS).toFixed(1), lines: said.map((l) => ({speaker: l.speaker, text: l.text, lineId: l.lineId ?? lineIdOf(it.assetId, l.k)})),
         });
         console.log(`${name}　${s.title}／${it.role}`);
       }

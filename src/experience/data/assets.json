@@ -78,6 +78,9 @@
       "prompt": "",
       "negativePrompt": "",
       "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
+    },
+    "gapBefore": {
+      "1": 3
     }
   },
   {
@@ -403,11 +406,27 @@
           "no": "08",
           "title": "原因の候補④ 制御側の条件"
         }
+      },
+      {
+        "overlay": "plc-explain",
+        "header": {
+          "no": "08",
+          "title": "PLCとは？"
+        },
+        "atLine": 1
+      },
+      {
+        "overlay": "control",
+        "header": {
+          "no": "08",
+          "title": "原因の候補④ 制御側の条件"
+        },
+        "atLine": 3
       }
     ],
     "seconds": 8,
     "dialogAt": 0.8,
-    "visualDescription": "制御盤（PLC）。数え方の設定は保全担当が把握",
+    "visualDescription": "制御盤（PLC）。数え方の設定は保全担当が把握／佐藤さんの「PLCで数えています」から「PLCとは？」（外観のイメージ・正式名称・センサとPLCの関係）を表示し、中田さんの最後のセリフで制御側の図に戻る",
     "cameraDirection": "固定（導入動画と同じ）",
     "animationDirection": "右の画面に「センサの出力」と「PLCのカウント」",
     "status": [

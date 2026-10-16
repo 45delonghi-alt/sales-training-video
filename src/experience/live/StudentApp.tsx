@@ -242,7 +242,8 @@ const QuestionView: React.FC<{s: StudentState; q: QuestionScene}> = ({s, q}) => 
           >
             {mine ? '回答を変更する' : 'この選択肢で回答する'}
           </button>
-          {q.hint ? (
+          {/* ヒントを問いの映像に入れた設問（hintOnQuestion）は、ボタンを出さない（同じヒントを2か所に出さない） */}
+          {q.hint && !q.hintOnQuestion ? (
             <button className="lv-ghost" onClick={() => setHint((h) => !h)}>
               先輩のヒント
             </button>

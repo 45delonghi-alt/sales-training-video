@@ -29,6 +29,6 @@ for (const a of allClips)
     console.log(`  ${oid} → ${id}　${l.text}`);
   });
 writeFileSync(TP, JSON.stringify(timing, null, 1) + '\n');
-const need = allClips.flatMap((a) => linesForAsset(a.assetId).map((_, i) => lineIdOf(a.assetId, i))).filter((id) => !(id in timing));
+const need = allClips.flatMap((a) => linesForAsset(a.assetId).map((l, i) => l.audioId ?? lineIdOf(a.assetId, i))).filter((id) => !(id in timing));
 writeFileSync(join(ROOT, 'out/needs-recording.json'), JSON.stringify(need, null, 1));
 console.log(`使い直した録音：${n}文／録音が必要：${need.length}文`);

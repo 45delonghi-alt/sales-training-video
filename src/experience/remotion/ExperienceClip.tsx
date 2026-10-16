@@ -77,7 +77,7 @@ export const ExperienceClip: React.FC<ExperienceClipProps> = ({assetId, showSubt
             <AbsoluteFill key={i} style={{opacity: o}}>
               <Sequence from={from} layout="none">
                 <Backdrop tone={st} sceneNo={Number(s.header?.no ?? 0)} total={s.header?.no ? 12 : null} decor={photoFile(s.photo) ? <PhotoLayer slot={s.photo} tone={st} /> : undefined} />
-                <Scene overlay={s.overlay} photo={s.photo} clear={clear} card={s.card} cardScene={card?.scene} imagePath={hasImage ? a.imagePath : undefined} quote={lastStarted ? {speaker: lastStarted.speaker, text: lastStarted.text, from: lastStarted.from - from / fps} : undefined} />
+                <Scene overlay={s.overlay} photo={s.photo} clear={clear} card={s.card} cardScene={card?.scene} imagePath={hasImage ? a.imagePath : undefined} quote={lastStarted ? {speaker: lastStarted.speaker, text: lastStarted.text, from: lastStarted.from - from / fps, lineId: lastStarted.lineId} : undefined} />
                 {s.header ? <Heading phase={phase} title={s.header.title} tone={st} frame={frame - from} /> : null}
               </Sequence>
             </AbsoluteFill>
@@ -107,7 +107,7 @@ export const ExperienceClip: React.FC<ExperienceClipProps> = ({assetId, showSubt
             ))
         : null}
       {/* 会話の場面はセリフを画面中央に大きく出すので、下の字幕は出さない */}
-      {showSubtitles && current && (useVideo || !QUOTE.has(shot.overlay)) ? <Subtitle speaker={current.speaker} text={current.text} from={Math.round(current.from * fps)} frame={frame} /> : null}
+      {showSubtitles && current && (useVideo || !QUOTE.has(shot.overlay)) ? <Subtitle speaker={current.speaker} text={current.text} from={Math.round(current.from * fps)} frame={frame} lineId={current.lineId} /> : null}
       {/* 話している人のワイプ（OPTEX-FA＝左、お客様＝右。話している間だけ） */}
       <SpeakerFaceOverlay cues={faceCues(sched)} t={t} />
       <Tags tags={tags} tone={useVideo ? 'dark' : tone} />

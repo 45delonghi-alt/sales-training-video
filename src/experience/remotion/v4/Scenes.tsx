@@ -9,8 +9,9 @@ import {progress} from '../../../consulting/components/anim';
 import {CountHud} from '../../../consulting/scenes/Scene03Mission';
 import type {Scene as StoryScene, Speaker} from '../../types';
 import {Bridge, Cast, Clear, type ClearInfo, IssuePhoto, WhyClear, photoFile} from './Connect';
-import {FrontView, LayoutCard, TopView} from './Layout';
-import {C, Emph, InkLabel, Panel, Red, RedLabel, type Tone, ap, useSec} from './Kit';
+import {FrontView, LayoutCard, TopView, lineBottles, occasionalShift} from './Layout';
+import {PlcExplain} from './Plc';
+import {BrokenText, C, InkLabel, Panel, Red, RedLabel, type Tone, ap, useSec} from './Kit';
 
 export const WEEKS = [
   {week: '第1週', actual: 10000, count: 10060},
@@ -75,7 +76,7 @@ const Miscount: React.FC = () => {
 };
 
 // ------------------------------------------------------------------ 会話：話者と、いま話しているセリフを大きく
-export type QuoteLine = {speaker: Speaker; text: string; from: number};
+export type QuoteLine = {speaker: Speaker; text: string; from: number; lineId?: string};
 
 const Talk: React.FC<{line?: QuoteLine; card?: string; photo?: boolean}> = ({line, card, photo}) => {
   const {frame, fps} = useSec();
@@ -90,7 +91,7 @@ const Talk: React.FC<{line?: QuoteLine; card?: string; photo?: boolean}> = ({lin
             <div style={{display: 'flex', gap: 24}}>
               <div style={{width: 8, background: C.red, flex: 'none'}} />
               <div style={{fontSize: 58, fontWeight: 800, color: C.white, lineHeight: 1.45}}>
-                <Emph text={line.text} />
+                <BrokenText lineId={line.lineId} text={line.text} />
               </div>
             </div>
           </div>
@@ -240,8 +241,10 @@ const SensorCheck: React.FC = () => {
 const Cause: React.FC<{no: string; title: string; text: string; wobble?: boolean; gap?: boolean}> = ({no, title, text, wobble, gap}) => {
   const {frame, fps} = useSec();
   const w = 900;
-  const xs = [0, 1, 2, 3, 4, 5].map((i) => ((frame * 3 + (gap ? i * 120 + (i % 2) * 60 : i * 190)) % (w + 160)) - 80);
-  const tilt = xs.map((_, i) => (wobble ? Math.sin(frame / 5 + i * 1.3) : 0));
+  // ボトルどうしは重ならない（接近は「わずかなすき間」で表す）。揺れは、ときどき1本だけ横にずれる
+  const bs = lineBottles(frame, w, 330, gap ? 'close' : 'normal');
+  const xs = bs.map((b) => b.x);
+  const tilt = wobble ? occasionalShift(bs, frame) : xs.map(() => 0);
   return (
     <AbsoluteFill>
       <Panel style={{left: 140, top: 200, width: 980, height: 660, ...ap(frame, 0.3, fps)}}>
@@ -554,8 +557,10 @@ const Demo: React.FC<{variant: string}> = ({variant}) => {
   const {frame, fps} = useSec();
   const d = DEMO[variant];
   const w = 820;
-  const xs = [0, 1, 2, 3, 4, 5].map((i) => ((frame * 3 + i * (d.gap ? 100 + (i % 2) * 70 : 170)) % (w + 160)) - 80);
-  const tilt = xs.map((_, i) => (d.wobble ? Math.sin(frame / 5 + i) : 0));
+  // ボトルどうしは重ならない。間隔：通常／詰まる（わずかなすき間）。揺れ：大半は正常で、ときどき1本だけ横にずれる
+  const bs = lineBottles(frame, w, 380, d.gap ? 'close' : 'normal');
+  const xs = bs.map((b) => b.x);
+  const tilt = d.wobble ? occasionalShift(bs, frame) : xs.map(() => 0);
   const box = (name: string) => (
     <div style={{flex: 1, border: `2px solid ${C.line}`, padding: '20px 24px'}}>
       <div style={{fontSize: 32, fontWeight: 900}}>{name}</div>
@@ -736,28 +741,40 @@ const Ending: React.FC = () => {
 };
 
 // ------------------------------------------------------------------ 問い・先輩のヒント・振り返り（導入動画の「問い」と同じ形）
-const Question: React.FC<{scene?: StoryScene; photo?: boolean}> = ({scene, photo}) => {
+const Question: React.FC<{scene?: StoryScene; photo?: boolean; quote?: QuoteLine}> = ({scene, photo, quote}) => {
   const {frame, fps} = useSec();
   if (!scene || scene.type !== 'question') return null;
+  // 問いの画面に入れた先輩のヒント（hintOnQuestion）。先輩が話し始めたときに、選択肢の下の空いたところに出す
+  const hintOn = scene.hintOnQuestion && scene.hint && quote && quote.speaker !== 'narration';
+  const hintAt = hintOn ? Math.round(quote!.from * fps) : 0;
   return (
     <AbsoluteFill>
       {photo ? null : <Line faint />}
-      <div style={{position: 'absolute', left: 160, right: 160, top: 220, textAlign: 'center', ...ap(frame, 0.2, fps)}}>
+      <div style={{position: 'absolute', left: 160, right: 160, top: 200, textAlign: 'center', ...ap(frame, 0.2, fps)}}>
         <div style={{fontSize: 30, fontWeight: 900, letterSpacing: 6, color: C.redOnDark}}>QUESTION</div>
-        <div style={{fontSize: 76, fontWeight: 900, color: C.white, lineHeight: 1.3, marginTop: 12}}>{scene.questionText}</div>
+        <div style={{fontSize: 70, fontWeight: 900, color: C.white, lineHeight: 1.3, marginTop: 12}}>
+          <BrokenText lineId={`q-${scene.questionId}_01`} text={scene.questionText} />
+        </div>
       </div>
-      <div style={{position: 'absolute', left: 140, right: 140, top: 520, display: 'flex', gap: 30}}>
+      <div style={{position: 'absolute', left: 140, right: 140, top: 500, display: 'flex', gap: 30}}>
         {scene.choices.map((c, i) => (
-          <div key={c.choiceId} style={{flex: 1, minHeight: 230, background: 'rgba(13,14,16,0.82)', border: '2px solid rgba(255,255,255,0.35)', padding: '24px 30px', color: C.white, ...ap(frame, 0.9 + i * 0.4, fps)}}>
+          <div key={c.choiceId} style={{flex: 1, minHeight: 200, background: 'rgba(13,14,16,0.82)', border: '2px solid rgba(255,255,255,0.35)', padding: '22px 30px', color: C.white, ...ap(frame, 0.9 + i * 0.4, fps)}}>
             <RedLabel size={30}>{c.choiceId}</RedLabel>
-            <div style={{fontSize: 40, fontWeight: 800, lineHeight: 1.4, marginTop: 18}}>{c.choiceText}</div>
+            <div style={{fontSize: 40, fontWeight: 800, lineHeight: 1.4, marginTop: 16}}>{c.choiceText}</div>
           </div>
         ))}
       </div>
+      {hintOn ? (
+        <div style={{position: 'absolute', left: 340, right: 140, top: 760, display: 'flex', alignItems: 'stretch', ...ap(frame - hintAt, 0, fps, {dy: 14, dur: 10})}}>
+          <div style={{flex: 'none', background: C.red, color: C.white, fontSize: 26, fontWeight: 900, letterSpacing: 2, padding: '0 20px', display: 'flex', alignItems: 'center'}}>先輩のヒント</div>
+          <div style={{flex: 1, background: 'rgba(255,255,255,0.95)', color: C.ink, fontSize: 38, fontWeight: 800, lineHeight: 1.45, padding: '18px 30px'}}>
+            <BrokenText lineId={scene.hint ? `hint-${scene.questionId}_01` : undefined} text={scene.hint!.text} color={C.red} />
+          </div>
+        </div>
+      ) : null}
     </AbsoluteFill>
   );
 };
-
 const Reflection: React.FC<{scene?: StoryScene}> = ({scene}) => {
   const {frame, fps} = useSec();
   if (!scene || scene.type !== 'reflection') return null;
@@ -767,7 +784,9 @@ const Reflection: React.FC<{scene?: StoryScene}> = ({scene}) => {
       <RedSlash progress={progress(frame, 4, 20)} left={1800} width={60} opacity={0.55} />
       <div style={{position: 'absolute', left: 160, right: 520, top: 330}}>
         <div style={{fontSize: 30, fontWeight: 900, letterSpacing: 6, color: C.redOnDark, ...ap(frame, 0.1, fps)}}>REFLECTION</div>
-        <div style={{fontSize: 84, fontWeight: 900, color: C.white, lineHeight: 1.3, marginTop: 16, ...ap(frame, 0.3, fps, {dx: -40, dy: 0})}}>{scene.question}</div>
+        <div style={{fontSize: 84, fontWeight: 900, color: C.white, lineHeight: 1.3, marginTop: 16, ...ap(frame, 0.3, fps, {dx: -40, dy: 0})}}>
+          <BrokenText lineId={`r-${scene.sceneId}_01`} text={scene.question} />
+        </div>
         <div style={{fontSize: 36, fontWeight: 700, color: 'rgba(255,255,255,0.75)', marginTop: 30, ...ap(frame, 1.2, fps)}}>ワークシートに、自分の言葉で書いてみよう</div>
       </div>
     </AbsoluteFill>
@@ -781,6 +800,8 @@ export const Scene: React.FC<{overlay: string; card?: string; imagePath?: string
       return <Bridge />;
     case 'cast':
       return <Cast />;
+    case 'plc-explain':
+      return <PlcExplain />;
     case 'clear':
       return <Clear info={clear} />;
     case 'why-clear':
@@ -788,7 +809,7 @@ export const Scene: React.FC<{overlay: string; card?: string; imagePath?: string
     case 'issue-photo':
       return <IssuePhoto photo={photo} />;
     case 'question':
-      return <Question scene={cardScene} photo={hasPhoto} />;
+      return <Question scene={cardScene} photo={hasPhoto} quote={quote} />;
     case 'hint':
       return <Talk line={quote} photo={hasPhoto} />;
     case 'reflection':

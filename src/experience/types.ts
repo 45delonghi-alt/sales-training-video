@@ -60,6 +60,8 @@ export type Asset = {
   shots: Shot[];
   seconds: number; // 映像だけの長さ（セリフが長ければ自動で延びる）
   dialogAt?: number; // セリフを出し始める秒
+  // セリフの前に入れる間（秒）。キーはセリフの番号（0から）。例 {"1": 3}＝2つめのセリフの前に3秒（前の画面を長く見せる）
+  gapBefore?: Record<string, number>;
   visualDescription: string;
   cameraDirection: string;
   animationDirection: string;
@@ -75,7 +77,8 @@ export type Asset = {
   production: {method: 'shoot' | 'ai-image' | 'cg' | 'composite'; prompt: string; negativePrompt: string; note: string};
 };
 
-export type Line = {speaker: Speaker; text: string};
+// audioId：別の素材の音声をそのまま使うとき（例：問いの画面で流す先輩のヒント＝ hint-P1-Q1_01）
+export type Line = {speaker: Speaker; text: string; audioId?: string};
 
 export type Choice = {
   choiceId: 'A' | 'B' | 'C';
@@ -120,6 +123,8 @@ export type QuestionScene = Base & {
   questionText: string;
   thinkSeconds: number;
   hint?: Line; // 難しいときに出す、先輩社員のヒント
+  // true：ヒントを別の画面にせず、問いの画面に入れる（問いの読み上げのあとに先輩が話す。2026-10-16 修正指示 P8→P6 など）
+  hintOnQuestion?: boolean;
   choices: Choice[];
   recommendedChoice: 'A' | 'B' | 'C' | null; // null＝どれも必要な確認（推奨なし）
   recommendReason: string; // 回答後に示す、推奨の理由

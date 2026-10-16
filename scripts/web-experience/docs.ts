@@ -2,7 +2,7 @@
 // 使い方：npx tsx scripts/web-experience/docs.ts
 import {readFileSync, writeFileSync} from 'node:fs';
 import {join} from 'node:path';
-import {assetById, characterById, lineIdOf, linesForAsset, phases, salesLineOf, scenes} from '../../src/experience/data';
+import {assetById, cardByKey, characterById, lineIdOf, linesForAsset, phases, salesLineOf, scenes} from '../../src/experience/data';
 import type {Scene} from '../../src/experience/types';
 
 const ROOT = join(__dirname, '..', '..');
@@ -20,7 +20,7 @@ for (const p of phases) {
   for (const s of scenes.filter((x) => x.phaseId === p.phaseId)) {
     script.push(`### ${s.title}（${s.sceneId}・${kind(s)}）`, '');
     if (s.facilitatorNote) script.push(`進行メモ：${s.facilitatorNote}`, '');
-    const assetIds = s.type === 'question' ? [`q-${s.questionId}`, ...(s.hint ? [`hint-${s.questionId}`] : []), ...s.choices.map((c) => c.videoAsset)] : 'videoAsset' in s ? [s.videoAsset] : [];
+    const assetIds = s.type === 'question' ? [`q-${s.questionId}`, ...(cardByKey.has(`hint-${s.questionId}`) ? [`hint-${s.questionId}`] : []), ...s.choices.map((c) => c.videoAsset)] : 'videoAsset' in s ? [s.videoAsset] : [];
     if (s.type === 'video') script.push('導入動画（intro-fixed.mp4・3分58秒）を再生。台本は intro-slides.pptx のノートと docs/reference/sales_storyboard.html。', '');
     if (s.type === 'pitch') script.push(`学生が入力：${s.prompt}`, '', ...s.parts.map((x, i) => `${i + 1}. ${x.label}（例：${x.placeholder.replace('例：', '')}）`), '');
     if (s.type === 'reflection') script.push(`問い：${s.question}（学生が各自入力）`, '');
@@ -29,7 +29,7 @@ for (const p of phases) {
       if (!lines.length) continue;
       script.push(`| 映像 | # | 話者 | セリフ | 音声 |`, '|---|---|---|---|---|');
       lines.forEach((l, i) => {
-        const id = lineIdOf(aid, i);
+        const id = l.audioId ?? lineIdOf(aid, i);
         if (!(id in timing)) need++;
         script.push(`| ${aid} | ${i + 1} | ${who(l.speaker)} | ${esc(l.text)} | ${rec(id)}（\`${id}\`） |`);
       });
