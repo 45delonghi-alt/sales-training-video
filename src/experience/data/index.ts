@@ -35,7 +35,8 @@ const splitLong = (speaker: Speaker, text: string): Line[] => {
   return parts.map((t) => ({speaker, text: t.trim()})).filter((l) => l.text);
 };
 
-const splitAll = (lines: Line[]) => lines.flatMap((l) => splitLong(l.speaker, l.text));
+// 長い文を分けても、表示用の指定（displaySpeaker）は引き継ぐ
+const splitAll = (lines: Line[]) => lines.flatMap((l) => splitLong(l.speaker, l.text).map((x) => (l.displaySpeaker ? {...x, displaySpeaker: l.displaySpeaker} : x)));
 
 // 素材を使っている場面のセリフ（字幕・音声・台本の書き出し用）。1要素＝1文＝音声1ファイル
 // 問い・先輩のヒント・振り返りの画面（アプリでは画面に表示するだけだが、動画にも書き出す）。
@@ -226,15 +227,16 @@ const FACE_MERGE_GAP = 0.6;
 export const faceCues = (sched: TimedLine[]): FaceCue[] => {
   const cues: FaceCue[] = [];
   for (const l of sched) {
-    const c = characterById.get(l.speaker);
+    const sp = l.displaySpeaker ?? l.speaker;
+    const c = characterById.get(sp);
     if (!c?.badgeImage || !c.category) continue;
     const last = cues[cues.length - 1];
-    if (last && last.speakerId === l.speaker && l.from - last.audioEnd <= FACE_MERGE_GAP) {
+    if (last && last.speakerId === sp && l.from - last.audioEnd <= FACE_MERGE_GAP) {
       last.audioEnd = l.to;
       continue;
     }
     cues.push({
-      speakerId: l.speaker,
+      speakerId: sp,
       speakerName: c.fullName && c.fullName !== c.name ? `${c.fullName}さん` : c.name,
       speakerRole: c.tagRole ?? c.title.replace(/（.*）/, ''),
       speakerImage: c.badgeImage,

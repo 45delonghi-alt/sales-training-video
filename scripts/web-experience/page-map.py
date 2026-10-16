@@ -1,5 +1,5 @@
 # 修正前後のページ対応表（2026-10-16 修正指示「後半動画 P1〜P80」）。
-#   python3 scripts/web-experience/page-map.py out/p80/before.pptx docs/web-experience/web-experience-scenes.pptx
+#   python3 scripts/web-experience/page-map.py out/p80/before.pptx docs/web-experience/web-experience-all.pptx
 # 修正前のページ番号（P）は、お客様の資料の番号に合わせる：
 #   スライド3〜34 → P1〜P32（スライド番号−2）／スライド40〜85 → P36〜P81（スライド番号−4）
 #   スライド35〜39（5枚）は P33〜P35（3つ）にあたり、1対1に決められない（要確認。修正の指定はない範囲）
@@ -81,8 +81,8 @@ CHANGES = {
     'P52': '「、」の後で改行',
     'P53': '先輩のヒント（修正前P54）を移設。ヒントは「、」の後で改行',
     'P54': 'ヒントを修正前P53へ移設し、この画面は削除',
-    'P55': '指定「。以降を改行」：この画面の文に文中の「。」がないため変更なし（要確認）',
-    'P60': '変更なし（製品画像の表示位置を確認）',
+    'P55': '「、」の後で改行（2つのセリフとも）',
+    'P60': '受領した KR-Qシリーズの資料画像を右に大きく表示。紹介場面の顔ワイプ・字幕の名前を中田さんに（最初のセリフの声は森さんのまま）',
     'P64': 'ボトルの揺れ：大半は正常、ときどき1本だけ横にずれる（規則的な波をやめた）',
     'P65': 'ボトルの接近：間隔を狭く、重ならない（わずかなすき間）',
     'P67': '先輩のヒント（修正前P68）を移設。問いの文は語の途中で切れないよう「、」の後で改行',
@@ -96,7 +96,9 @@ MERGED = {'hint-P1-Q1#1': 'q-P1-Q1#1', 'hint-P1-Q2#1': 'q-P1-Q2#1', 'hint-P2-Q2#
 def main():
     before, after = ids(sys.argv[1]), ids(sys.argv[2])
     new_slide = {r['id']: r['slide'] for r in after}
-    new_p = lambda s: f'新P{s - 2}' if s and s >= 3 else '—'
+    # 修正後の番号（新P）：後半の最初（YOUR MISSION＝bridge）を新P1 とする。全体版では導入の24枚の後ろになる
+    first = new_slide['bridge#1']
+    new_p = lambda s: f'新P{s - first + 1}（スライド{s}）' if s and s >= first else '—'
     rows = []
     for r in before:
         if r['slide'] < 3:
@@ -104,16 +106,16 @@ def main():
         p = old_p(r['slide'])
         target = MERGED.get(r['id'], r['id'])
         ns = new_slide.get(target)
-        extra = [x for x in after if x['id'].startswith(r['id'].split('#')[0] + '#') and x['id'] not in {y['id'] for y in before}]
+        extra = [x for x in after if x['id'].startswith(r['id'].split('#')[0] + '#') and x['id'] not in {y['id'] for y in before}] if r['id'].endswith('#1') else []
         change = CHANGES.get(p.split('（')[0], '')
         result = '統合（削除）' if r['id'] in MERGED else ('修正' if change and '変更なし' not in change else '変更なし')
-        rows.append({'old': p, 'oldSlide': r['slide'], 'id': r['id'], 'serif': r['serif'][:40], 'change': change or '—', 'new': new_p(ns) + (f'（{target} に統合）' if r['id'] in MERGED else ''), 'newSlide': ns or '', 'result': result, 'added': '、'.join(f"{x['id']}（新P{x['slide'] - 2}）" for x in extra)})
+        rows.append({'old': p, 'oldSlide': r['slide'], 'id': r['id'], 'serif': r['serif'][:40], 'change': change or '—', 'new': new_p(ns) + (f'（{target} に統合）' if r['id'] in MERGED else ''), 'newSlide': ns or '', 'result': result, 'added': '、'.join(f"{x['id']}（{new_p(x['slide'])}）" for x in extra)})
     json.dump(rows, open(ROOT / 'out' / 'p80' / 'page-map.json', 'w'), ensure_ascii=False, indent=1)
     md = ['# 14　修正前後のページ対応表（後半動画 P1〜P80・2026-10-16）', '',
           '> `python3 scripts/web-experience/page-map.py` で自動生成。Excel 版：`14-page-map.xlsx`。', '',
           '- 修正前のページ番号は、お客様の資料の番号（場面一覧スライドの番号−2。PHASE 3 の扉以降は−4）。',
           '- スライド35〜39（5枚：p2-q2-a・p2-q2-b・p2-q2-c・原因の仮説・PHASE 2 CLEAR）は P33〜P35 の3つにあたり、1対1に決められない。修正の指定はない範囲のため変更していない（要確認）。',
-          '- 内部ID：<映像ID>#<画面の番号>。修正後の番号は、修正後の場面一覧スライドの番号−2（新P）。', '',
+          '- 内部ID：<映像ID>#<画面の番号>。修正後の番号（新P）は、後半の最初（YOUR MISSION）を新P1 とした番号。かっこ内は全体版 PowerPoint（web-experience-all.pptx）のスライド番号。', '',
           '| 修正前 | 内部ID | 修正内容 | 修正後 | 結果 |', '|---|---|---|---|---|']
     for x in rows:
         md.append(f"| {x['old']} | `{x['id']}` | {x['change']} | {x['new']}{('／追加：' + x['added']) if x['added'] else ''} | {x['result']} |")

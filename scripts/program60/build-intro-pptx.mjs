@@ -13,7 +13,7 @@ const ASSETS = join(ROOT, 'docs', 'intro-slides', 'assets');
 const OUT = process.argv[2] || join(ROOT, 'docs', 'intro-slides', 'intro-slides.pptx');
 
 // [画像番号, 場面, 動画の開始, 終了, ナレーション]
-const SHOTS = [
+export const SHOTS = [
   [1, 'オープニング', '0:00', '0:05', '「営業」と聞いて、皆さんはどんな仕事を想像するでしょうか。'],
   [2, 'オープニング', '0:05', '0:10', '商品を紹介する。価格を伝える。もちろん、それも営業の仕事です。'],
   [3, 'オープニング', '0:10', '0:15', 'でも、オプテックス・エフエーの営業は、それだけではありません。'],
@@ -40,40 +40,50 @@ const SHOTS = [
   [21, 'エンディング', '3:49', '3:58', 'それでは、オプテックス・エフエーの営業になったつもりで、お客様の課題を解決してみましょう。'],
 ];
 // 動画が止まる場所（体験アプリと同じ：0:54.9／1:23.8／3:32.8）
-const STOPS = {
+export const STOPS = {
   1: {at: '0:54.9', q: '営業である皆さんは、\nお客様に何を確認しますか？', hint: '15秒で、ワークシートに1つ書こう'},
   2: {at: '1:23.8', q: '誤カウントを放っておくと、\n現場では何が起きると思う？', hint: '15秒、となりの人と話してみよう'},
   3: {at: '3:32.8', q: '今回のお客様のボトルは「透明」。\nどの方式が合いそう？', hint: '15秒で、理由を1つ考えよう'},
 };
 
 const W = 13.333, H = 7.5, FONT = 'Meiryo';
-const pres = new pptxgen();
-pres.layout = 'LAYOUT_WIDE';
-pres.title = 'コンサルティング営業体験　導入（動画のスライド版）';
-pres.author = 'OPTEX-FA 営業企画';
-pres.theme = {headFontFace: FONT, bodyFontFace: FONT};
 
-let section = null;
-for (const shot of SHOTS) {
-  if (shot[0] === 'STOP') {
-    const st = STOPS[shot[1]];
+// 導入の24枚を pres に足す（全体版の PowerPoint からも使う）。ノートは先頭にセリフ（ナレーション）
+export const addIntroSlides = (pres, {sectionPrefix = ''} = {}) => {
+  let section = null;
+  for (const shot of SHOTS) {
+    if (shot[0] === 'STOP') {
+      const st = STOPS[shot[1]];
+      const s = pres.addSlide({sectionTitle: section});
+      s.background = {color: '141517'};
+      s.addText('THINK', {x: 0.8, y: 1.3, w: 6, h: 0.4, fontSize: 14, bold: true, color: 'E60012', charSpacing: 4, fontFace: FONT, margin: 0, isTextBox: true});
+      s.addText(st.q, {x: 0.8, y: 1.9, w: 11.7, h: 2.4, fontSize: 40, bold: true, color: 'FFFFFF', fontFace: FONT, margin: 0, valign: 'middle', isTextBox: true});
+      s.addShape(pres.shapes.OVAL, {x: 0.8, y: 4.75, w: 1.2, h: 1.2, fill: {color: 'E60012'}, line: {type: 'none'}});
+      s.addText([{text: '15', options: {fontSize: 30, bold: true, breakLine: true}}, {text: '秒', options: {fontSize: 12}}], {x: 0.8, y: 4.85, w: 1.2, h: 1.0, color: 'FFFFFF', align: 'center', valign: 'middle', fontFace: FONT, margin: 0, isTextBox: true});
+      s.addText(st.hint, {x: 2.3, y: 4.75, w: 9, h: 1.2, fontSize: 22, color: 'C9CED4', valign: 'middle', fontFace: FONT, margin: 0, isTextBox: true});
+      s.addNotes(`■ セリフ\n（セリフなし。動画が ${st.at} で止まり、考える時間）\n\n■ 問いかけ\n${st.q.replace('\n', '')}\n\n■ 進め方\n${st.hint}。答えは言わせっぱなしでよい（正解は言わない）。`);
+      continue;
+    }
+    const [n, scene, from, to, text] = shot;
+    const sec = sectionPrefix + scene.split('：')[0];
+    if (sec !== section) {
+      pres.addSection({title: sec});
+      section = sec;
+    }
     const s = pres.addSlide({sectionTitle: section});
-    s.background = {color: '141517'};
-    s.addText('THINK', {x: 0.8, y: 1.3, w: 6, h: 0.4, fontSize: 14, bold: true, color: 'E60012', charSpacing: 4, fontFace: FONT, margin: 0, isTextBox: true});
-    s.addText(st.q, {x: 0.8, y: 1.9, w: 11.7, h: 2.4, fontSize: 40, bold: true, color: 'FFFFFF', fontFace: FONT, margin: 0, valign: 'middle', isTextBox: true});
-    s.addShape(pres.shapes.OVAL, {x: 0.8, y: 4.75, w: 1.2, h: 1.2, fill: {color: 'E60012'}, line: {type: 'none'}});
-    s.addText([{text: '15', options: {fontSize: 30, bold: true, breakLine: true}}, {text: '秒', options: {fontSize: 12}}], {x: 0.8, y: 4.85, w: 1.2, h: 1.0, color: 'FFFFFF', align: 'center', valign: 'middle', fontFace: FONT, margin: 0, isTextBox: true});
-    s.addText(st.hint, {x: 2.3, y: 4.75, w: 9, h: 1.2, fontSize: 22, color: 'C9CED4', valign: 'middle', fontFace: FONT, margin: 0, isTextBox: true});
-    s.addNotes(`考える時間（動画では ${st.at} で止まる場所）\n\n■ 問いかけ\n${st.q.replace('\n', '')}\n\n■ 進め方\n${st.hint}。答えは言わせっぱなしでよい（正解は言わない）。`);
-    continue;
+    s.background = {color: '000000'};
+    s.addImage({path: join(ASSETS, `intro_${String(n).padStart(2, '0')}.jpg`), x: 0, y: 0, w: W, h: H, altText: `導入動画 ${from}〜${to}　${scene}`, objectName: `INTRO_${String(n).padStart(2, '0')}`});
+    s.addNotes(`■ セリフ\nナレーション：${text}\n\n―――――― 以下、制作用の情報\n導入動画｜${scene}｜動画の位置：${from}〜${to}`);
   }
-  const [n, scene, from, to, text] = shot;
-  const sec = scene.split('：')[0];
-  if (sec !== section) { pres.addSection({title: sec}); section = sec; }
-  const s = pres.addSlide({sectionTitle: section});
-  s.background = {color: '000000'};
-  s.addImage({path: join(ASSETS, `intro_${String(n).padStart(2, '0')}.jpg`), x: 0, y: 0, w: W, h: H, altText: `導入動画 ${from}〜${to}　${scene}`, objectName: `INTRO_${String(n).padStart(2, '0')}`});
-  s.addNotes(`${scene}\n動画の位置：${from}〜${to}\n\n■ ナレーション\n${text}`);
+};
+
+if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
+  const pres = new pptxgen();
+  pres.layout = 'LAYOUT_WIDE';
+  pres.title = 'コンサルティング営業体験　導入（動画のスライド版）';
+  pres.author = 'OPTEX-FA 営業企画';
+  pres.theme = {headFontFace: FONT, bodyFontFace: FONT};
+  addIntroSlides(pres);
+  await pres.writeFile({fileName: OUT});
+  console.log(`${OUT}：${SHOTS.length}枚`);
 }
-await pres.writeFile({fileName: OUT});
-console.log(`${OUT}：${SHOTS.length}枚`);

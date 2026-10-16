@@ -78,7 +78,8 @@ export type Asset = {
 };
 
 // audioId：別の素材の音声をそのまま使うとき（例：問いの画面で流す先輩のヒント＝ hint-P1-Q1_01）
-export type Line = {speaker: Speaker; text: string; audioId?: string};
+// displaySpeaker：画面（顔ワイプ・字幕の名前）に出す人を、声の人と変えるとき（2026-10-16 指示：KR-Qの紹介場面は中田さんのワイプ）
+export type Line = {speaker: Speaker; text: string; audioId?: string; displaySpeaker?: Speaker};
 
 export type Choice = {
   choiceId: 'A' | 'B' | 'C';

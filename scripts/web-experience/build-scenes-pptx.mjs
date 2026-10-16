@@ -5,6 +5,7 @@ import {execFileSync} from 'node:child_process';
 import {existsSync, readFileSync} from 'node:fs';
 import {createRequire} from 'node:module';
 import {join} from 'node:path';
+import {addIntroSlides} from '../program60/build-intro-pptx.mjs';
 
 const require = createRequire(import.meta.url);
 const pptxgen = require('pptxgenjs');
@@ -15,7 +16,8 @@ const NAV = join(ROOT, 'out', 'experience', 'nav');
 // WEBアプリの画面（SHOTS=out/live-shots node tests/live.e2e.mjs と tests/phase-nav.e2e.mjs で撮ったもの）
 const SHOTS = join(ROOT, 'out', 'live-shots');
 const VOICE = {narration: 'Yann', sales: 'Ash', sato: 'Ash', takahashi: 'Misa', mori: 'Leo', nakata: 'Ellis'};
-const OUT = process.argv[2] || join(ROOT, 'docs', 'web-experience', 'web-experience-scenes.pptx');
+// 全体版：導入（24枚）＋後半（場面ごと）。2026-10-16 から1つのファイルにまとめる
+const OUT = process.argv[2] || join(ROOT, 'docs', 'web-experience', 'web-experience-all.pptx');
 const man = JSON.parse(readFileSync(join(STILLS, 'manifest.json'), 'utf8'));
 // 場面・人物・素材のデータ（tsx で書き出したもの）
 const data = JSON.parse(execFileSync('npx', ['tsx', '-e', `
@@ -44,7 +46,7 @@ const OVERLAY_JA = {
 
 const pres = new pptxgen();
 pres.layout = 'LAYOUT_WIDE';
-pres.title = 'コンサルティング営業体験　WEB本編　場面一覧（音声組み込み版）';
+pres.title = 'コンサルティング営業体験　全体（導入＋後半）';
 pres.author = 'OPTEX-FA 営業企画';
 const W = 13.333, H = 7.5, FONT = 'Meiryo';
 const T = (s, text, o) => s.addText(text, {fontFace: FONT, margin: 0, isTextBox: true, ...o});
@@ -54,27 +56,23 @@ const T = (s, text, o) => s.addText(text, {fontFace: FONT, margin: 0, isTextBox:
   const s = pres.addSlide();
   s.background = {color: '0D0E10'};
   s.addShape(pres.shapes.RECTANGLE, {x: 10.6, y: 0, w: W - 10.6, h: H, fill: {color: 'E60012'}, line: {type: 'none'}});
-  T(s, 'コンサルティング営業体験　WEB本編', {x: 0.7, y: 2.2, w: 9.5, h: 0.7, fontSize: 30, bold: true, color: 'FFFFFF'});
-  T(s, '場面一覧（音声組み込み版）', {x: 0.7, y: 2.95, w: 9.5, h: 0.7, fontSize: 26, bold: true, color: 'E60012'});
+  T(s, 'コンサルティング営業体験　全体版', {x: 0.7, y: 2.2, w: 9.5, h: 0.7, fontSize: 30, bold: true, color: 'FFFFFF'});
+  T(s, '導入＋後半　場面一覧', {x: 0.7, y: 2.95, w: 9.5, h: 0.7, fontSize: 26, bold: true, color: 'E60012'});
   T(s, [
     {text: `1枚＝1つの場面（画面の切り替わりごと）。全${man.length}場面`, options: {breakLine: true}},
     {text: '画像は完成動画と同じ画面（上部のフェーズナビゲーション・話している人の顔ワイプ入り。字幕はノートに記載）', options: {breakLine: true}},
     {text: '音声：音読さん Beta（あなた・佐藤さん＝Ash／森さん＝Leo／中田さん＝Ellis／高橋さん＝Misa／ナレーション＝Yann）', options: {breakLine: true}},
     {text: 'ノート：先頭にセリフ（話す人：セリフ）。続けて選択肢・進行メモ、最後に制作用の情報（場面の想定・音声ファイル名）', options: {breakLine: true}},
-    {text: '導入動画は別ファイル intro-slides.pptx（24ページ）'},
+    {text: '構成：導入動画（24枚）→ 後半（WEB参加型の体験）'},
   ], {x: 0.7, y: 4.0, w: 9.5, h: 1.8, fontSize: 14, color: 'C9CED4', paraSpaceAfter: 6});
   s.addNotes('表紙。場面の静止画は scripts/web-experience/scene-stills.ts で作成（1920×1080・字幕なし）。');
 }
 
-// 導入（別ファイルの intro-slides.pptx）。本編は導入P23「YOUR MISSION／FIRST STEP」から始まる
+// 導入（導入動画の24枚。scripts/program60/build-intro-pptx.mjs と同じもの）。後半は導入P23「YOUR MISSION」から続く
 const introSec = `${data.phases[0].phaseTitle}（${data.phases[0].minutes}分）`;
+addIntroSlides(pres, {sectionPrefix: '導入：'});
+// 後半の最初（YOUR MISSION・登場人物）は導入のフェーズに入る
 pres.addSection({title: introSec});
-{
-  const s = pres.addSlide({sectionTitle: introSec});
-  s.background = {color: '000000'};
-  s.addImage({path: join(ROOT, 'docs', 'intro-slides', 'assets', 'intro_20.jpg'), x: 0, y: 0, w: W, h: H, altText: '導入P23 YOUR MISSION'});
-  s.addNotes('導入動画（intro-fixed.mp4・3分58秒）＝ intro-slides.pptx の24ページ。これは導入P23「YOUR MISSION／FIRST STEP：まずはお客様に現状を確認」。次のスライドから本編。');
-}
 let curPhase = 'intro';
 const phaseOf = (id) => data.phases.find((p) => p.phaseId === id);
 for (const m of man) {
