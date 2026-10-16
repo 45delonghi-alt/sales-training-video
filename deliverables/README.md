@@ -12,7 +12,8 @@
 | 確認・共有用（軽い版） | [2026-10-16_v6_with-intro_720p.mp4](videos/2026-10-16_v6_with-intro_720p.mp4) | 14分49秒 | 同上の720p |
 | 分岐の確認（A/B/C 全部） | [2026-10-16_v6_all-branches_1080p.mp4](videos/2026-10-16_v6_all-branches_1080p.mp4) | 13分59秒 | 後半の全分岐を順につないだもの（研修では使わない。内容確認用） |
 | 分岐の確認（軽い版） | [2026-10-16_v6_all-branches_720p.mp4](videos/2026-10-16_v6_all-branches_720p.mp4) | 13分59秒 | 同上の720p |
-| 導入動画のみ | [intro-fixed.mp4](../public/consulting/video/intro-fixed.mp4) | 3分58秒 | 導入P6のセンサ配置を直した版。本編はこちらを使用 |
+| 導入動画のみ | [intro-fixed.mp4](../public/consulting/video/intro-fixed.mp4) | 3分58秒 | 導入P6のセンサ配置を直した版。本編（v6）・WEBアプリはこちらを使用 |
+| 導入動画のみ（文の間＋1.3秒） | [2026-10-16_intro_pause1.3s_1080p.mp4](videos/2026-10-16_intro_pause1.3s_1080p.mp4) | 5分14秒 | intro-fixed.mp4 の文と文の間（58か所）に1.3秒の間を足した版。間のあいだは画面を止め、BGM は途切れさせない。作り方：`python3 scripts/program60/intro-pauses.py 1.3` |
 | スライド（全体） | [web-experience-all.pptx](../docs/web-experience/web-experience-all.pptx) | 103枚 | 導入23枚＋後半の全場面。ノートの先頭にセリフ |
 | スライド（導入のみ） | [intro-slides.pptx](../docs/intro-slides/intro-slides.pptx) | 23枚 | 導入動画のスライド版 |
 
