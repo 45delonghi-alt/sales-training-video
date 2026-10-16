@@ -15,8 +15,9 @@ const IMPORT_DIR = join(ROOT, 'audio_import', 'experience');
 const AUDIO_DIR = join(ROOT, 'public', 'experience', 'audio');
 const TIMING = join(ROOT, 'src', 'experience', 'data', 'audioTiming.json');
 // 読み上げ速度：音読さんで決めた速さのまま取り込む（ナレーションは導入動画と同じ設定で作るので、取り込み時には変えない）
-const SPEED = Number(process.env.SPEED || 1);
-const speedOf = (sp: Speaker) => (sp === 'narration' ? Number(process.env.NARRATION_SPEED || 1) : SPEED);
+// 話す速さ（2026-10-16 決定：全員 0.8倍。音の高さは変えない＝ffmpeg atempo）。環境変数 SPEED・NARRATION_SPEED で変えられる
+const SPEED = Number(process.env.SPEED || 0.8);
+const speedOf = (sp: Speaker) => (sp === 'narration' ? Number(process.env.NARRATION_SPEED || SPEED) : SPEED);
 
 export type TalkLine = Line & {lineId: string; where: string; sceneId: string; phaseId: string};
 
