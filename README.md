@@ -1,5 +1,7 @@
 # 研修動画「その1on1、続いていますか？」
 
+> **OPTEX-FA｜WEB参加型コンサルティング営業体験の成果物（完成動画・過去の版・スライド・報告書）は [deliverables/README.md](deliverables/README.md) にまとめています。**
+
 営業部の上長向け 1on1 研修動画を Remotion（TypeScript）で作るプロジェクトです。
 1920×1080 / 30fps / MP4。台本は `src/script.json` にデータとして入っており、**台本を書き換えれば動画が変わります**。
 
