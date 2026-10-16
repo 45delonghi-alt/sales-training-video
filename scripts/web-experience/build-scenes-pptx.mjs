@@ -108,10 +108,10 @@ for (const m of man) {
   const ch = sc?.type === 'question' && m.choiceId ? sc.choices.find((c) => c.choiceId === m.choiceId) : null;
   if (ch && !people.includes(ch.responder)) people.push(ch.responder);
   // ノートの先頭はセリフ（話す人：セリフ）。そのあとに、選択肢・進行メモ・制作用の情報
-  const speakerLabel = (sp) => (sp === 'narration' ? 'ナレーション' : sp === 'sales' ? 'あなた（新入社員）' : who(sp));
+  const speakerLabel = (sp) => (sp === 'narration' ? 'ナレーション' : sp === 'sales' ? 'あなた（営業担当）' : who(sp));
   const serif = m.lines.length
     ? m.lines.map((l) => `${speakerLabel(l.speaker)}：${l.text}`)
-    : [m.assetId === 'cast' ? '（セリフなし・BGMのみ。画面の文字「皆さんは、一番左の『新入社員』になります。」を読ませる）' : '（セリフなし・BGMのみ）'];
+    : [m.assetId === 'cast' ? '（セリフなし・BGMのみ。画面の文字「皆さんは、左上の『あなた（営業担当）』になります。」を読ませる）' : '（セリフなし・BGMのみ）'];
   const onScreenChoices = sc?.type === 'question' && m.role === '問い' ? ['', '画面の選択肢', ...sc.choices.map((c) => `　${c.choiceId}：${c.choiceText}`)] : [];
   const notes = [
     '■ セリフ',
