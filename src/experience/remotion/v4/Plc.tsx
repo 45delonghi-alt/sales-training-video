@@ -1,45 +1,14 @@
 // PLCとは？（2026-10-16 修正指示 第8章・修正前P29）。PLCを初めて聞く学生向けの説明。
-//   左：PLCの外観のイメージ（一般的な形を線で描いたもの。メーカー・型式は描かない）
+//   左：PLCの外観のイメージ（受領した画像。メーカー・型式の入っていない一般的な形）
 //   右：センサとPLCの関係。光電センサが「検出信号」を出し、PLCがその信号を受けて数える（PLCはセンサではない）
 import React from 'react';
-import {interpolate} from 'remotion';
+import {Img, interpolate, staticFile} from 'remotion';
 import {C, Panel, Red, RedLabel, ap, useSec} from './Kit';
 
-// 一般的なPLC（電源・CPU・入出力ユニットを横に並べ、レールに取り付けたもの）の外観イメージ
-const PlcDrawing: React.FC<{frame: number}> = ({frame}) => {
-  const blink = Math.floor(frame / 12) % 2 === 0;
-  const units = [
-    {x: 20, w: 120, label: '電源'},
-    {x: 146, w: 150, label: 'CPU'},
-    {x: 302, w: 110, label: '入力'},
-    {x: 418, w: 110, label: '出力'},
-  ];
-  return (
-    <svg width={560} height={330} style={{display: 'block'}}>
-      {/* 取り付けレール */}
-      <rect x={0} y={150} width={560} height={26} fill="#C9CFD6" stroke="#8C959F" strokeWidth={2} />
-      {units.map((u, i) => (
-        <g key={u.label}>
-          <rect x={u.x} y={30} width={u.w} height={260} rx={6} fill="#F4F6F8" stroke="#3A3F46" strokeWidth={3} />
-          {/* 配線をつなぐ端子台 */}
-          {Array.from({length: 6}, (_, k) => (
-            <circle key={k} cx={u.x + 18 + ((u.w - 36) / 5) * k} cy={262} r={6} fill="#9AA3AD" />
-          ))}
-          {/* 表示ランプ */}
-          {Array.from({length: i === 0 ? 1 : 4}, (_, k) => (
-            <circle key={k} cx={u.x + 20 + k * 22} cy={56} r={6} fill={(k + i) % 2 === 0 && blink ? '#22B35A' : '#B9C1CA'} />
-          ))}
-          <text x={u.x + u.w / 2} y={130} textAnchor="middle" fontSize={26} fontWeight={900} fill="#3A3F46">
-            {u.label}
-          </text>
-        </g>
-      ))}
-      {/* 入力ユニットにセンサからの線、出力ユニットから機械への線 */}
-      <path d="M 357 290 L 357 322" stroke={C.red} strokeWidth={4} />
-      <path d="M 473 290 L 473 322" stroke="#3A3F46" strokeWidth={4} />
-    </svg>
-  );
-};
+// PLCの外観（2026-10-16 受領した画像に置き換え。元画像は assets-src/products/plc-provided.webp、上下の余白を切ったもの）
+const PlcImage: React.FC = () => (
+  <Img src={staticFile('experience/products/general/plc.jpg')} style={{display: 'block', margin: '0 auto', height: 355, width: 355 * (1254 / 1010), objectFit: 'contain'}} />
+);
 
 // 横一列の流れ：PETボトル → 光電センサ →（検出信号）→ PLC → カウント処理
 const Box: React.FC<{label: string; sub: string; strong?: boolean; at: number; frame: number; fps: number}> = ({label, sub, strong, at, frame, fps}) => (
@@ -64,7 +33,7 @@ export const PlcExplain: React.FC = () => {
       <Panel style={{left: 140, top: 190, width: 700, height: 500, padding: '24px 36px', ...ap(frame, 0.2, fps)}}>
         <RedLabel size={24}>PLC（外観のイメージ）</RedLabel>
         <div style={{marginTop: 18}}>
-          <PlcDrawing frame={frame} />
+          <PlcImage />
         </div>
         <div style={{fontSize: 22, fontWeight: 700, color: C.gray, marginTop: 6}}>※ 一般的な形のイメージ（特定の製品ではありません）</div>
       </Panel>
