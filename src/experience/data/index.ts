@@ -178,13 +178,18 @@ export const GAP_SAME = 0.3;
 export const GAP_TURN = 0.6;
 // 字幕は話し終わりから少しだけ残す（次の字幕までのちらつきを防ぎつつ、音声とずらさない）
 export const SUB_HOLD = 0.15;
+// スライド（画面）が替わるところの間（2026-10-16 指示：スライドごとに1秒）。
+//   クリップの終わりに1秒、クリップの途中で画面（ショット）が替わるセリフの前に1秒、話していない時間を足す
+export const SLIDE_GAP = 1;
 export type TimedLine = Line & {from: number; to: number; lineId?: string; recorded?: boolean};
 export const lineSchedule = (lines: Line[], dialogAt: number, assetId?: string): TimedLine[] => {
   let t = dialogAt;
+  const asset = assetId ? assetById.get(assetId) : undefined;
   return lines.map((l, i) => {
     const lineId = l.audioId ?? (assetId ? lineIdOf(assetId, i) : undefined);
     // 指定されたセリフの前に間を入れる（前の画面を長く見せる）
-    t += (assetId ? assetById.get(assetId)?.gapBefore?.[String(i)] : undefined) ?? 0;
+    t += asset?.gapBefore?.[String(i)] ?? 0;
+    if (i > 0 && asset?.shots?.some((sh) => sh.atLine === i)) t += SLIDE_GAP;
     const rec = lineId ? recordedSeconds(lineId) : undefined;
     const from = t;
     if (rec === undefined) {
@@ -203,7 +208,7 @@ export const questionHold = (assetId?: string) => (assetId?.startsWith('q-') ? Q
 export const clipSeconds = (seconds: number, lines: Line[], dialogAt: number, assetId?: string) => {
   const sched = lineSchedule(lines, dialogAt, assetId);
   const end = sched.length ? sched[sched.length - 1].to + 0.8 : 0;
-  return Math.max(seconds, end) + questionHold(assetId);
+  return Math.max(seconds, end) + questionHold(assetId) + SLIDE_GAP;
 };
 export const assetSeconds = (assetId: string) => {
   const a = assetById.get(assetId);
