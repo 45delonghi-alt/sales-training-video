@@ -937,17 +937,15 @@
     "cameraDirection": "固定（導入動画と同じ）",
     "animationDirection": "「透明体検出タイプ・回帰反射型」「仕様は公式資料で確認」",
     "status": [
-      "placeholder",
-      "awaiting-footage",
-      "awaiting-license"
+      "implemented"
     ],
     "production": {
       "method": "cg",
       "prompt": "",
       "negativePrompt": "",
-      "note": "導入動画と同じ線画・パネル・配色で Remotion が描く（写真・画像生成は使わない）。実写・実機の映像が届いたら差し替える"
+      "note": "製品画像：お客様から受領した資料（assets-src/products/kr-q-series-provided.webp）をそのまま表示（2026-10-16 指示「P60はこちらをベースに」）。画像の中の表記・数値は受領資料のまま"
     },
-    "imagePath": "experience/products/optex-fa/transparent-sensor.png",
+    "imagePath": "experience/products/optex-fa/kr-q-series.jpg",
     "productName": "OPTEX-FA KR-Qシリーズ（透明体検出タイプ）",
     "productModel": "候補：KR-Q50N／KR-Q150NW／KR-Q300NW 等（公式資料で確認中）",
     "sensorType": "回帰反射型（反射ミラー使用）",

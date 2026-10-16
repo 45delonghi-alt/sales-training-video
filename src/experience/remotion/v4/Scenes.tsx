@@ -469,35 +469,29 @@ const Issues3: React.FC = () => {
 };
 
 // ------------------------------------------------------------------ 製品（公式画像のみ）
+// 修正前P60：お客様から受領した製品資料（KR-Qシリーズ）を右に大きく。左は学生向けの要点（左下の顔ワイプより上に収める）
+const PRODUCT_IMAGE = 'experience/products/optex-fa/kr-q-series.jpg';
 const Product: React.FC<{imagePath?: string}> = ({imagePath}) => {
   const {frame, fps} = useSec();
+  const img = imagePath ?? PRODUCT_IMAGE;
   return (
     <AbsoluteFill>
-      <Panel style={{left: 140, top: 200, width: 640, height: 660, display: 'flex', alignItems: 'center', justifyContent: 'center', ...ap(frame, 0.3, fps)}}>
-        {imagePath ? (
-          <Img src={staticFile(imagePath)} style={{maxWidth: '90%', maxHeight: '90%', objectFit: 'contain'}} />
-        ) : (
-          <div style={{width: 520, height: 520, border: `3px dashed ${C.grayLight}`, display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', fontSize: 32, fontWeight: 800, color: C.gray, lineHeight: 1.6}}>
-            公式製品画像
-            <br />
-            （許諾確認後に配置）
-          </div>
-        )}
-      </Panel>
-      <Panel accent="top" style={{left: 820, right: 140, top: 200, height: 660, ...ap(frame, 0.8, fps)}}>
-        <div style={{fontSize: 34, fontWeight: 900, color: C.red, letterSpacing: 2}}>OPTEX-FA</div>
-        <div style={{fontSize: 96, fontWeight: 900, lineHeight: 1.1}}>KR-Qシリーズ</div>
-        <div style={{fontSize: 34, fontWeight: 800, marginTop: 10}}>透明体検出タイプ ／ 回帰反射型（反射ミラー使用）</div>
-        <div style={{marginTop: 30}}>
+      <Panel accent="top" style={{left: 140, top: 190, width: 740, height: 500, ...ap(frame, 0.3, fps)}}>
+        <div style={{fontSize: 30, fontWeight: 900, color: C.red, letterSpacing: 2}}>OPTEX-FA</div>
+        <div style={{fontSize: 76, fontWeight: 900, lineHeight: 1.1}}>KR-Qシリーズ</div>
+        <div style={{fontSize: 30, fontWeight: 800, marginTop: 8}}>透明体検出タイプ ／ 回帰反射型</div>
+        <div style={{marginTop: 26}}>
           {['センサと反射板を向かい合わせて、ボトル下部を横から検出', '今のセンサとの違いは、公式の仕様で確認', '性能は、お客様のボトルで確かめる'].map((t, i) => (
-            <div key={t} style={{display: 'flex', gap: 16, fontSize: 34, fontWeight: 800, marginBottom: 18, ...ap(frame, 1.4 + i * 0.8, fps)}}>
+            <div key={t} style={{display: 'flex', gap: 14, fontSize: 30, fontWeight: 800, marginBottom: 14, lineHeight: 1.4, ...ap(frame, 1.4 + i * 0.8, fps)}}>
               <span style={{color: C.red, fontWeight: 900}}>✓</span>
               {t}
             </div>
           ))}
         </div>
-        <div style={{fontSize: 22, fontWeight: 600, color: C.gray, marginTop: 10}}>型式と仕様は、メーカー公式資料で確認してから表示します</div>
       </Panel>
+      <div style={{position: 'absolute', left: 930, right: 140, top: 190, boxShadow: '0 18px 40px rgba(17,18,20,0.12)', ...ap(frame, 0.8, fps, {dx: 30, dy: 0})}}>
+        <Img src={staticFile(img)} style={{width: '100%', display: 'block'}} />
+      </div>
     </AbsoluteFill>
   );
 };
