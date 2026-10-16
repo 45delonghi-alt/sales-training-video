@@ -32,6 +32,7 @@ const fullName = (id) => {
 const role = (id) => data.characters.find((c) => c.id === id)?.title ?? '';
 const PLACE_JA = {'factory-line': '飲料工場のライン', 'sensor-side': 'センサの設置箇所（コンベアの横・ボトル下部の高さ）', recount: '止めたラインの横（数え直しの現場）', 'demo-rig': '比較デモの装置（同じ側に2台のセンサ）', 'line-wobble': '揺れて間隔が乱れたボトル（ボトル下部の高さ）'};
 const OVERLAY_JA = {
+  cast: '登場する名前と役割（受領画像）',
   talk: '会話（話す人の名前カードと、いま話している言葉）', 'talk-card': '会話＋赤い要点カード', question: '問いとA/B/Cの選択肢', hint: '先輩のヒント', reflection: '振り返りの問い',
   bridge: 'YOUR MISSION（導入P23からのつなぎ）', clear: 'PHASE CLEAR → NEXT', 'why-clear': '導入P18の想起と、今回のお客様に合う理由', 'issue-photo': 'お客様が解決したいこと（現場の写真の上に）',
   miscount: 'ラインと誤カウントの表示', figures: '誤カウント率の数字', chart: '週ごとの誤カウント率のグラフ', 'sensor-existing': '既設センサの設置（片側・ボトル下部・反対側に反射板）', beam: '光の往復（センサ→反射板→センサ）',
@@ -58,7 +59,7 @@ const T = (s, text, o) => s.addText(text, {fontFace: FONT, margin: 0, isTextBox:
     {text: `1枚＝1つの場面（画面の切り替わりごと）。全${man.length}場面`, options: {breakLine: true}},
     {text: '画像は完成動画と同じ画面（上部のフェーズナビゲーション・話している人の顔ワイプ入り。字幕はノートに記載）', options: {breakLine: true}},
     {text: '音声：音読さん Beta（あなた・佐藤さん＝Ash／森さん＝Leo／中田さん＝Ellis／高橋さん＝Misa／ナレーション＝Yann）', options: {breakLine: true}},
-    {text: 'ノート：場面の想定（場所・登場人物・画面の要素）、話す文、音声ファイル名', options: {breakLine: true}},
+    {text: 'ノート：先頭にセリフ（話す人：セリフ）。続けて選択肢・進行メモ、最後に制作用の情報（場面の想定・音声ファイル名）', options: {breakLine: true}},
     {text: '導入動画は別ファイル intro-slides.pptx（24ページ）'},
   ], {x: 0.7, y: 4.0, w: 9.5, h: 1.8, fontSize: 14, color: 'C9CED4', paraSpaceAfter: 6});
   s.addNotes('表紙。場面の静止画は scripts/web-experience/scene-stills.ts で作成（1920×1080・字幕なし）。');
@@ -107,23 +108,29 @@ for (const m of man) {
   const people = [...new Set(m.lines.map((l) => l.speaker).filter((x) => x !== 'narration'))];
   const ch = sc?.type === 'question' && m.choiceId ? sc.choices.find((c) => c.choiceId === m.choiceId) : null;
   if (ch && !people.includes(ch.responder)) people.push(ch.responder);
+  // ノートの先頭はセリフ（話す人：セリフ）。そのあとに、選択肢・進行メモ・制作用の情報
+  const speakerLabel = (sp) => (sp === 'narration' ? 'ナレーション' : sp === 'sales' ? 'あなた（新入社員）' : who(sp));
+  const serif = m.lines.length
+    ? m.lines.map((l) => `${speakerLabel(l.speaker)}：${l.text}`)
+    : [m.assetId === 'cast' ? '（セリフなし・BGMのみ。画面の文字「皆さんは、一番左の『新入社員』になります。」を読ませる）' : '（セリフなし・BGMのみ）'];
+  const onScreenChoices = sc?.type === 'question' && m.role === '問い' ? ['', '画面の選択肢', ...sc.choices.map((c) => `　${c.choiceId}：${c.choiceText}`)] : [];
   const notes = [
+    '■ セリフ',
+    ...serif,
+    ...onScreenChoices,
+    m.role === '問い' ? '\n■ THINK TIME：この画面は通常より5秒長い。WEBアプリではここで自動で止まり、約60秒の回答時間。進行役が締め切ると、各自の選択肢の映像へ' : '',
+    ...(ch
+      ? [`\n■ 選択肢 ${ch.choiceId}：${ch.choiceText}${sc.recommendedChoice === ch.choiceId ? '（推奨。解説の段階まで学生には見せない）' : ''}`, `分かったこと：${ch.gained}`, `まだ分からないこと：${ch.missing}`]
+      : []),
+    sc?.type === 'question' && m.role === '問い' ? `\n■ 推奨：${sc.recommendedChoice ?? 'なし'}（${sc.recommendReason}）` : '',
+    sc?.facilitatorNote && m.shot === 1 && !m.choiceId ? `\n■ 進行メモ：${sc.facilitatorNote}` : '',
+    '\n―――――― 以下、制作用の情報',
     `${ph.phaseTitle}｜${m.sceneTitle}｜${m.role}${m.shots > 1 ? `（画面 ${m.shot}/${m.shots}）` : ''}｜映像 ${m.assetId}（${m.seconds}秒）`,
-    '',
-    '■ 場面の想定',
     `場所：${m.photo ? PLACE_JA[m.photo] ?? m.photo : '―（説明の図・文字の画面）'}`,
     `登場人物：${people.length ? people.map((p) => `${fullName(p)}（${role(p)}・声 ${VOICE[p]}）`).join('、') : 'なし（ナレーション）'}`,
     `画面の要素：${OVERLAY_JA[m.overlay] ?? m.overlay}${m.header ? `／見出し「${m.header}」` : ''}`,
     assetDesc[m.assetId] ? `演出：${assetDesc[m.assetId]}` : '',
-    '',
-    m.lines.length ? '■ 話す文（音声ファイル名）' : '',
-    ...m.lines.map((l) => `${who(l.speaker)}（${VOICE[l.speaker]}）：${l.text}（${l.lineId}.mp3）`),
-    m.role === '問い' ? `\n■ THINK TIME：この画面は通常より5秒長い（問いと選択肢が出そろった状態を保持）。WEBアプリでは、ここで自動で止まり「THINK TIME｜考えてみよう」と約60秒の回答時間。進行役が締め切ると、各自の選択肢の映像へ` : '',
-    ...(ch
-      ? ['', `■ 選択肢 ${ch.choiceId}：${ch.choiceText}${sc.recommendedChoice === ch.choiceId ? '（推奨。解説の段階まで学生には見せない）' : ''}`, `分かったこと：${ch.gained}`, `まだ分からないこと：${ch.missing}`]
-      : []),
-    sc?.type === 'question' && m.role === '問い' ? `\n■ 推奨：${sc.recommendedChoice ?? 'なし'}（${sc.recommendReason}）` : '',
-    sc?.facilitatorNote && m.shot === 1 && !m.choiceId ? `\n■ 進行メモ：${sc.facilitatorNote}` : '',
+    m.lines.length ? `音声ファイル：${m.lines.map((l) => `${l.lineId}.mp3（${VOICE[l.speaker]}）`).join('、')}` : '',
   ].filter((x) => x !== '');
   s.addNotes(notes.join('\n'));
 
