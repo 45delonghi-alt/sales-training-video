@@ -96,7 +96,7 @@ MERGED = {'hint-P1-Q1#1': 'q-P1-Q1#1', 'hint-P1-Q2#1': 'q-P1-Q2#1', 'hint-P2-Q2#
 def main():
     before, after = ids(sys.argv[1]), ids(sys.argv[2])
     new_slide = {r['id']: r['slide'] for r in after}
-    # 修正後の番号（新P）：後半の最初（YOUR MISSION＝bridge）を新P1 とする。全体版では導入の24枚の後ろになる
+    # 修正後の番号（新P）：後半の最初（YOUR MISSION＝bridge）を新P1 とする。全体版では導入の23枚の後ろになる
     first = new_slide['bridge#1']
     new_p = lambda s: f'新P{s - first + 1}（スライド{s}）' if s and s >= first else '—'
     rows = []
