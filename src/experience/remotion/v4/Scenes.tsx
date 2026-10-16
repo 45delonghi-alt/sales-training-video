@@ -414,7 +414,8 @@ const Isolation: React.FC = () => {
     ['④', '制御側の条件', 'PLCの数え方の設定・ノイズの可能性'],
   ];
   return (
-    <AbsoluteFill style={{padding: '200px 140px 200px', display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr', gap: 30}}>
+    // カードは左下・右下のワイプ（上端 y≈714）より上で終える
+    <AbsoluteFill style={{padding: '190px 140px 380px', display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr', gap: 26}}>
       {items.map(([no, t, d], i) => (
         <div key={t} style={{background: C.white, border: `2px solid ${C.line}`, borderLeft: `10px solid ${C.red}`, padding: '26px 36px', ...ap(frame, 0.4 + i * 0.7, fps)}}>
           <div style={{fontSize: 30, fontWeight: 900, color: C.red}}>原因の候補{no}</div>
@@ -675,7 +676,8 @@ const Checklist: React.FC<{title: string; items: string[]}> = ({title, items}) =
 const Grid4: React.FC<{items: [string, string][]}> = ({items}) => {
   const {frame, fps} = useSec();
   return (
-    <AbsoluteFill style={{padding: '200px 140px 200px', display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr', gap: 30}}>
+    // カードは左下・右下のワイプ（上端 y≈714）より上で終える
+    <AbsoluteFill style={{padding: '190px 140px 380px', display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr', gap: 26}}>
       {items.map(([t, d], i) => (
         <div key={t} style={{background: C.white, border: `2px solid ${C.line}`, borderLeft: `10px solid ${C.red}`, padding: '28px 36px', ...ap(frame, 0.4 + i * 0.6, fps)}}>
           <div style={{fontSize: 50, fontWeight: 900}}>{t}</div>

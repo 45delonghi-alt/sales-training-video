@@ -6,7 +6,8 @@ import {Img, interpolate, staticFile} from 'remotion';
 import type {FaceCue} from '../../data';
 
 const FADE = 0.25;
-export const BADGE_W = 300;
+// 高さが画面の約3割（上端 y≈714）に収まる幅。図・表の左下・右下の角に重ならない（2026-10-16 確認）
+export const BADGE_W = 240;
 const SIDE = 40;
 const BOTTOM = 40;
 // バッジ画像の縦横比（public/experience/people/<id>-badge.png・約340×462。役割＋名前の帯つき）
